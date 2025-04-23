@@ -1,0 +1,36 @@
+import { configureStore } from '@reduxjs/toolkit'
+import registerApi from './features/api/registerApi/registerApi';
+// import productApi from './features/api/productApi';
+// import bannerApi from './features/api/bannerApi';
+// import variantApi from './features/api/variantApi';
+// import categoryApi from './features/api/categoryApi';
+// import selectCartReducer from "./features/slice/cartSlice";
+// import authReducer from "./features/slice/authSlice";
+
+const store = configureStore({
+    reducer: {
+
+        // search: searchReducer,
+        // auth: authReducer,
+        // cart: selectCartReducer,
+        // filters: filterReducer,
+        // selectCart: selectCartReducer,
+        // order: orderReducer,
+
+
+        // [productApi.reducerPath]: productApi.reducer,
+        // [bannerApi.reducerPath]: bannerApi.reducer,
+        // [variantApi.reducerPath]: variantApi.reducer,
+        // [categoryApi.reducerPath]: categoryApi.reducer,
+        [registerApi.reducerPath]: registerApi.reducer,
+    },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware()
+            // .concat(productApi.middleware)
+            // .concat(bannerApi.middleware)
+            // .concat(variantApi.middleware)
+            // .concat(categoryApi.middleware)
+            .concat(registerApi.middleware)
+})
+
+export default store;
