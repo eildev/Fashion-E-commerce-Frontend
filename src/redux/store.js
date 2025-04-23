@@ -1,5 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import registerApi from './features/api/registerApi/registerApi';
+import authReducer from "./features/slice/authSlice";
+import authApi from './features/api/auth/authApi';
 // import productApi from './features/api/productApi';
 // import bannerApi from './features/api/bannerApi';
 // import variantApi from './features/api/variantApi';
@@ -11,7 +13,7 @@ const store = configureStore({
     reducer: {
 
         // search: searchReducer,
-        // auth: authReducer,
+        auth: authReducer,
         // cart: selectCartReducer,
         // filters: filterReducer,
         // selectCart: selectCartReducer,
@@ -22,6 +24,7 @@ const store = configureStore({
         // [bannerApi.reducerPath]: bannerApi.reducer,
         // [variantApi.reducerPath]: variantApi.reducer,
         // [categoryApi.reducerPath]: categoryApi.reducer,
+        [authApi.reducerPath]: authApi.reducer,
         [registerApi.reducerPath]: registerApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
@@ -30,6 +33,7 @@ const store = configureStore({
             // .concat(bannerApi.middleware)
             // .concat(variantApi.middleware)
             // .concat(categoryApi.middleware)
+            .concat(authApi.middleware)
             .concat(registerApi.middleware)
 })
 
