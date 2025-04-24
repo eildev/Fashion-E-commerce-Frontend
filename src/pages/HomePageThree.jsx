@@ -18,6 +18,7 @@ import TestimonialOne from "../components/TestimonialOne";
 import InstagramSection from "../components/InstagramSection";
 import NewsletterThree from "../components/NewsletterThree";
 import FooterThree from "../components/FooterThree";
+import HomePageTwo from "./HomePageTwo";
 
 const HomePageThree = () => {
   return (
@@ -32,7 +33,7 @@ const HomePageThree = () => {
       <Preloader />
 
       {/* HeaderThree */}
-      <HeaderThree />
+     <HomePageTwo></HomePageTwo>
 
       {/* BannerThree */}
       <BannerThree />
