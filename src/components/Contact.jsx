@@ -1,7 +1,67 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useSendContactMessageMutation } from '../redux/features/api/contactUsApi/contactUsApi';
 
 const Contact = () => {
+    const [sendContactMessage, { isLoading, error, isSuccess }] =
+    useSendContactMessageMutation();
+  const [formData, setFormData] = useState({
+    name: "",
+
+    email: "",
+    subject: "",
+    message: "",
+    phone: "",
+    category: "",
+  });
+  const [agreePolicy, setAgreePolicy] = useState(false);
+
+  const handleChange = (e) => {
+    // console.log(e.target.value );
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    // console.log(formData);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (
+      !formData.firstName ||
+      !formData.email ||
+      !formData.subject ||
+      !formData.message
+    ) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+    if (!agreePolicy) {
+      alert("You must agree to the privacy policy.");
+      return;
+    }
+    const fullName = `${formData.firstName} ${formData.lastName}`.trim();
+    try {
+      await sendContactMessage({
+        ...formData,
+        name: fullName,
+      });
+      setFormData({
+        name: "",
+
+        email: "",
+        subject: "",
+        message: "",
+        phone: "",
+        category: "",
+      });
+      // console.log(formData);
+      setAgreePolicy(false);
+    } catch (err) {
+      console.error(
+        "Submission Error:",
+        err?.data?.message || "Something went wrong"
+      );
+    }
+  };
     return (
         <section className="contact py-80">
             <div className="container container-lg">
@@ -24,6 +84,7 @@ const Contact = () => {
                                             className="common-input px-16"
                                             id="name"
                                             placeholder="Full name"
+                                            onChange={handleChange}
                                         />
                                     </div>
                                     <div className="col-sm-6 col-xs-6">
@@ -39,6 +100,7 @@ const Contact = () => {
                                             className="common-input px-16"
                                             id="email"
                                             placeholder="Email address"
+                                            onChange={handleChange}
                                         />
                                     </div>
                                     <div className="col-sm-6 col-xs-6">
@@ -54,6 +116,7 @@ const Contact = () => {
                                             className="common-input px-16"
                                             id="phone"
                                             placeholder="Phone Number*"
+                                            onChange={handleChange}
                                         />
                                     </div>
                                     <div className="col-sm-6 col-xs-6">
@@ -71,6 +134,7 @@ const Contact = () => {
                                             className="common-input px-16"
                                             id="subject"
                                             placeholder="Subject"
+                                            onChange={handleChange}
                                         />
                                     </div>
                                     <div className="col-sm-12">
@@ -87,6 +151,7 @@ const Contact = () => {
                                             className="common-input px-16"
                                             id="message"
                                             placeholder="Type your message"
+                                            onChange={handleChange}
                                             defaultValue={""}
                                         />
                                     </div>
