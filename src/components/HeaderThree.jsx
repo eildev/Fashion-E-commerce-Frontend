@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import query from "jquery";
 import { Link, NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const HeaderThree = () => {
   const [scroll, setScroll] = useState(false);
+  const { token, user } = useSelector((state) => state.auth);
   useEffect(() => {
     window.onscroll = () => {
       if (window.pageYOffset < 150) {
