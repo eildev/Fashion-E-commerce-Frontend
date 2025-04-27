@@ -11,7 +11,7 @@ const Login = ({ onSwitchToRegister }) => {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isLoading: csrfLoading } = useGetCsrfTokenQuery();
+  const { data: csrfData, isLoading: csrfLoading, refetch: refetchCsrf } = useGetCsrfTokenQuery();
   const [loginUser, { isLoading: loginLoading }] = useLoginUserMutation();
 
   const {
@@ -23,15 +23,30 @@ const Login = ({ onSwitchToRegister }) => {
   const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
 
   const handleLogin = async (data) => {
-    console.log('Login form data:', data); // Debug: Log form data
+    console.log('Login form data:', data);
     dispatch(loginStart());
     try {
-      const result = await loginUser({
-        email: data.email,
-        password: data.password,
-      }).unwrap();
+      await refetchCsrf();
+      let result;
+      try {
+        result = await loginUser({
+          email: data.email,
+          password: data.password,
+        }).unwrap();
+      } catch (err) {
+        if (err?.status === 419 || err?.data?.message === 'CSRF token mismatch') {
+          console.log('CSRF token mismatch, retrying...');
+          await refetchCsrf();
+          result = await loginUser({
+            email: data.email,
+            password: data.password,
+          }).unwrap();
+        } else {
+          throw err;
+        }
+      }
 
-      console.log('Login API response:', result); // Debug: Log API response
+      console.log('Login API response:', result);
       if (result.status === 200 || result.status === 201) {
         dispatch(loginSuccess(result));
         toast.success('Login successful!');
@@ -41,10 +56,9 @@ const Login = ({ onSwitchToRegister }) => {
         toast.error(result.message || 'Login failed');
       }
     } catch (err) {
-      console.error('Login error:', err); // Debug: Log full error
-      const errorData = err?.data || {};
-      dispatch(loginFailure(errorData.message || 'Login failed'));
-      toast.error(errorData.message || 'Invalid credentials, please try again');
+      console.error('Login error:', err);
+      dispatch(loginFailure(err?.data?.message || 'Login failed'));
+      toast.error(err?.data?.message || 'Invalid credentials, please try again');
     }
   };
 

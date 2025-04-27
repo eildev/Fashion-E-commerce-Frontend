@@ -12,7 +12,7 @@ const Register = ({ onSwitchToLogin }) => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isLoading: csrfLoading } = useGetCsrfTokenQuery();
+  const { data: csrfData, isLoading: csrfLoading, refetch: refetchCsrf } = useGetCsrfTokenQuery();
   const [registerUser, { isLoading: registerLoading }] = useRegisterUserMutation();
 
   const {
@@ -27,17 +27,35 @@ const Register = ({ onSwitchToLogin }) => {
   const toggleConfirmPasswordVisibility = () => setShowConfirmPassword((prev) => !prev);
 
   const handleRegister = async (data) => {
-    console.log('Register form data:', data); // Debug: Log form data
+    console.log('Register form data:', data);
     dispatch(loginStart());
     try {
-      const result = await registerUser({
-        name: data.name,
-        email: data.email,
-        password: data.password,
-        password_confirmation: data.password_confirmation,
-      }).unwrap();
+      await refetchCsrf();
+      let result;
+      console.log(result);
+      try {
+        result = await registerUser({
+          name: data.name,
+          email: data.email,
+          password: data.password,
+          password_confirmation: data.password_confirmation,
+        }).unwrap();
+      } catch (err) {
+        if (err?.status === 419 || err?.data?.message === 'CSRF token mismatch') {
+          console.log('CSRF token mismatch, retrying...');
+          await refetchCsrf();
+          result = await registerUser({
+            name: data.name,
+            email: data.email,
+            password: data.password,
+            password_confirmation: data.password_confirmation,
+          }).unwrap();
+        } else {
+          throw err;
+        }
+      }
 
-      console.log('Register API response:', result); // Debug: Log API response
+      console.log('Register API response:', result);
       if (result.status === 200 || result.status === 201) {
         dispatch(loginSuccess(result));
         toast.success('Registration successful! You are now logged in.');
@@ -47,7 +65,7 @@ const Register = ({ onSwitchToLogin }) => {
         toast.error(result.message || 'Registration failed');
       }
     } catch (err) {
-      console.error('Registration error:', err); // Debug: Log full error
+      console.error('Registration error:', err);
       const errorData = err?.data || {};
       dispatch(loginFailure(errorData.message || 'Registration failed'));
 

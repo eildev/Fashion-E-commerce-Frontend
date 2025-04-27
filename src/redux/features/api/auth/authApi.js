@@ -8,15 +8,16 @@ const authApi = createApi({
     credentials: "include",
     prepareHeaders: (headers, { getState, endpoint }) => {
       const csrfToken = Cookies.get("XSRF-TOKEN");
+      console.log('CSRF Token:', csrfToken); // Debug
       if (csrfToken) {
-        headers.set("X-XSRF-TOKEN", decodeURIComponent(csrfToken));
+        headers.set("X-CSRF-TOKEN", decodeURIComponent(csrfToken));
       }
       const token = getState().auth.token;
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }
       if (endpoint === "updateUser" && getState().auth.body instanceof FormData) {
-        // Skip Content-Type for FormData to allow browser to set it
+        // Skip Content-Type for FormData
       } else {
         headers.set("Content-Type", "application/json");
       }
@@ -46,6 +47,8 @@ const authApi = createApi({
         body: credentials,
       }),
     }),
+  
+
     logoutUser: builder.mutation({
       query: () => ({
         url: "/logout",
