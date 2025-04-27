@@ -9,6 +9,7 @@ import ShippingOne from "../components/ShippingOne";
 import Account from "../components/Account";
 import ScrollToTop from "react-scroll-to-top";
 import ColorInit from "../helper/ColorInit";
+import HeaderThree from "../components/HeaderThree";
 
 
 const AccountPage = () => {
@@ -27,7 +28,7 @@ const AccountPage = () => {
       <Preloader />
 
       {/* HeaderTwo */}
-      <HeaderTwo category={true} />
+      <HeaderThree category={true} />
 
       {/* Breadcrumb */}
       <Breadcrumb title={"Account"} />

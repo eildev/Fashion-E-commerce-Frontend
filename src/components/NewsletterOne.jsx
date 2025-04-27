@@ -1,4 +1,5 @@
 import React from 'react'
+import SubscribeInput from './SubscribeInput'
 
 const NewsletterOne = () => {
     return (
@@ -14,12 +15,12 @@ const NewsletterOne = () => {
                         <div className="col-xl-6">
                             <div className="">
                                 <h1 className="text-white mb-12">
-                                    Don't Miss Out on Grocery Deals
+                                    Don't Miss Out on Grocery Dealssss
                                 </h1>
                                 <p className="text-white h5 mb-0">
                                     SING UP FOR THE UPDATE NEWSLETTER
                                 </p>
-                                <form action="#" className="position-relative mt-40">
+                                {/* <form action="#" className="position-relative mt-40">
                                     <input
                                         type="text"
                                         className="form-control common-input rounded-pill text-white py-22 px-16 pe-144"
@@ -31,7 +32,8 @@ const NewsletterOne = () => {
                                     >
                                         Subscribe
                                     </button>
-                                </form>
+                                </form> */}
+                                <SubscribeInput></SubscribeInput>
                             </div>
                         </div>
                         <div className="col-xl-6 text-center d-xl-block d-none">

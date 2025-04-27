@@ -1,84 +1,101 @@
 import React from "react";
 import Preloader from "../helper/Preloader";
+import HeaderTwo from "../components/HeaderTwo";
+import BannerTwo from "../components/BannerTwo";
+import PromotionalTwo from "../components/PromotionalTwo";
+import DealsOne from "../components/DealsOne";
+import TopSellingOne from "../components/TopSellingOne";
+import TrendingOne from "../components/TrendingOne";
+import DiscountOne from "../components/DiscountOne";
+import FeaturedOne from "../components/FeaturedOne";
+import BigDealOne from "../components/BigDealOne";
+import TopSellingTwo from "../components/TopSellingTwo";
+import PopularProductsOne from "../components/PopularProductsOne";
+import TopVendorsTwo from "../components/TopVendorsTwo";
+import DaySaleOne from "../components/DaySaleOne";
+import RecentlyViewedOne from "../components/RecentlyViewedOne";
+import BrandTwo from "../components/BrandTwo";
+import ShippingTwo from "../components/ShippingTwo";
+import NewsletterTwo from "../components/NewsletterTwo";
+import FooterTwo from "../components/FooterTwo";
+import BottomFooter from "../components/BottomFooter";
 import ColorInit from "../helper/ColorInit";
 import ScrollToTop from "react-scroll-to-top";
 import HeaderThree from "../components/HeaderThree";
-import BannerThree from "../components/BannerThree";
-import PromotionalThree from "../components/PromotionalThree";
-import FeatureThree from "../components/FeatureThree";
-import TextSlider from "../components/TextSlider";
-import TrendingThree from "../components/TrendingThree";
-import DiscountThree from "../components/DiscountThree";
-import NewArrivalThree from "../components/NewArrivalThree";
-import DealsSection from "../components/DealsSection";
-import PopularProductsThree from "../components/PopularProductsThree";
-import BrandThree from "../components/BrandThree";
-import ShippingThree from "../components/ShippingThree";
-import TestimonialOne from "../components/TestimonialOne";
-import InstagramSection from "../components/InstagramSection";
-import NewsletterThree from "../components/NewsletterThree";
-import FooterThree from "../components/FooterThree";
-import HomePageTwo from "./HomePageTwo";
 
 const HomePageThree = () => {
+
+
   return (
+
     <>
       {/* ColorInit */}
       <ColorInit color={true} />
 
       {/* ScrollToTop */}
-      <ScrollToTop smooth color='#FA6400' />
+      <ScrollToTop smooth color="#FA6400" />
 
       {/* Preloader */}
       <Preloader />
 
-      {/* HeaderThree */}
-     <HomePageTwo></HomePageTwo>
+      {/* HeaderTwo */}
+      <HeaderThree category={false} />
 
-      {/* BannerThree */}
-      <BannerThree />
+      {/* BannerTwo */}
+      <BannerTwo />
 
-      {/* PromotionalThree */}
-      <PromotionalThree />
+      {/* PromotionalTwo */}
+      <PromotionalTwo />
 
-      {/* FeatureThree */}
-      <FeatureThree />
+      {/* DealsOne */}
+      <DealsOne />
 
-      {/* TextSlider */}
-      <TextSlider />
+      {/* TopSellingOne */}
+      <TopSellingOne />
 
-      {/* TrendingThree */}
-      <TrendingThree />
+      {/* TrendingOne */}
+      <TrendingOne />
 
-      {/* DiscountThree */}
-      <DiscountThree />
+      {/* DiscountOne */}
+      <DiscountOne />
 
-      {/* NewArrivalThree */}
-      <NewArrivalThree />
+      {/* FeaturedOne */}
+      <FeaturedOne />
 
-      {/* DealsSection */}
-      <DealsSection />
+      {/* BigDealOne */}
+      <BigDealOne />
 
-      {/* PopularProductsThree */}
-      <PopularProductsThree />
+      {/* TopSellingTwo */}
+      <TopSellingTwo />
 
-      {/* BrandThree */}
-      <BrandThree />
+      {/* PopularProductsOne */}
+      <PopularProductsOne />
 
-      {/* ShippingThree */}
-      <ShippingThree />
+      {/* TopVendorsTwo */}
+      <TopVendorsTwo />
 
-      {/* TestimonialOne */}
-      <TestimonialOne />
+      {/* DaySaleOne */}
+      <DaySaleOne />
 
-      {/* InstagramSection */}
-      <InstagramSection />
+      {/* RecentlyViewedOne */}
+      <RecentlyViewedOne />
 
-      {/* NewsletterThree */}
-      <NewsletterThree />
+      {/* BrandTwo */}
+      <BrandTwo />
 
-      {/* FooterThree */}
-      <FooterThree />
+      {/* ShippingTwo */}
+      <ShippingTwo />
+
+      {/* NewsletterTwo */}
+      <NewsletterTwo />
+
+      {/* FooterTwo */}
+      <FooterTwo />
+
+      {/* BottomFooter */}
+      <BottomFooter />
+
+
     </>
   );
 };

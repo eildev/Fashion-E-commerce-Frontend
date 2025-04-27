@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import registerApi from './features/api/registerApi/registerApi';
 import authReducer from "./features/slice/authSlice";
 import authApi from './features/api/auth/authApi';
+import subscriptionApi from './features/api/subscribtionApi';
 // import productApi from './features/api/productApi';
 // import bannerApi from './features/api/bannerApi';
 // import variantApi from './features/api/variantApi';
@@ -26,6 +27,7 @@ const store = configureStore({
         // [categoryApi.reducerPath]: categoryApi.reducer,
         [authApi.reducerPath]: authApi.reducer,
         [registerApi.reducerPath]: registerApi.reducer,
+        [subscriptionApi.reducerPath]: subscriptionApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()
@@ -35,6 +37,7 @@ const store = configureStore({
             // .concat(categoryApi.middleware)
             .concat(authApi.middleware)
             .concat(registerApi.middleware)
+            .concat(subscriptionApi.middleware)
 })
 
 export default store;
