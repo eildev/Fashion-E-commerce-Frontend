@@ -3,6 +3,16 @@ import registerApi from './features/api/registerApi/registerApi';
 import authReducer from "./features/slice/authSlice";
 import authApi from './features/api/auth/authApi';
 import subscriptionApi from './features/api/subscribtionApi';
+import productApi from './features/api/productApi';
+import bannerApi from './features/api/bannerApi';
+import variantApi from './features/api/variantApi';
+import categoryApi from './features/api/categoryApi';
+import couponApi from './features/api/couponApi';
+import checkoutApi from './features/api/checkoutApi';
+import selectCartReducer from "./features/slice/cartSlice";
+
+import searchReducer from "./features/slice/searchSlice";
+import cartReducer from "./features/slice/cartSlice";
 // import productApi from './features/api/productApi';
 // import bannerApi from './features/api/bannerApi';
 // import variantApi from './features/api/variantApi';
@@ -13,28 +23,38 @@ import subscriptionApi from './features/api/subscribtionApi';
 const store = configureStore({
     reducer: {
 
-        // search: searchReducer,
+        search: searchReducer,
         auth: authReducer,
-        // cart: selectCartReducer,
+        cart: cartReducer,
         // filters: filterReducer,
-        // selectCart: selectCartReducer,
+        selectCart: selectCartReducer,
+        // order: orderReducer,
+      
+     
+        // filters: filterReducer,
+       
         // order: orderReducer,
 
 
-        // [productApi.reducerPath]: productApi.reducer,
-        // [bannerApi.reducerPath]: bannerApi.reducer,
-        // [variantApi.reducerPath]: variantApi.reducer,
-        // [categoryApi.reducerPath]: categoryApi.reducer,
+      
+        
+        [couponApi.reducerPath]: couponApi.reducer,
+        [checkoutApi.reducerPath]: checkoutApi.reducer,
+
+        [productApi.reducerPath]: productApi.reducer,
+        [bannerApi.reducerPath]: bannerApi.reducer,
+        [variantApi.reducerPath]: variantApi.reducer,
+        [categoryApi.reducerPath]: categoryApi.reducer,
         [authApi.reducerPath]: authApi.reducer,
         [registerApi.reducerPath]: registerApi.reducer,
         [subscriptionApi.reducerPath]: subscriptionApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()
-            // .concat(productApi.middleware)
-            // .concat(bannerApi.middleware)
-            // .concat(variantApi.middleware)
-            // .concat(categoryApi.middleware)
+            .concat(productApi.middleware)
+            .concat(bannerApi.middleware)
+            .concat(variantApi.middleware)
+            .concat(categoryApi.middleware)
             .concat(authApi.middleware)
             .concat(registerApi.middleware)
             .concat(subscriptionApi.middleware)

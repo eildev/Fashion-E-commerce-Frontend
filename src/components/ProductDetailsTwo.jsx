@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
 import { getCountdown } from '../helper/Countdown';
+import toast from 'react-hot-toast';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart } from '../redux/features/slice/cartSlice';
 
-const ProductDetailsTwo = () => {
+const ProductDetailsTwo = ({ item: data }) => {
+    const dispatch = useDispatch();
+    const cartItems = useSelector((state) => state.cart.cartItems);
     const [timeLeft, setTimeLeft] = useState(getCountdown());
+    const [mainImage, setMainImage] = useState(data?.variant_image[0]);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -13,22 +19,37 @@ const ProductDetailsTwo = () => {
 
         return () => clearInterval(interval);
     }, []);
-    const productImages = [
-        "assets/images/thumbs/product-details-two-thumb1.png",
-        "assets/images/thumbs/product-details-two-thumb2.png",
-        "assets/images/thumbs/product-details-two-thumb3.png",
-        "assets/images/thumbs/product-details-two-thumb1.png",
-        "assets/images/thumbs/product-details-two-thumb2.png",
-    ];
+    // const productImages = [
+    //     "assets/images/thumbs/product-details-two-thumb1.png",
+    //     "assets/images/thumbs/product-details-two-thumb2.png",
+    //     "assets/images/thumbs/product-details-two-thumb3.png",
+    //     "assets/images/thumbs/product-details-two-thumb1.png",
+    //     "assets/images/thumbs/product-details-two-thumb2.png",
+    // ];
 
 
     // increment & decrement
     const [quantity, setQuantity] = useState(1);
-    const incrementQuantity = () => setQuantity(quantity + 1);
-    const decrementQuantity = () => setQuantity(quantity > 1 ? quantity - 1 : quantity);
+    const incrementQuantity = () => {
+        if (quantity < data?.product_stock?.StockQuantity) {
+          setQuantity(quantity + 1);
+        } 
+      };
+    
+
+      const decrementQuantity = () => {
+        if (quantity > 1) {
+          setQuantity(quantity - 1);
+        }
+      };
 
 
-    const [mainImage, setMainImage] = useState(productImages[0]);
+useEffect(()=>{
+    setMainImage(data?.variant_image[0])
+},[data])
+   
+
+    // console.log(item?.variant_image[0]);
 
     const settingsThumbs = {
         dots: false,
@@ -38,6 +59,141 @@ const ProductDetailsTwo = () => {
         slidesToScroll: 1,
         focusOnSelect: true,
     };
+
+
+
+
+    
+
+    // const { data, isLoading, error } = useGetProductByDetailsQuery(id);
+    const { user } = useSelector((state) => state.auth);
+  
+    const filteredCartItems = cartItems.filter((item) => {
+      if (user?.id) {
+        return item.user_id === user.id;
+      } else {
+        return item.user_id === null;
+      }
+    });
+  
+   
+  
+//   const categoryId = data?.data?.category_id
+  
+    const navigate = useNavigate();
+  
+  
+    const stockAvailable = data?.product_stock?.StockQuantity > 0;
+
+
+    console.log(stockAvailable);
+    const [itemCount, setItemCount] = useState(1);
+    console.log(itemCount);
+   
+    const [variant, setVariant] = useState([0]);
+    const [selectedVariant, setSelectedVariant] = useState(null);
+  
+    useEffect(() => {
+      if (data?.data?.variants?.length > 0) {
+        setSelectedVariant(data?.data?.variants[0]);
+      }
+    }, [data]);
+  
+    const handleVariantChange = (e) => {
+      const variantId = e.target.value;
+      const selected = data?.data?.variants?.find(
+        (v) => v.id === parseInt(variantId)
+      );
+      setSelectedVariant(selected);
+    };
+  
+    const productDetails = data?.data?.productdetails?.description;
+    const apply = data?.data?.productdetails?.usage_instruction;
+    const ingredients = data?.data?.productdetails?.ingredients;
+  
+    const selectedVariantData = data?.data?.variants?.find(
+      (variant) => variant.id === selectedVariant?.id
+    );
+  
+  
+    
+    const matchedItem = filteredCartItems.find(
+      (item) => item.id === data?.id
+    );
+    
+    const handleAddToCart = () => {
+      const stockLimit = matchedItem?.product_stock?.StockQuantity || data?.product_stock?.StockQuantity || 0;
+    
+      const totalRequested = (matchedItem?.quantity || 0) + quantity;
+    
+     
+      if (totalRequested > stockLimit) {
+        toast.error("Cannot add more than available stock!");
+        setQuantity(1);
+        return;
+      }
+    
+      const newProduct = {
+        ...data,
+        quantity: quantity,
+        user_id: user?.id || null,
+      };
+    
+      dispatch(addToCart(newProduct));
+      toast.success("Added to Cart");
+      setQuantity(1);
+    };
+    
+  
+
+  
+    const handleCheckOut = () => {
+   
+      const stockLimit = matchedItem?.product_stock?.StockQuantity || data?.product_stock?.StockQuantity || 0;
+    
+      if (matchedItem) {
+        const totalQuantity = matchedItem.quantity + quantity;
+    
+        if (totalQuantity > stockLimit) {
+         
+          navigate("/checkout");
+
+          return;
+        }
+        
+    
+  
+        const newProduct = {
+          ...data,
+          quantity: quantity,
+          user_id: user?.id || null,
+        };
+    
+        dispatch(addToCart(newProduct));
+        navigate("/checkout");
+      } else {
+   
+        const newProduct = {
+          ...data,
+          quantity: quantity,
+          user_id: user?.id || null,
+        };
+    
+        dispatch(addToCart(newProduct));
+        navigate("/checkout");
+      }
+    };
+    
+
+
+
+
+
+
+
+
+
+
     return (
         <section className="product-details py-80">
             <div className="container container-lg">
@@ -49,16 +205,16 @@ const ProductDetailsTwo = () => {
                                     <div className="product-details__thumb-slider border border-gray-100 rounded-16">
                                         <div className="">
                                             <div className="product-details__thumb flex-center h-100">
-                                                <img src={mainImage} alt="Main Product" />
+                                                <img src={"http://127.0.0.1:8000/" + mainImage?.image} alt="" />
                                             </div>
                                         </div>
                                     </div>
                                     <div className="mt-24">
                                         <div className="product-details__images-slider">
                                             <Slider {...settingsThumbs}>
-                                                {productImages.map((image, index) => (
+                                                {data?.variant_image.map((image, index) => (
                                                     <div className="center max-w-120 max-h-120 h-100 flex-center border border-gray-100 rounded-16 p-8" key={index} onClick={() => setMainImage(image)}>
-                                                        <img className='thum' src={image} alt={`Thumbnail ${index}`} />
+                                                        <img className='thum' src={"http://127.0.0.1:8000/" + image?.image} alt={`Thumbnail ${index}`} />
                                                     </div>
                                                 ))}
                                             </Slider>
@@ -98,8 +254,7 @@ const ProductDetailsTwo = () => {
                                         </span>
                                     </div>
                                     <h5 className="mb-12">
-                                        HP Chromebook With Intel Celeron, 4GB Memory &amp; 64GB eMMC -
-                                        Modern Gray
+                                        {data?.product?.product_name}
                                     </h5>
                                     <div className="flex-align flex-wrap gap-12">
                                         <div className="flex-align gap-12 flex-wrap">
@@ -130,17 +285,12 @@ const ProductDetailsTwo = () => {
                                         <span className="text-sm fw-medium text-gray-500">|</span>
                                         <span className="text-gray-900">
                                             {" "}
-                                            <span className="text-gray-400">SKU:</span>EB4DRP{" "}
+                                            <span className="text-gray-400">SKU:</span> {data?.product?.sku}
                                         </span>
                                     </div>
                                     <span className="mt-32 pt-32 text-gray-700 border-top border-gray-100 d-block" />
                                     <p className="text-gray-700">
-                                        Geared up and ready to roll: Get the responsive performance
-                                        you're looking for with an Intel processor and 64 GB eMMC
-                                        storage. Stay productive with compatible apps like Microsoft
-                                        Office, Google Workspace, and more. The Chrome OS gives you a
-                                        fast, simple, and secure online experience with built-in virus
-                                        protection.
+                                        {data?.product?.product_details?.short_description}
                                     </p>
                                     <div className="my-32 flex-align gap-16 flex-wrap">
                                         <div className="flex-align gap-8">
@@ -148,7 +298,7 @@ const ProductDetailsTwo = () => {
                                                 <i className="ph-fill ph-seal-percent text-xl" />
                                                 -10%
                                             </div>
-                                            <h6 className="mb-0">USD 320.99</h6>
+                                            <h6 className="mb-0">USD {data?.regular_price}</h6>
                                         </div>
                                         <div className="flex-align gap-8">
                                             <span className="text-gray-700">Regular Price</span>
@@ -184,7 +334,7 @@ const ProductDetailsTwo = () => {
                                     <div className="mt-32">
                                         <h6 className="mb-16">Quick Overview</h6>
                                         <div className="flex-between align-items-start flex-wrap gap-16">
-                                            <div>
+                                            {/* <div>
                                                 <span className="text-gray-900 d-block mb-12">
                                                     Color:
                                                     <span className="fw-medium">Mineral Silver</span>
@@ -211,7 +361,7 @@ const ProductDetailsTwo = () => {
                                                         className="color-list__button w-20 h-20 border border-2 border-gray-50 rounded-circle bg-gray-100"
                                                     />
                                                 </div>
-                                            </div>
+                                            </div> */}
                                             <div>
                                                 <span className="text-gray-900 d-block mb-12">
                                                     Pattern Name:
@@ -289,7 +439,7 @@ const ProductDetailsTwo = () => {
                                     htmlFor="stock"
                                     className="text-lg mb-8 text-heading fw-semibold d-block"
                                 >
-                                    Total Stock: 21
+                                    Total Stock: {data?.product_stock?.StockQuantity}
                                 </label>
                                 <span className="text-xl d-flex">
                                     <i className="ph ph-location" />
@@ -321,7 +471,7 @@ const ProductDetailsTwo = () => {
                             <div className="mb-32">
                                 <div className="flex-between flex-wrap gap-8 border-bottom border-gray-100 pb-16 mb-16">
                                     <span className="text-gray-500">Price</span>
-                                    <h6 className="text-lg mb-0">$150.00</h6>
+                                    <h6 className="text-lg mb-0">${data?.regular_price}</h6>
                                 </div>
                                 <div className="flex-between flex-wrap gap-8">
                                     <span className="text-gray-500">Shipping</span>
@@ -329,14 +479,16 @@ const ProductDetailsTwo = () => {
                                 </div>
                             </div>
                             <Link
-                                to="#"
+                            onClick={handleAddToCart}
+                           
                                 className="btn btn-main flex-center gap-8 rounded-8 py-16 fw-normal mt-48"
                             >
                                 <i className="ph ph-shopping-cart-simple text-lg" />
                                 Add To Cart
                             </Link>
                             <Link
-                                to="#"
+                                to="/checkout"
+                                onClick={handleCheckOut}
                                 className="btn btn-outline-main rounded-8 py-16 fw-normal mt-16 w-100"
                             >
                                 Buy Now

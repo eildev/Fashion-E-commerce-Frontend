@@ -10,11 +10,18 @@ import NewsletterOne from "../components/NewsletterOne";
 import FooterTwo from "../components/FooterTwo";
 import BottomFooter from "../components/BottomFooter";
 import ScrollToTop from "react-scroll-to-top";
+import { useGetVariantApiQuery } from "../redux/features/api/variantApi";
+import { useParams } from "react-router-dom";
 
 
 const ProductDetailsPageTwo = () => {
 
-
+  const { id } = useParams();
+  const { data, isLoading, error } = useGetVariantApiQuery();
+  
+ const item = data?.variant?.find(
+   (variant) => String(variant.id) === id 
+ );
 
   return (
     <>
@@ -34,7 +41,7 @@ const ProductDetailsPageTwo = () => {
       <Breadcrumb title={"Product Details"} />
 
       {/* ProductDetailsTwo */}
-      <ProductDetailsTwo />
+      <ProductDetailsTwo item={item}/>
 
       {/* NewArrivalTwo */}
       <NewArrivalTwo />
