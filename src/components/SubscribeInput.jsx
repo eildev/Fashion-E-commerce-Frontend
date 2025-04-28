@@ -39,7 +39,9 @@ const SubscribeInput = () => {
                     {isLoading ? "Subscribing..." : "Subscribe"}
                   </button>
                 </div>
-                {isSuccess && (
+                
+      </form>
+      {isSuccess && (
                   <p style={{ color: "green" }}>Subscription successful!</p>
                 )}
                 {isError && (
@@ -47,7 +49,6 @@ const SubscribeInput = () => {
                     Failed to subscribe. Try again.
                   </p>
                 )}
-      </form>
         </div>
     );
 };

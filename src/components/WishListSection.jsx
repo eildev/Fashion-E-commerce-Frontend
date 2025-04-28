@@ -1,7 +1,72 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useDeleteWishlistItemMutation, useGetWishlistByUserIdQuery } from "../redux/features/api/wishlistByUserAPI";
+import toast from "react-hot-toast";
+import { imagePath } from "./imagePath";
 
 const WishListSection = () => {
+  const { token, user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+
+  const {
+    data: wishlist,
+    error,
+    isLoading,
+  } = useGetWishlistByUserIdQuery(user?.id, {
+    skip: !user?.id,
+  });
+  console.log(wishlist);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
+  const [isInCart, setIsInCart] = useState([]);
+  const [deleteWishlistItem] = useDeleteWishlistItemMutation();
+
+  const handleDeleteItems = (itemID) => {
+    setItemToDelete(itemID);
+    setShowConfirmModal(true);
+  };
+
+  const confirmDelete = async () => {
+    if (itemToDelete) {
+      try {
+        await deleteWishlistItem(itemToDelete).unwrap();
+        toast.success("Item deleted successfully!");
+        // The invalidatesTags will automatically trigger a refetch
+      } catch (error) {
+        console.error("Failed to delete the item:", error);
+        toast.error("Error deleting the item!");
+      }
+      setShowConfirmModal(false);
+      setItemToDelete(null);
+    }
+  };
+
+  const cancelDelete = () => {
+    setShowConfirmModal(false);
+    setItemToDelete(null);
+  };
+
+  const handleAddCart = (productItem) => {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    if (!cart.some((item) => item.id === productItem.id)) {
+      const newProduct = { ...productItem, quantity: 1 };
+      cart.push(newProduct);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      toast.success(`${productItem.title} added to Cart!`);
+    } else {
+      toast.error("This product is already in your Cart.");
+    }
+  };
+
+  if (isLoading) {
+    return <div>Loading wishlist...</div>;
+  }
+
+  if (error) {
+    return <div>Error loading wishlist: {error.message}</div>;
+  }
   return (
     <section className='cart py-80'>
       <div className='container container-lg'>
@@ -28,11 +93,13 @@ const WishListSection = () => {
                     </tr>
                   </thead>
                   <tbody>
+                  {wishlist?.wishlist?.map((item, i) => (
                     <tr className=''>
                       <td className='px-40 py-32 border-end border-neutral-100'>
                         <button
                           type='button'
                           className='remove-tr-btn flex-align gap-12 hover-text-danger-600'
+                          onClick={() => handleDeleteItems(item.id)}
                         >
                           <i className='ph ph-x-circle text-2xl d-flex' />
                           Remove
@@ -45,7 +112,9 @@ const WishListSection = () => {
                             className='table-product__thumb border border-gray-100 rounded-8 flex-center '
                           >
                             <img
-                              src='assets/images/thumbs/product-two-img1.png'
+                               src={imagePath(
+                                item?.variant?.variant_image[0]?.image
+                              )}
                               alt=''
                             />
                           </Link>
@@ -56,7 +125,7 @@ const WishListSection = () => {
                                 className='link text-line-2'
                                 tabIndex={0}
                               >
-                                Taylor Farms Broccoli Florets Vegetables
+                                {item?.wishlist_product?.product_name ?? ""}
                               </Link>
                             </h6>
                             <div className='flex-align gap-16 mb-16'>
@@ -94,7 +163,7 @@ const WishListSection = () => {
                       </td>
                       <td className='px-40 py-32 border-end border-neutral-100'>
                         <span className='text-lg h6 mb-0 fw-semibold'>
-                          $125.00
+                        {item?.variant.regular_price}
                         </span>
                       </td>
                       <td className='px-40 py-32 border-end border-neutral-100'>
@@ -102,7 +171,7 @@ const WishListSection = () => {
                           In Stock
                         </span>
                       </td>
-                      <td className='px-40 py-32'>
+                      <td className='px-40 py-32' onClick={() => handleAddCart(item)}>
                         <Link
                           to='/cart'
                           className='btn btn-main-two rounded-8 px-64'
@@ -111,7 +180,8 @@ const WishListSection = () => {
                         </Link>
                       </td>
                     </tr>
-                    <tr className=''>
+                       ))}
+                    {/* <tr className=''>
                       <td className='px-40 py-32 border-end border-neutral-100'>
                         <button
                           type='button'
@@ -359,7 +429,7 @@ const WishListSection = () => {
                           Add To Cart <i className='ph ph-shopping-cart' />
                         </Link>
                       </td>
-                    </tr>
+                    </tr> */}
                   </tbody>
                 </table>
               </div>

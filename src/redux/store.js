@@ -13,6 +13,9 @@ import selectCartReducer from "./features/slice/cartSlice";
 
 import searchReducer from "./features/slice/searchSlice";
 import cartReducer from "./features/slice/cartSlice";
+import wishListApi from './features/api/wishListApi';
+import wishlistByUserAPI from './features/api/wishlistByUserAPI';
+
 // import productApi from './features/api/productApi';
 // import bannerApi from './features/api/bannerApi';
 // import variantApi from './features/api/variantApi';
@@ -48,6 +51,8 @@ const store = configureStore({
         [authApi.reducerPath]: authApi.reducer,
         [registerApi.reducerPath]: registerApi.reducer,
         [subscriptionApi.reducerPath]: subscriptionApi.reducer,
+        [wishListApi.reducerPath]: wishListApi.reducer,
+        [wishlistByUserAPI.reducerPath]: wishlistByUserAPI.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()
@@ -58,6 +63,8 @@ const store = configureStore({
             .concat(authApi.middleware)
             .concat(registerApi.middleware)
             .concat(subscriptionApi.middleware)
+            .concat(wishListApi.middleware)
+            .concat(wishlistByUserAPI.middleware)
 })
 
 export default store;

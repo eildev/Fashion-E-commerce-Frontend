@@ -1,4 +1,5 @@
 import React from 'react'
+import SubscribeInput from './SubscribeInput'
 
 const NewsletterTwo = () => {
     return (
@@ -18,7 +19,7 @@ const NewsletterTwo = () => {
                             </p>
                         </div>
                     </div>
-                    <form action="#" className="newsletter-two__form w-50">
+                    {/* <form action="#" className="newsletter-two__form w-50">
                         <div className="flex-align gap-16">
                             <input
                                 type="text"
@@ -33,7 +34,8 @@ const NewsletterTwo = () => {
                                 Subscribe
                             </button>
                         </div>
-                    </form>
+                    </form> */}
+                    <SubscribeInput></SubscribeInput>
                 </div>
             </div>
         </div>

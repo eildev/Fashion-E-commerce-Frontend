@@ -638,7 +638,7 @@ const HeaderThree = ({ category }) => {
                       className="flex-align flex-column gap-8 item-hover-two"
                     >
                       <span className="text-2xl text-white d-flex position-relative item-hover__text">
-                        {token && user.name ?  <i className="ph ph-user" /> : <Link to="/account"> <i className="ph ph-user text-white" /></Link>}
+                        {token && user?.name ?  <i className="ph ph-user" /> : <Link to="/account"> <i className="ph ph-user text-white" /></Link>}
                    
                       </span>
                       <span className="text-md text-white item-hover__text d-none d-lg-flex">

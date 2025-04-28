@@ -5,13 +5,16 @@ import { getCountdown } from '../helper/Countdown';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../redux/features/slice/cartSlice';
+import { useAddToWishlistMutation } from '../redux/features/api/wishlistByUserAPI';
 
 const ProductDetailsTwo = ({ item: data }) => {
     const dispatch = useDispatch();
     const cartItems = useSelector((state) => state.cart.cartItems);
     const [timeLeft, setTimeLeft] = useState(getCountdown());
+    const [isFav, setIsFav] = useState(false);
     const [mainImage, setMainImage] = useState(data?.variant_image[0]);
-
+    const [addToWishlist, { isLoading, isError, isSuccess, data: wishlistItems }] =
+    useAddToWishlistMutation();
     useEffect(() => {
         const interval = setInterval(() => {
             setTimeLeft(getCountdown());
@@ -26,8 +29,34 @@ const ProductDetailsTwo = ({ item: data }) => {
     //     "assets/images/thumbs/product-details-two-thumb1.png",
     //     "assets/images/thumbs/product-details-two-thumb2.png",
     // ];
+    const { id, product_name, productdetails, variants, price, stock } = data;
 
-
+    const handleFav = async (productItem) => {
+        if (!user) {
+          navigate("/login");
+          return;
+        }
+        const variantId = productItem.variants[0]?.id;
+        try {
+          const wishlistData = {
+            product_id: productItem.id,
+            user_id: user?.id,
+            variant_id: variantId,
+          };
+          const result = await addToWishlist(wishlistData).unwrap();
+          if (result.status === 200) {
+            setIsFav(true);
+            toast.success(`${product_name} added to your wishlist!`);
+          } else {
+            toast.error(`Failed to add ${product_name} to wishlist.`);
+          }
+        } catch (error) {
+          toast.error(
+            error?.data?.message || "An error occurred. Please try again."
+          );
+        }
+      };
+    
     // increment & decrement
     const [quantity, setQuantity] = useState(1);
     const incrementQuantity = () => {
@@ -493,6 +522,14 @@ useEffect(()=>{
                             >
                                 Buy Now
                             </Link>
+                            <button
+
+      className="btn btn-outline-main rounded-8 py-16 fw-normal mt-16 w-100 flex-center gap-8"
+      handleFav={handleFav}
+    >
+      <i className="ph ph-heart text-lg" />
+      Add to Wishlist
+    </button>
                             <div className="mt-32">
                                 <div className="px-16 py-8 bg-main-50 rounded-8 flex-between gap-24 mb-14">
                                     <span className="w-32 h-32 bg-white text-main-600 rounded-circle flex-center text-xl flex-shrink-0">
