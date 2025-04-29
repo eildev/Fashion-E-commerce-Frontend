@@ -14,10 +14,15 @@ const ShopSection = () => {
   const { data: categoryApi, isLoading: categoryApiLoad, error: categoryApiError } = useGetCategoryQuery();
   const { data: brandData, isLoading: isBrandLoading } = useGetBrandQuery();
 
+  // Calculate dynamic price range limits
+  const prices = data?.variant?.map(item => item?.regular_price).filter(price => price !== undefined && price !== null) || [];
+  const minPrice = prices.length > 0 ? Math.min(...prices) - 100 : 10;
+  const maxPrice = prices.length > 0 ? Math.max(...prices) + 100 : 10000;
+
   // Filter states
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedBrands, setSelectedBrands] = useState([]);
-  const [priceRange, setPriceRange] = useState([10, 10000]);
+  const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
   const [filteredProducts, setFilteredProducts] = useState([]);
 
   // Pagination states
@@ -62,7 +67,7 @@ const ShopSection = () => {
     } else if (type === 'brand') {
       setSelectedBrands((prev) => prev.filter((id) => id !== value));
     } else if (type === 'price') {
-      setPriceRange([10, 10000]);
+      setPriceRange([minPrice, maxPrice]);
     }
   };
 
@@ -70,7 +75,7 @@ const ShopSection = () => {
   const handleResetFilters = () => {
     setSelectedCategories([]);
     setSelectedBrands([]);
-    setPriceRange([10, 10000]);
+    setPriceRange([minPrice, maxPrice]);
     setCurrentPage(1);
     toast.success('Filters reset');
   };
@@ -164,16 +169,6 @@ const ShopSection = () => {
                   Filters
                 </h6>
                 <div className="flex-between flex-wrap-reverse gap-8 mb-24">
-                  {/* <button
-                    type="button"
-                    className="btn btn-main h-40 flex-align"
-                    onClick={() => {
-                      // Filters are applied via useEffect
-                      toast.success('Filters applied');
-                    }}
-                  >
-                    Apply Filters
-                  </button> */}
                   <button
                     type="button"
                     className="btn btn-main h-40 flex-align"
@@ -183,7 +178,7 @@ const ShopSection = () => {
                   </button>
                 </div>
                 {/* Selected Filters */}
-                {(selectedCategories.length > 0 || selectedBrands.length > 0 || priceRange[0] !== 10 || priceRange[1] !== 10000) && (
+                {(selectedCategories.length > 0 || selectedBrands.length > 0 || priceRange[0] !== minPrice || priceRange[1] !== maxPrice) && (
                   <div className="selected-filters mb-24">
                     <h6 className="text-md mb-12">Selected Filters:</h6>
                     <div className="flex flex-wrap gap-8">
@@ -192,14 +187,13 @@ const ShopSection = () => {
                         return (
                           <span
                             key={`cat-${catId}`}
-                        class="badge btn btn-main text-white px-8 py-8 me-4 mb-2  shadow-sm d-inline-flex align-items-center gap-1"
+                            className="badge btn btn-main text-white px-8 py-8 me-4 mb-2 shadow-sm d-inline-flex align-items-center gap-1"
                           >
                             {category?.categoryName}
                             <i
-  class="ph ph-x ms-1 fw-bold text-white hover:text-primary cursor-pointer"
-  onClick={() => removeFilter('category', catId)}
-></i>
-
+                              className="ph ph-x ms-1 fw-bold text-white hover:text-primary cursor-pointer"
+                              onClick={() => removeFilter('category', catId)}
+                            />
                           </span>
                         );
                       })}
@@ -208,23 +202,23 @@ const ShopSection = () => {
                         return (
                           <span
                             key={`brand-${brandId}`}
-                      class="badge btn btn-main text-white px-8 py-8 me-4 mb-2  shadow-sm d-inline-flex align-items-center gap-1"
+                            className="badge btn btn-main text-white px-8 py-8 me-4 mb-2 shadow-sm d-inline-flex align-items-center gap-1"
                           >
                             {brand?.BrandName}
                             <i
-                                 class="ph ph-x ms-1 cursor-pointer"
+                              className="ph ph-x ms-1 fw-bold text-white hover:text-primary cursor-pointer"
                               onClick={() => removeFilter('brand', brandId)}
                             />
                           </span>
                         );
                       })}
-                      {(priceRange[0] !== 10 || priceRange[1] !== 10000) && (
+                      {(priceRange[0] !== minPrice || priceRange[1] !== maxPrice) && (
                         <span
-                          className="badge bg-main-600 text-white px-8 py-4 flex-align gap-4"
+                          className="badge btn btn-main text-white px-8 py-8 me-4 mb-2 shadow-sm d-inline-flex align-items-center gap-1"
                         >
                           Price: ${priceRange[0]} - ${priceRange[1]}
                           <i
-                            className="ph ph-x cursor-pointer"
+                            className="ph ph-x ms-1 fw-bold text-white hover:text-primary cursor-pointer"
                             onClick={() => removeFilter('price')}
                           />
                         </span>
@@ -286,11 +280,11 @@ const ShopSection = () => {
                     }}
                     pearling
                     minDistance={150}
-                    min={10}
-                    max={10000}
+                    min={minPrice}
+                    max={maxPrice}
                   />
                   <div className="mt-24">
-                    Price Range: ${priceRange[0]} - ${priceRange[1]}
+                    {/* Price Range: ${priceRange[0]} - ${priceRange[1]} */}
                   </div>
                 </div>
               </div>
@@ -338,7 +332,6 @@ const ShopSection = () => {
               <span className="text-gray-900">
                 Showing {(currentPage - 1) * itemsPerPage + 1} -{' '}
                 {Math.min(currentPage * itemsPerPage, filteredProducts.length)} of{' '}
-
                 {filteredProducts.length} results
               </span>
               <div className="position-relative flex-align gap-16 flex-wrap">
