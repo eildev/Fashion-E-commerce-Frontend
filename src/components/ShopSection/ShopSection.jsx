@@ -13,11 +13,10 @@ const ShopSection = () => {
   const { data, isLoading, error } = useGetVariantApiQuery();
   const { data: categoryApi, isLoading: categoryApiLoad, error: categoryApiError } = useGetCategoryQuery();
   const { data: brandData, isLoading: isBrandLoading } = useGetBrandQuery();
-console.log("variant", data);
-console.log("category", categoryApi);
+
   // Filter states
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedBrand, setSelectedBrand] = useState(null);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedBrands, setSelectedBrands] = useState([]);
   const [priceRange, setPriceRange] = useState([10, 10000]);
   const [filteredProducts, setFilteredProducts] = useState([]);
 
@@ -38,23 +37,61 @@ console.log("category", categoryApi);
     setActive(!active);
   };
 
-  // Filter products based on category, price, and brand
+  // Toggle category selection
+  const toggleCategory = (categoryId) => {
+    setSelectedCategories((prev) =>
+      prev.includes(categoryId)
+        ? prev.filter((id) => id !== categoryId)
+        : [...prev, categoryId]
+    );
+  };
+
+  // Toggle brand selection
+  const toggleBrand = (brandId) => {
+    setSelectedBrands((prev) =>
+      prev.includes(brandId)
+        ? prev.filter((id) => id !== brandId)
+        : [...prev, brandId]
+    );
+  };
+
+  // Remove filter (category, brand, or price)
+  const removeFilter = (type, value) => {
+    if (type === 'category') {
+      setSelectedCategories((prev) => prev.filter((id) => id !== value));
+    } else if (type === 'brand') {
+      setSelectedBrands((prev) => prev.filter((id) => id !== value));
+    } else if (type === 'price') {
+      setPriceRange([10, 10000]);
+    }
+  };
+
+  // Reset all filters
+  const handleResetFilters = () => {
+    setSelectedCategories([]);
+    setSelectedBrands([]);
+    setPriceRange([10, 10000]);
+    setCurrentPage(1);
+    toast.success('Filters reset');
+  };
+
+  // Filter products based on categories, brands, and price
   useEffect(() => {
     if (data?.variant) {
       let filtered = data.variant;
 
       // Apply category filter
-      if (selectedCategory) {
-        filtered = filtered.filter(
-          (item) => item.product?.category_id === selectedCategory || item.product?.subcategory_id === selectedCategory
+      if (selectedCategories.length > 0) {
+        filtered = filtered.filter((item) =>
+          selectedCategories.includes(item.product?.category_id) ||
+          selectedCategories.includes(item.product?.subcategory_id)
         );
       }
-console.log("selected", selectedCategory);
-console.log("test filter", filtered);
+
       // Apply brand filter
-      if (selectedBrand) {
-        filtered = filtered.filter(
-          (item) => item.product?.brand_id === selectedBrand
+      if (selectedBrands.length > 0) {
+        filtered = filtered.filter((item) =>
+          selectedBrands.includes(item.product?.brand_id)
         );
       }
 
@@ -68,7 +105,7 @@ console.log("test filter", filtered);
       setFilteredProducts(filtered);
       setCurrentPage(1); // Reset to first page when filters change
     }
-  }, [data, selectedCategory, selectedBrand, priceRange]);
+  }, [data, selectedCategories, selectedBrands, priceRange]);
 
   // Paginate filtered products
   const paginatedData = filteredProducts.slice(
@@ -76,21 +113,6 @@ console.log("test filter", filtered);
     currentPage * itemsPerPage
   );
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-
-  // Handle filter button click
-  const handleFilter = () => {
-    console.log('Filtering with:', { selectedCategory, selectedBrand, priceRange });
-    // Filters are already applied via useEffect, so no additional logic needed here
-  };
-
-  // Reset filters
-  const handleResetFilters = () => {
-    setSelectedCategory(null);
-    setSelectedBrand(null);
-    setPriceRange([10, 10000]);
-    setCurrentPage(1);
-    toast.success('Filters reset');
-  };
 
   // Add to cart
   const handleAddToCart = (eItem) => {
@@ -136,6 +158,82 @@ console.log("test filter", filtered);
                 <i className="ph ph-x" />
               </button>
 
+              {/* Filter Controls */}
+              <div className="shop-sidebar__box border border-gray-100 rounded-8 p-32 mb-32">
+                <h6 className="text-xl border-bottom border-gray-100 pb-24 mb-24">
+                  Filters
+                </h6>
+                <div className="flex-between flex-wrap-reverse gap-8 mb-24">
+                  {/* <button
+                    type="button"
+                    className="btn btn-main h-40 flex-align"
+                    onClick={() => {
+                      // Filters are applied via useEffect
+                      toast.success('Filters applied');
+                    }}
+                  >
+                    Apply Filters
+                  </button> */}
+                  <button
+                    type="button"
+                    className="btn btn-main h-40 flex-align"
+                    onClick={handleResetFilters}
+                  >
+                    Reset Filters
+                  </button>
+                </div>
+                {/* Selected Filters */}
+                {(selectedCategories.length > 0 || selectedBrands.length > 0 || priceRange[0] !== 10 || priceRange[1] !== 10000) && (
+                  <div className="selected-filters mb-24">
+                    <h6 className="text-md mb-12">Selected Filters:</h6>
+                    <div className="flex flex-wrap gap-8">
+                      {selectedCategories.map((catId) => {
+                        const category = categoryApi?.categories?.find((c) => c.id === catId);
+                        return (
+                          <span
+                            key={`cat-${catId}`}
+                        class="badge btn btn-main text-white px-8 py-8 me-4 mb-2  shadow-sm d-inline-flex align-items-center gap-1"
+                          >
+                            {category?.categoryName}
+                            <i
+  class="ph ph-x ms-1 fw-bold text-white hover:text-primary cursor-pointer"
+  onClick={() => removeFilter('category', catId)}
+></i>
+
+                          </span>
+                        );
+                      })}
+                      {selectedBrands.map((brandId) => {
+                        const brand = brandData?.Brands?.find((b) => b.id === brandId);
+                        return (
+                          <span
+                            key={`brand-${brandId}`}
+                      class="badge btn btn-main text-white px-8 py-8 me-4 mb-2  shadow-sm d-inline-flex align-items-center gap-1"
+                          >
+                            {brand?.BrandName}
+                            <i
+                                 class="ph ph-x ms-1 cursor-pointer"
+                              onClick={() => removeFilter('brand', brandId)}
+                            />
+                          </span>
+                        );
+                      })}
+                      {(priceRange[0] !== 10 || priceRange[1] !== 10000) && (
+                        <span
+                          className="badge bg-main-600 text-white px-8 py-4 flex-align gap-4"
+                        >
+                          Price: ${priceRange[0]} - ${priceRange[1]}
+                          <i
+                            className="ph ph-x cursor-pointer"
+                            onClick={() => removeFilter('price')}
+                          />
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {/* Product Category */}
               <div className="shop-sidebar__box border border-gray-100 rounded-8 p-32 mb-32">
                 <h6 className="text-xl border-bottom border-gray-100 pb-24 mb-24">
@@ -144,14 +242,13 @@ console.log("test filter", filtered);
                 <ul className="max-h-540 overflow-y-auto scroll-sm">
                   {categoryApi?.categories?.slice(0, 10).map((category) => (
                     <li className="mb-24" key={category.id}>
-                      <div className="form-check common-check common-radio">
+                      <div className="form-check common-check">
                         <input
                           className="form-check-input"
-                          type="radio"
-                          name="category"
+                          type="checkbox"
                           id={`category-${category.id}`}
-                          checked={selectedCategory === category.id}
-                          onChange={() => setSelectedCategory(category.id)}
+                          checked={selectedCategories.includes(category.id)}
+                          onChange={() => toggleCategory(category.id)}
                         />
                         <label
                           className="form-check-label cursor-pointer"
@@ -192,23 +289,8 @@ console.log("test filter", filtered);
                     min={10}
                     max={10000}
                   />
-                  <br />
-                  <br />
-                  <div className="flex-between flex-wrap-reverse gap-8 mt-24">
-                    <button
-                      type="button"
-                      className="btn btn-main h-40 flex-align"
-                      onClick={handleFilter}
-                    >
-                      Filter
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn-outline-secondary h-40 flex-align border"
-                      onClick={handleResetFilters}
-                    >
-                      Reset
-                    </button>
+                  <div className="mt-24">
+                    Price Range: ${priceRange[0]} - ${priceRange[1]}
                   </div>
                 </div>
               </div>
@@ -221,14 +303,13 @@ console.log("test filter", filtered);
                 <ul className="max-h-540 overflow-y-auto scroll-sm">
                   {brandData?.Brands?.map((brand) => (
                     <li className="mb-24" key={brand.id}>
-                      <div className="form-check common-check common-radio">
+                      <div className="form-check common-check">
                         <input
                           className="form-check-input"
-                          type="radio"
-                          name="brand"
+                          type="checkbox"
                           id={`brand-${brand.id}`}
-                          checked={selectedBrand === brand.id}
-                          onChange={() => setSelectedBrand(brand.id)}
+                          checked={selectedBrands.includes(brand.id)}
+                          onChange={() => toggleBrand(brand.id)}
                         />
                         <label
                           className="form-check-label cursor-pointer"
@@ -257,6 +338,7 @@ console.log("test filter", filtered);
               <span className="text-gray-900">
                 Showing {(currentPage - 1) * itemsPerPage + 1} -{' '}
                 {Math.min(currentPage * itemsPerPage, filteredProducts.length)} of{' '}
+
                 {filteredProducts.length} results
               </span>
               <div className="position-relative flex-align gap-16 flex-wrap">
