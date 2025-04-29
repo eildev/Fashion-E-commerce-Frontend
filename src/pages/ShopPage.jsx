@@ -2,7 +2,7 @@ import React from "react";
 import Preloader from "../helper/Preloader";
 import HeaderTwo from "../components/HeaderTwo";
 import Breadcrumb from "../components/Breadcrumb";
-import ShopSection from "../components/ShopSection";
+import ShopSection from "../components/ShopSection/ShopSection";
 import ShippingTwo from "../components/ShippingTwo";
 import FooterTwo from "../components/FooterTwo";
 import ColorInit from "../helper/ColorInit";

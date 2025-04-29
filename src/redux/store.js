@@ -10,11 +10,14 @@ import categoryApi from './features/api/categoryApi';
 import couponApi from './features/api/couponApi';
 import checkoutApi from './features/api/checkoutApi';
 import selectCartReducer from "./features/slice/cartSlice";
-
+import filterReducer from "./features/slice/filterSlice";
 import searchReducer from "./features/slice/searchSlice";
 import cartReducer from "./features/slice/cartSlice";
 import wishListApi from './features/api/wishListApi';
 import wishlistByUserAPI from './features/api/wishlistByUserAPI';
+import brandApi from './features/api/brandApi';
+import userApi from './features/api/userApi';
+import tagViewApi from './features/api/tagViewApi';
 
 // import productApi from './features/api/productApi';
 // import bannerApi from './features/api/bannerApi';
@@ -29,7 +32,7 @@ const store = configureStore({
         search: searchReducer,
         auth: authReducer,
         cart: cartReducer,
-        // filters: filterReducer,
+        filters: filterReducer,
         selectCart: selectCartReducer,
         // order: orderReducer,
       
@@ -48,11 +51,15 @@ const store = configureStore({
         [bannerApi.reducerPath]: bannerApi.reducer,
         [variantApi.reducerPath]: variantApi.reducer,
         [categoryApi.reducerPath]: categoryApi.reducer,
+        [brandApi.reducerPath]: brandApi.reducer,
         [authApi.reducerPath]: authApi.reducer,
         [registerApi.reducerPath]: registerApi.reducer,
         [subscriptionApi.reducerPath]: subscriptionApi.reducer,
         [wishListApi.reducerPath]: wishListApi.reducer,
         [wishlistByUserAPI.reducerPath]: wishlistByUserAPI.reducer,
+        [userApi.reducerPath]: userApi.reducer,
+        [tagViewApi.reducerPath]: tagViewApi.reducer,
+     
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()
@@ -60,11 +67,14 @@ const store = configureStore({
             .concat(bannerApi.middleware)
             .concat(variantApi.middleware)
             .concat(categoryApi.middleware)
+            .concat(brandApi.middleware)
             .concat(authApi.middleware)
             .concat(registerApi.middleware)
             .concat(subscriptionApi.middleware)
             .concat(wishListApi.middleware)
             .concat(wishlistByUserAPI.middleware)
+            .concat(userApi.middleware)
+            .concat(tagViewApi.middleware)
 })
 
 export default store;

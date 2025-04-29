@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useGetVariantApiQuery } from '../redux/features/api/variantApi';
+import { useGetVariantApiQuery } from '../../redux/features/api/variantApi';
 import ReactSlider from 'react-slider';
-import { useGetCategoryApiQuery } from '../redux/features/api/categoryApi';
+
 import toast from 'react-hot-toast';
-import { addToCart } from '../redux/features/slice/cartSlice';
+import { addToCart } from '../../redux/features/slice/cartSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { useGetCategoryQuery } from '../../redux/features/api/categoryApi';
 
 const ShopSection = () => {
     const dispatch = useDispatch();
 
     const [priceRange, setPriceRange] = useState([10, 10000]);
     const { data, isLoading, error } = useGetVariantApiQuery();
-    const { data: categoryApi, isLoading: categoryApiLoad, error: categoryApiError } = useGetCategoryApiQuery();
+    const { data: categoryApi, isLoading: categoryApiLoad, error: categoryApiError } = useGetCategoryQuery();
     console.log("shop page", data);
 
     const [grid, setGrid] = useState(false);
