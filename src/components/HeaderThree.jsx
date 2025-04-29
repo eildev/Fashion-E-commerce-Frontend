@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
-import query from "jquery";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { useLogoutUserMutation } from "../redux/features/api/auth/authApi";
+
+import React, { useEffect, useState } from 'react';
+import query from 'jquery';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLogoutUserMutation } from '../redux/features/api/auth/authApi';
+import SearchBar from './search/SearchBar';
 
 const HeaderThree = ({ category }) => {
   const [scroll, setScroll] = useState(false);
@@ -21,11 +23,10 @@ const HeaderThree = ({ category }) => {
   const handleLogout = async () => {
     try {
       await logoutUser().unwrap();
-      // Clear auth state (assuming you have a reducer to handle this)
-      dispatch({ type: "auth/logout" }); // Adjust based on your auth slice
-      navigate("/account");
+      dispatch({ type: 'auth/logout' }); // Adjust based on your auth slice
+      navigate('/account');
     } catch (error) {
-      console.error("Logout failed:", error);
+      console.error('Logout failed:', error);
     }
     setUserDropdownOpen(false);
   };
@@ -39,24 +40,24 @@ const HeaderThree = ({ category }) => {
       }
       return () => (window.onscroll = null);
     };
-    const selectElement = query(".js-example-basic-single");
+    const selectElement = query('.js-example-basic-single');
     selectElement.select2();
 
     return () => {
-      if (selectElement.data("select2")) {
-        selectElement.select2("destroy");
+      if (selectElement.data('select2')) {
+        selectElement.select2('destroy');
       }
     };
   }, []);
 
   // Set the default language
-  const [selectedLanguage, setSelectedLanguage] = useState("Eng");
+  const [selectedLanguage, setSelectedLanguage] = useState('Eng');
   const handleLanguageChange = (language) => {
     setSelectedLanguage(language);
   };
 
   // Set the default currency
-  const [selectedCurrency, setSelectedCurrency] = useState("USD");
+  const [selectedCurrency, setSelectedCurrency] = useState('USD');
   const handleCurrencyChange = (currency) => {
     setSelectedCurrency(currency);
   };
@@ -69,12 +70,6 @@ const HeaderThree = ({ category }) => {
   };
   const handleMenuToggle = () => {
     setMenuActive(!menuActive);
-  };
-
-  // Search control support
-  const [activeSearch, setActiveSearch] = useState(false);
-  const handleSearchToggle = () => {
-    setActiveSearch(!activeSearch);
   };
 
   // Category control support
@@ -91,37 +86,12 @@ const HeaderThree = ({ category }) => {
     <>
       <div className="overlay" />
       <div
-        className={`side-overlay ${(menuActive || activeCategory) && "show"}`}
+        className={`side-overlay ${menuActive || activeCategory ? 'show' : ''}`}
       />
-      {/* Search Box */}
-      <form action="#" className={`search-box ${activeSearch && "active"}`}>
-        <button
-          onClick={handleSearchToggle}
-          type="button"
-          className="search-box__close position-absolute inset-block-start-0 inset-inline-end-0 m-16 w-48 h-48 border border-gray-100 rounded-circle flex-center text-white hover-text-gray-800 hover-bg-white text-2xl transition-1"
-        >
-          <i className="ph ph-x" />
-        </button>
-        <div className="container">
-          <div className="position-relative">
-            <input
-              type="text"
-              className="form-control py-16 px-24 text-xl rounded-pill pe-64"
-              placeholder="Search for a product or brand"
-            />
-            <button
-              type="submit"
-              className="w-48 h-48 bg-main-600 rounded-circle flex-center text-xl text-white position-absolute top-50 translate-middle-y inset-inline-end-0 me-8"
-            >
-              <i className="ph ph-magnifying-glass" />
-            </button>
-          </div>
-        </div>
-      </form>
       {/* Mobile Menu */}
       <div
         className={`mobile-menu scroll-sm d-lg-none d-block ${
-          menuActive && "active"
+          menuActive ? 'active' : ''
         }`}
       >
         <button
@@ -143,7 +113,7 @@ const HeaderThree = ({ category }) => {
               <li
                 onClick={() => handleMenuClick(0)}
                 className={`on-hover-item nav-menu__item has-submenu ${
-                  activeIndex === 0 ? "d-block" : ""
+                  activeIndex === 0 ? 'd-block' : ''
                 }`}
               >
                 <Link to="#" className="nav-menu__link">
@@ -151,7 +121,7 @@ const HeaderThree = ({ category }) => {
                 </Link>
                 <ul
                   className={`on-hover-dropdown common-dropdown nav-submenu scroll-sm ${
-                    activeIndex === 0 ? "open" : ""
+                    activeIndex === 0 ? 'open' : ''
                   }`}
                 >
                   <li className="common-dropdown__item nav-submenu__item">
@@ -186,7 +156,7 @@ const HeaderThree = ({ category }) => {
               <li
                 onClick={() => handleMenuClick(1)}
                 className={`on-hover-item nav-menu__item has-submenu ${
-                  activeIndex === 1 ? "d-block" : ""
+                  activeIndex === 1 ? 'd-block' : ''
                 }`}
               >
                 <Link to="#" className="nav-menu__link">
@@ -194,7 +164,7 @@ const HeaderThree = ({ category }) => {
                 </Link>
                 <ul
                   className={`on-hover-dropdown common-dropdown nav-submenu scroll-sm ${
-                    activeIndex === 1 ? "open" : ""
+                    activeIndex === 1 ? 'open' : ''
                   }`}
                 >
                   <li className="common-dropdown__item nav-submenu__item">
@@ -229,7 +199,7 @@ const HeaderThree = ({ category }) => {
               <li
                 onClick={() => handleMenuClick(2)}
                 className={`on-hover-item nav-menu__item has-submenu ${
-                  activeIndex === 2 ? "d-block" : ""
+                  activeIndex === 2 ? 'd-block' : ''
                 }`}
               >
                 <span className="badge-notification bg-warning-600 text-white text-sm py-2 px-8 rounded-4">
@@ -240,7 +210,7 @@ const HeaderThree = ({ category }) => {
                 </Link>
                 <ul
                   className={`on-hover-dropdown common-dropdown nav-submenu scroll-sm ${
-                    activeIndex === 2 ? "open" : ""
+                    activeIndex === 2 ? 'open' : ''
                   }`}
                 >
                   <li className="common-dropdown__item nav-submenu__item">
@@ -293,7 +263,7 @@ const HeaderThree = ({ category }) => {
               <li
                 onClick={() => handleMenuClick(3)}
                 className={`on-hover-item nav-menu__item has-submenu ${
-                  activeIndex === 3 ? "d-block" : ""
+                  activeIndex === 3 ? 'd-block' : ''
                 }`}
               >
                 <span className="badge-notification bg-tertiary-600 text-white text-sm py-2 px-8 rounded-4">
@@ -304,7 +274,7 @@ const HeaderThree = ({ category }) => {
                 </Link>
                 <ul
                   className={`on-hover-dropdown common-dropdown nav-submenu scroll-sm ${
-                    activeIndex === 3 ? "open" : ""
+                    activeIndex === 3 ? 'open' : ''
                   }`}
                 >
                   <li className="common-dropdown__item nav-submenu__item">
@@ -348,7 +318,7 @@ const HeaderThree = ({ category }) => {
               <li
                 onClick={() => handleMenuClick(4)}
                 className={`on-hover-item nav-menu__item has-submenu ${
-                  activeIndex === 4 ? "d-block" : ""
+                  activeIndex === 4 ? 'd-block' : ''
                 }`}
               >
                 <Link to="#" className="nav-menu__link">
@@ -356,7 +326,7 @@ const HeaderThree = ({ category }) => {
                 </Link>
                 <ul
                   className={`on-hover-dropdown common-dropdown nav-submenu scroll-sm ${
-                    activeIndex === 4 ? "open" : ""
+                    activeIndex === 4 ? 'open' : ''
                   }`}
                 >
                   <li className="common-dropdown__item nav-submenu__item">
@@ -398,7 +368,7 @@ const HeaderThree = ({ category }) => {
                 <img src="assets/images/logo/logo-two.png" alt="Logo" />
               </Link>
             </div>
-            {/* Form Category */}
+            {/* Search Bar */}
             <div className="flex-align gap-16">
               <div className="select-dropdown-for-home-two d-lg-none d-block">
                 <ul className="header-top__right style-two flex-align flex-wrap">
@@ -411,7 +381,7 @@ const HeaderThree = ({ category }) => {
                         <Link
                           to="#"
                           className="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0"
-                          onClick={() => handleLanguageChange("English")}
+                          onClick={() => handleLanguageChange('English')}
                         >
                           <img
                             src="assets/images/thumbs/flag1.png"
@@ -425,7 +395,7 @@ const HeaderThree = ({ category }) => {
                         <Link
                           to="#"
                           className="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0"
-                          onClick={() => handleLanguageChange("Japan")}
+                          onClick={() => handleLanguageChange('Japan')}
                         >
                           <img
                             src="assets/images/thumbs/flag2.png"
@@ -439,7 +409,7 @@ const HeaderThree = ({ category }) => {
                         <Link
                           to="#"
                           className="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0"
-                          onClick={() => handleLanguageChange("French")}
+                          onClick={() => handleLanguageChange('French')}
                         >
                           <img
                             src="assets/images/thumbs/flag3.png"
@@ -453,7 +423,7 @@ const HeaderThree = ({ category }) => {
                         <Link
                           to="#"
                           className="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0"
-                          onClick={() => handleLanguageChange("Germany")}
+                          onClick={() => handleLanguageChange('Germany')}
                         >
                           <img
                             src="assets/images/thumbs/flag4.png"
@@ -467,7 +437,7 @@ const HeaderThree = ({ category }) => {
                         <Link
                           to="#"
                           className="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0"
-                          onClick={() => handleLanguageChange("Bangladesh")}
+                          onClick={() => handleLanguageChange('Bangladesh')}
                         >
                           <img
                             src="assets/images/thumbs/flag6.png"
@@ -481,7 +451,7 @@ const HeaderThree = ({ category }) => {
                         <Link
                           to="#"
                           className="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0"
-                          onClick={() => handleLanguageChange("South Korea")}
+                          onClick={() => handleLanguageChange('South Korea')}
                         >
                           <img
                             src="assets/images/thumbs/flag5.png"
@@ -502,7 +472,7 @@ const HeaderThree = ({ category }) => {
                         <Link
                           to="#"
                           className="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0"
-                          onClick={() => handleCurrencyChange("USD")}
+                          onClick={() => handleCurrencyChange('USD')}
                         >
                           <img
                             src="assets/images/thumbs/flag1.png"
@@ -516,7 +486,7 @@ const HeaderThree = ({ category }) => {
                         <Link
                           to="#"
                           className="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0"
-                          onClick={() => handleCurrencyChange("Yen")}
+                          onClick={() => handleCurrencyChange('Yen')}
                         >
                           <img
                             src="assets/images/thumbs/flag2.png"
@@ -530,7 +500,7 @@ const HeaderThree = ({ category }) => {
                         <Link
                           to="#"
                           className="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0"
-                          onClick={() => handleCurrencyChange("Franc")}
+                          onClick={() => handleCurrencyChange('Franc')}
                         >
                           <img
                             src="assets/images/thumbs/flag3.png"
@@ -544,7 +514,7 @@ const HeaderThree = ({ category }) => {
                         <Link
                           to="#"
                           className="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0"
-                          onClick={() => handleCurrencyChange("EURO")}
+                          onClick={() => handleCurrencyChange('EURO')}
                         >
                           <img
                             src="assets/images/thumbs/flag4.png"
@@ -558,7 +528,7 @@ const HeaderThree = ({ category }) => {
                         <Link
                           to="#"
                           className="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0"
-                          onClick={() => handleCurrencyChange("BDT")}
+                          onClick={() => handleCurrencyChange('BDT')}
                         >
                           <img
                             src="assets/images/thumbs/flag6.png"
@@ -572,7 +542,7 @@ const HeaderThree = ({ category }) => {
                         <Link
                           to="#"
                           className="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0"
-                          onClick={() => handleCurrencyChange("WON")}
+                          onClick={() => handleCurrencyChange('WON')}
                         >
                           <img
                             src="assets/images/thumbs/flag5.png"
@@ -586,92 +556,81 @@ const HeaderThree = ({ category }) => {
                   </li>
                 </ul>
               </div>
-              <form action="#" className="flex-align flex-wrap form-location-wrapper">
-                <div className="search-category style-two d-flex h-48 search-form d-sm-flex d-none">
-                  <select
-                    defaultValue={1}
-                    className="js-example-basic-single border border-gray-200 border-end-0 rounded-0 border-0"
-                    name="state"
-                  >
-                    <option value={1}>All Categories</option>
-                    <option value={1}>Grocery</option>
-                    <option value={1}>Breakfast & Dairy</option>
-                    <option value={1}>Vegetables</option>
-                    <option value={1}>Milks and Dairies</option>
-                    <option value={1}>Pet Foods & Toy</option>
-                    <option value={1}>Breads & Bakery</option>
-                    <option value={1}>Fresh Seafood</option>
-                    <option value={1}>Fronzen Foods</option>
-                    <option value={1}>Noodles & Rice</option>
-                    <option value={1}>Ice Cream</option>
-                  </select>
-                  <div className="search-form__wrapper position-relative">
-                    <input
-                      type="text"
-                      className="search-form__input common-input py-13 ps-16 pe-18 rounded-0 border-0"
-                      placeholder="Search for a product or brand"
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    className="bg-main-two-600 flex-center text-xl text-white flex-shrink-0 w-48 hover-bg-main-two-700 d-lg-flex d-none"
-                  >
-                    <i className="ph ph-magnifying-glass" />
-                  </button>
-                </div>
-              </form>
+              <div className="search-category style-two d-flex h-48 search-form d-sm-flex">
+                <select
+                  defaultValue={1}
+                  className="js-example-basic-single border border-gray-200 border-end-0 rounded-0 border-0"
+                  name="state"
+                >
+                  <option value={1}>All Categories</option>
+                  <option value={1}>Grocery</option>
+                  <option value={1}>Breakfast & Dairy</option>
+                  <option value={1}>Vegetables</option>
+                  <option value={1}>Milks and Dairies</option>
+                  <option value={1}>Pet Foods & Toy</option>
+                  <option value={1}>Breads & Bakery</option>
+                  <option value={1}>Fresh Seafood</option>
+                  <option value={1}>Frozen Foods</option>
+                  <option value={1}>Noodles & Rice</option>
+                  <option value={1}>Ice Cream</option>
+                </select>
+                <SearchBar className="flex-grow-1" />
+              </div>
             </div>
             {/* Header Middle Right */}
             <div className="header-right flex-align d-lg-block d-none">
               <div className="header-two-activities flex-align flex-wrap gap-32">
-                <button
-                  type="button"
-                  className="flex-align search-icon d-lg-none d-flex gap-4 item-hover-two"
-                >
-                  <span className="text-2xl text-white d-flex position-relative item-hover__text">
-                    <i className="ph ph-magnifying-glass" />
-                  </span>
-                </button>
                 <div className="on-hover-item">
-                    <button
-                      onClick={handleUserDropdownToggle}
-                      className="flex-align flex-column gap-8 item-hover-two"
+                  <button
+                    onClick={handleUserDropdownToggle}
+                    className="flex-align flex-column gap-8 item-hover-two"
+                  >
+                    <span className="text-2xl text-white d-flex position-relative item-hover__text">
+                      {token && user?.name ? (
+                        <i className="ph ph-user" />
+                      ) : (
+                        <Link to="/account">
+                          <i className="ph ph-user text-white" />
+                        </Link>
+                      )}
+                    </span>
+                    <span className="text-md text-white item-hover__text d-none d-lg-flex">
+                      {token && user?.name ? (
+                        `Hi, ${user.name}`
+                      ) : (
+                        <Link to="/account" className="text-white">
+                          Login
+                        </Link>
+                      )}
+                    </span>
+                  </button>
+                  {token && user?.name && (
+                    <ul
+                      className={`on-hover-dropdown common-dropdown nav-submenu scroll-sm ${
+                        userDropdownOpen ? 'open' : ''
+                      }`}
+                      style={{ right: 0, width: '150px' }}
                     >
-                      <span className="text-2xl text-white d-flex position-relative item-hover__text">
-                        {token && user?.name ?  <i className="ph ph-user" /> : <Link to="/account"> <i className="ph ph-user text-white" /></Link>}
-                   
-                      </span>
-                      <span className="text-md text-white item-hover__text d-none d-lg-flex">
-                        {token && user?.name ? `Hi, ${user?.name}` : <Link to="/account" className="text-white">Login</Link> }
-                      </span>
-                    </button>
-                    {token && user?.name && (
-                      <ul
-                        className={`on-hover-dropdown common-dropdown nav-submenu scroll-sm ${
-                          userDropdownOpen ? "open" : ""
-                        }`}
-                        style={{ right: 0, width: "150px" }}
-                      >
-                        <li className="common-dropdown__item nav-submenu__item">
-                          <Link
-                            to="/user-details"
-                            className="common-dropdown__link nav-submenu__link hover-bg-neutral-100"
-                            onClick={() => setUserDropdownOpen(false)}
-                          >
-                            User Details
-                          </Link>
-                        </li>
-                        <li className="common-dropdown__item nav-submenu__item">
-                          <button
-                            onClick={handleLogout}
-                            className="common-dropdown__link nav-submenu__link hover-bg-neutral-100 w-100 text-start"
-                          >
-                            Logout
-                          </button>
-                        </li>
-                      </ul>
-                    )}
-                  </div>
+                      <li className="common-dropdown__item nav-submenu__item">
+                        <Link
+                          to="/user-details"
+                          className="common-dropdown__link nav-submenu__link hover-bg-neutral-100"
+                          onClick={() => setUserDropdownOpen(false)}
+                        >
+                          User Details
+                        </Link>
+                      </li>
+                      <li className="common-dropdown__item nav-submenu__item">
+                        <button
+                          onClick={handleLogout}
+                          className="common-dropdown__link nav-submenu__link hover-bg-neutral-100 w-100 text-start"
+                        >
+                          Logout
+                        </button>
+                      </li>
+                    </ul>
+                  )}
+                </div>
                 <Link
                   to="/wishlist"
                   className="flex-align flex-column gap-8 item-hover-two"
@@ -722,7 +681,7 @@ const HeaderThree = ({ category }) => {
       {/* Header Two */}
       <header
         className={`header bg-white border-bottom border-gray-100 ${
-          scroll && "fixed-header"
+          scroll ? 'fixed-header' : ''
         }`}
       >
         <div className="container container-lg">
@@ -730,9 +689,7 @@ const HeaderThree = ({ category }) => {
             <div className="flex-align menu-category-wrapper">
               {/* Category Dropdown */}
               <div
-                className={`category-two ${
-                  category === false ? "d-block" : "d-none"
-                } `}
+                className={`category-two ${category === false ? 'd-block' : 'd-none'}`}
               >
                 <button
                   onClick={handleCategoryToggle}
@@ -749,7 +706,7 @@ const HeaderThree = ({ category }) => {
                 </button>
                 <div
                   className={`responsive-dropdown cat common-dropdown d-lg-none d-block nav-submenu p-0 submenus-submenu-wrapper shadow-none border border-gray-100 ${
-                    activeCategory && "active"
+                    activeCategory ? 'active' : ''
                   }`}
                 >
                   <button
@@ -770,9 +727,7 @@ const HeaderThree = ({ category }) => {
                   <ul className="scroll-sm p-0 py-8 overflow-y-auto">
                     <li
                       onClick={() => handleCatClick(0)}
-                      className={`has-submenus-submenu ${
-                        activeIndexCat === 0 ? "active" : ""
-                      }`}
+                      className={`has-submenus-submenu ${activeIndexCat === 0 ? 'active' : ''}`}
                     >
                       <Link
                         onClick={() => setActiveIndexCat(null)}
@@ -785,9 +740,7 @@ const HeaderThree = ({ category }) => {
                         </span>
                       </Link>
                       <div
-                        className={`submenus-submenu py-16 ${
-                          activeIndexCat === 0 ? "open" : ""
-                        }`}
+                        className={`submenus-submenu py-16 ${activeIndexCat === 0 ? 'open' : ''}`}
                       >
                         <h6 className="text-lg px-16 submenus-submenu__title">
                           Cell Phone
@@ -820,7 +773,7 @@ const HeaderThree = ({ category }) => {
               </div>
               <div
                 className={`category main on-hover-item bg-main-600 text-white ${
-                  category === true ? "d-block" : "d-none"
+                  category === true ? 'd-block' : 'd-none'
                 }`}
               >
                 <button
@@ -910,8 +863,8 @@ const HeaderThree = ({ category }) => {
                           to="/"
                           className={(navData) =>
                             navData.isActive
-                              ? "common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage"
-                              : "common-dropdown__link nav-submenu__link hover-bg-neutral-100"
+                              ? 'common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage'
+                              : 'common-dropdown__link nav-submenu__link hover-bg-neutral-100'
                           }
                         >
                           Home Grocery
@@ -922,8 +875,8 @@ const HeaderThree = ({ category }) => {
                           to="/index-two"
                           className={(navData) =>
                             navData.isActive
-                              ? "common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage"
-                              : "common-dropdown__link nav-submenu__link hover-bg-neutral-100"
+                              ? 'common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage'
+                              : 'common-dropdown__link nav-submenu__link hover-bg-neutral-100'
                           }
                         >
                           Home Electronics
@@ -934,8 +887,8 @@ const HeaderThree = ({ category }) => {
                           to="/index-three"
                           className={(navData) =>
                             navData.isActive
-                              ? "common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage"
-                              : "common-dropdown__link nav-submenu__link hover-bg-neutral-100"
+                              ? 'common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage'
+                              : 'common-dropdown__link nav-submenu__link hover-bg-neutral-100'
                           }
                         >
                           Home Fashion
@@ -953,8 +906,8 @@ const HeaderThree = ({ category }) => {
                           to="/shop"
                           className={(navData) =>
                             navData.isActive
-                              ? "common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage"
-                              : "common-dropdown__link nav-submenu__link hover-bg-neutral-100"
+                              ? 'common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage'
+                              : 'common-dropdown__link nav-submenu__link hover-bg-neutral-100'
                           }
                         >
                           Shop
@@ -965,8 +918,8 @@ const HeaderThree = ({ category }) => {
                           to="/product-details"
                           className={(navData) =>
                             navData.isActive
-                              ? "common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage"
-                              : "common-dropdown__link nav-submenu__link hover-bg-neutral-100"
+                              ? 'common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage'
+                              : 'common-dropdown__link nav-submenu__link hover-bg-neutral-100'
                           }
                         >
                           Shop Details
@@ -977,8 +930,8 @@ const HeaderThree = ({ category }) => {
                           to="/product-details-two"
                           className={(navData) =>
                             navData.isActive
-                              ? "common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage"
-                              : "common-dropdown__link nav-submenu__link hover-bg-neutral-100"
+                              ? 'common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage'
+                              : 'common-dropdown__link nav-submenu__link hover-bg-neutral-100'
                           }
                         >
                           Shop Details Two
@@ -999,8 +952,8 @@ const HeaderThree = ({ category }) => {
                           to="/cart"
                           className={(navData) =>
                             navData.isActive
-                              ? "common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage"
-                              : "common-dropdown__link nav-submenu__link hover-bg-neutral-100"
+                              ? 'common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage'
+                              : 'common-dropdown__link nav-submenu__link hover-bg-neutral-100'
                           }
                         >
                           Cart
@@ -1011,8 +964,8 @@ const HeaderThree = ({ category }) => {
                           to="/wishlist"
                           className={(navData) =>
                             navData.isActive
-                              ? "common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage"
-                              : "common-dropdown__link nav-submenu__link hover-bg-neutral-100"
+                              ? 'common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage'
+                              : 'common-dropdown__link nav-submenu__link hover-bg-neutral-100'
                           }
                         >
                           Wishlist
@@ -1023,8 +976,8 @@ const HeaderThree = ({ category }) => {
                           to="/checkout"
                           className={(navData) =>
                             navData.isActive
-                              ? "common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage"
-                              : "common-dropdown__link nav-submenu__link hover-bg-neutral-100"
+                              ? 'common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage'
+                              : 'common-dropdown__link nav-submenu__link hover-bg-neutral-100'
                           }
                         >
                           Checkout
@@ -1035,8 +988,8 @@ const HeaderThree = ({ category }) => {
                           to="/become-seller"
                           className={(navData) =>
                             navData.isActive
-                              ? "common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage"
-                              : "common-dropdown__link nav-submenu__link hover-bg-neutral-100"
+                              ? 'common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage'
+                              : 'common-dropdown__link nav-submenu__link hover-bg-neutral-100'
                           }
                         >
                           Become Seller
@@ -1047,8 +1000,8 @@ const HeaderThree = ({ category }) => {
                           to="/account"
                           className={(navData) =>
                             navData.isActive
-                              ? "common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage"
-                              : "common-dropdown__link nav-submenu__link hover-bg-neutral-100"
+                              ? 'common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage'
+                              : 'common-dropdown__link nav-submenu__link hover-bg-neutral-100'
                           }
                         >
                           Account
@@ -1069,8 +1022,8 @@ const HeaderThree = ({ category }) => {
                           to="/vendor"
                           className={(navData) =>
                             navData.isActive
-                              ? "common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage"
-                              : "common-dropdown__link nav-submenu__link hover-bg-neutral-100"
+                              ? 'common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage'
+                              : 'common-dropdown__link nav-submenu__link hover-bg-neutral-100'
                           }
                         >
                           Vendor
@@ -1081,8 +1034,8 @@ const HeaderThree = ({ category }) => {
                           to="/vendor-details"
                           className={(navData) =>
                             navData.isActive
-                              ? "common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage"
-                              : "common-dropdown__link nav-submenu__link hover-bg-neutral-100"
+                              ? 'common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage'
+                              : 'common-dropdown__link nav-submenu__link hover-bg-neutral-100'
                           }
                         >
                           Vendor Details
@@ -1093,8 +1046,8 @@ const HeaderThree = ({ category }) => {
                           to="/vendor-two"
                           className={(navData) =>
                             navData.isActive
-                              ? "common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage"
-                              : "common-dropdown__link nav-submenu__link hover-bg-neutral-100"
+                              ? 'common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage'
+                              : 'common-dropdown__link nav-submenu__link hover-bg-neutral-100'
                           }
                         >
                           Vendor Two
@@ -1105,8 +1058,8 @@ const HeaderThree = ({ category }) => {
                           to="/vendor-two-details"
                           className={(navData) =>
                             navData.isActive
-                              ? "common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage"
-                              : "common-dropdown__link nav-submenu__link hover-bg-neutral-100"
+                              ? 'common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage'
+                              : 'common-dropdown__link nav-submenu__link hover-bg-neutral-100'
                           }
                         >
                           Vendor Two Details
@@ -1124,8 +1077,8 @@ const HeaderThree = ({ category }) => {
                           to="/blog"
                           className={(navData) =>
                             navData.isActive
-                              ? "common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage"
-                              : "common-dropdown__link nav-submenu__link hover-bg-neutral-100"
+                              ? 'common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage'
+                              : 'common-dropdown__link nav-submenu__link hover-bg-neutral-100'
                           }
                         >
                           Blog
@@ -1136,8 +1089,8 @@ const HeaderThree = ({ category }) => {
                           to="/blog-details"
                           className={(navData) =>
                             navData.isActive
-                              ? "common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage"
-                              : "common-dropdown__link nav-submenu__link hover-bg-neutral-100"
+                              ? 'common-dropdown__link nav-submenu__link hover-bg-neutral-100 activePage'
+                              : 'common-dropdown__link nav-submenu__link hover-bg-neutral-100'
                           }
                         >
                           Blog Details
@@ -1150,8 +1103,8 @@ const HeaderThree = ({ category }) => {
                       to="/contact"
                       className={(navData) =>
                         navData.isActive
-                          ? "nav-menu__link activePage"
-                          : "nav-menu__link"
+                          ? 'nav-menu__link activePage'
+                          : 'nav-menu__link'
                       }
                     >
                       Contact Us
@@ -1173,7 +1126,7 @@ const HeaderThree = ({ category }) => {
                         <Link
                           to="#"
                           className="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0"
-                          onClick={() => handleLanguageChange("English")}
+                          onClick={() => handleLanguageChange('English')}
                         >
                           <img
                             src="assets/images/thumbs/flag1.png"
@@ -1187,7 +1140,7 @@ const HeaderThree = ({ category }) => {
                         <Link
                           to="#"
                           className="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0"
-                          onClick={() => handleLanguageChange("Japan")}
+                          onClick={() => handleLanguageChange('Japan')}
                         >
                           <img
                             src="assets/images/thumbs/flag2.png"
@@ -1201,7 +1154,7 @@ const HeaderThree = ({ category }) => {
                         <Link
                           to="#"
                           className="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0"
-                          onClick={() => handleLanguageChange("French")}
+                          onClick={() => handleLanguageChange('French')}
                         >
                           <img
                             src="assets/images/thumbs/flag3.png"
@@ -1215,7 +1168,7 @@ const HeaderThree = ({ category }) => {
                         <Link
                           to="#"
                           className="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0"
-                          onClick={() => handleLanguageChange("Germany")}
+                          onClick={() => handleLanguageChange('Germany')}
                         >
                           <img
                             src="assets/images/thumbs/flag4.png"
@@ -1229,7 +1182,7 @@ const HeaderThree = ({ category }) => {
                         <Link
                           to="#"
                           className="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0"
-                          onClick={() => handleLanguageChange("Bangladesh")}
+                          onClick={() => handleLanguageChange('Bangladesh')}
                         >
                           <img
                             src="assets/images/thumbs/flag6.png"
@@ -1243,7 +1196,7 @@ const HeaderThree = ({ category }) => {
                         <Link
                           to="#"
                           className="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0"
-                          onClick={() => handleLanguageChange("South Korea")}
+                          onClick={() => handleLanguageChange('South Korea')}
                         >
                           <img
                             src="assets/images/thumbs/flag5.png"
@@ -1264,7 +1217,7 @@ const HeaderThree = ({ category }) => {
                         <Link
                           to="#"
                           className="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0"
-                          onClick={() => handleCurrencyChange("USD")}
+                          onClick={() => handleCurrencyChange('USD')}
                         >
                           <img
                             src="assets/images/thumbs/flag1.png"
@@ -1278,7 +1231,7 @@ const HeaderThree = ({ category }) => {
                         <Link
                           to="#"
                           className="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0"
-                          onClick={() => handleCurrencyChange("Yen")}
+                          onClick={() => handleCurrencyChange('Yen')}
                         >
                           <img
                             src="assets/images/thumbs/flag2.png"
@@ -1292,7 +1245,7 @@ const HeaderThree = ({ category }) => {
                         <Link
                           to="#"
                           className="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0"
-                          onClick={() => handleCurrencyChange("Franc")}
+                          onClick={() => handleCurrencyChange('Franc')}
                         >
                           <img
                             src="assets/images/thumbs/flag3.png"
@@ -1306,7 +1259,7 @@ const HeaderThree = ({ category }) => {
                         <Link
                           to="#"
                           className="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0"
-                          onClick={() => handleCurrencyChange("EURO")}
+                          onClick={() => handleCurrencyChange('EURO')}
                         >
                           <img
                             src="assets/images/thumbs/flag4.png"
@@ -1320,7 +1273,7 @@ const HeaderThree = ({ category }) => {
                         <Link
                           to="#"
                           className="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0"
-                          onClick={() => handleCurrencyChange("BDT")}
+                          onClick={() => handleCurrencyChange('BDT')}
                         >
                           <img
                             src="assets/images/thumbs/flag6.png"
@@ -1334,7 +1287,7 @@ const HeaderThree = ({ category }) => {
                         <Link
                           to="#"
                           className="hover-bg-gray-100 text-gray-500 text-xs py-6 px-16 flex-align gap-8 rounded-0"
-                          onClick={() => handleCurrencyChange("WON")}
+                          onClick={() => handleCurrencyChange('WON')}
                         >
                           <img
                             src="assets/images/thumbs/flag5.png"
@@ -1350,24 +1303,15 @@ const HeaderThree = ({ category }) => {
               </div>
               <div className="me-8 d-lg-none d-block">
                 <div className="header-two-activities flex-align flex-wrap gap-32">
-                  <button
-                    onClick={handleSearchToggle}
-                    type="button"
-                    className="flex-align search-icon d-lg-none d-flex gap-4 item-hover-two"
-                  >
-                    <span className="text-2xl text-white d-flex position-relative item-hover__text">
-                      <i className="ph ph-magnifying-glass" />
-                    </span>
-                  </button>
                   <Link
-                    to={token ? "/user-details" : "/account"}
+                    to={token ? '/user-details' : '/account'}
                     className="flex-align flex-column gap-8 item-hover-two"
                   >
                     <span className="text-2xl text-white d-flex position-relative item-hover__text">
                       <i className="ph ph-user" />
                     </span>
                     <span className="text-md text-white item-hover__text d-none d-lg-flex">
-                      {token && user?.name ? `Hi, ${user.name}` : "Login"}
+                      {token && user?.name ? `Hi, ${user.name}` : 'Login'}
                     </span>
                   </Link>
                   <Link
