@@ -18,6 +18,8 @@ import wishlistByUserAPI from './features/api/wishlistByUserAPI';
 import brandApi from './features/api/brandApi';
 import userApi from './features/api/userApi';
 import tagViewApi from './features/api/tagViewApi';
+import reviewApi from './features/api/reviewApi';
+import reviewGetApi from './features/api/reviewGetApi';
 
 // import productApi from './features/api/productApi';
 // import bannerApi from './features/api/bannerApi';
@@ -59,6 +61,8 @@ const store = configureStore({
         [wishlistByUserAPI.reducerPath]: wishlistByUserAPI.reducer,
         [userApi.reducerPath]: userApi.reducer,
         [tagViewApi.reducerPath]: tagViewApi.reducer,
+        [reviewApi.reducerPath]: reviewApi.reducer,
+        [reviewGetApi.reducerPath]: reviewGetApi.reducer,
      
     },
     middleware: (getDefaultMiddleware) =>
@@ -75,6 +79,8 @@ const store = configureStore({
             .concat(wishlistByUserAPI.middleware)
             .concat(userApi.middleware)
             .concat(tagViewApi.middleware)
+            .concat(reviewApi.middleware)
+            .concat(reviewGetApi.middleware)
 })
 
 export default store;

@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../../redux/features/slice/cartSlice';
+import { useAddToWishlistMutation } from '../../redux/features/api/wishlistByUserAPI';
 import toast from 'react-hot-toast';
 
 const ProductSection = ({
@@ -19,6 +20,7 @@ const ProductSection = ({
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
   const { user } = useSelector((state) => state.auth);
+  const [addToWishlist] = useAddToWishlistMutation();
 
   // Add to cart
   const handleAddToCart = (eItem) => {
@@ -46,6 +48,32 @@ const ProductSection = ({
 
     dispatch(addToCart(newProduct));
     toast.success('Added to Cart');
+  };
+
+  // Add to wishlist
+  const handleAddToWishlist = async (item) => {
+    if (!user) {
+      toast.error('Please login to add items to your wishlist');
+      return;
+    }
+
+    try {
+      const wishlistData = {
+        user_id: user.id,
+        product_id: item.product?.id,
+        variant_id: item.id,
+      };
+      
+      const response = await addToWishlist(wishlistData).unwrap();
+      toast.success('Added to Wishlist');
+    } catch (error) {
+      console.error('Failed to add to wishlist:', error);
+      if (error.data?.message?.includes('already exists')) {
+        toast.error('This product is already in your wishlist');
+      } else {
+        toast.error('Failed to add to wishlist');
+      }
+    }
   };
 
   return (
@@ -132,15 +160,24 @@ const ProductSection = ({
                 </span>
               </Link>
               <div className="product-card__content mt-16">
-                <h6 className="title text-lg fw-semibold mt-12 mb-8">
-                  <Link
-                    to={`/product-details-two/${item.id}`}
-                    className="link text-line-2"
-                    tabIndex={0}
+                <div className="d-flex justify-content-between align-items-center">
+                  <h6 className="title text-lg fw-semibold mt-12 mb-8">
+                    <Link
+                      to={`/product-details-two/${item.id}`}
+                      className="link text-line-2"
+                      tabIndex={0}
+                    >
+                      {item?.product?.product_name}
+                    </Link>
+                  </h6>
+                  <button 
+                    onClick={() => handleAddToWishlist(item)}
+                    className="wish-btn text-2xl text-neutral-600 hover-text-danger-600"
+                    type="button"
                   >
-                    {item?.product?.product_name}
-                  </Link>
-                </h6>
+                    <i className="ph-bold ph-heart" />
+                  </button>
+                </div>
                 <div className="flex-align mb-20 mt-16 gap-6">
                   <span className="text-xs fw-medium text-gray-500">4.8</span>
                   <span className="text-15 fw-medium text-warning-600 d-flex">
@@ -157,14 +194,15 @@ const ProductSection = ({
                     <span className="text-gray-500 fw-normal">/Qty</span>
                   </span>
                 </div>
-                <Link
-                  to="/cart"
-                  onClick={() => handleAddToCart(item)}
-                  className="product-card__cart btn bg-gray-50 text-heading hover-bg-main-600 hover-text-white py-11 px-24 rounded-8 flex-center gap-8 fw-medium"
-                  tabIndex={0}
-                >
-                  Add To Cart <i className="ph ph-shopping-cart" />
-                </Link>
+                <div className="d-flex gap-2">
+                  <button
+                    onClick={() => handleAddToCart(item)}
+                    className="product-card__cart btn bg-gray-50 text-heading hover-bg-main-600 hover-text-white py-11 px-24 rounded-8 flex-center gap-8 fw-medium flex-grow-1"
+                    tabIndex={0}
+                  >
+                    Add To Cart <i className="ph ph-shopping-cart" />
+                  </button>
+                </div>
               </div>
             </div>
           ))
