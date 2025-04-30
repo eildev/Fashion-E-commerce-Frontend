@@ -1,18 +1,22 @@
 
 import React, { useEffect, useState } from 'react';
-import query from 'jquery';
+import $ from 'jquery';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLogoutUserMutation } from '../redux/features/api/auth/authApi';
 import SearchBar from './search/SearchBar';
+import { useGetCategoryQuery } from '../redux/features/api/categoryApi';
 
 const HeaderThree = ({ category }) => {
   const [scroll, setScroll] = useState(false);
   const { token, user } = useSelector((state) => state.auth);
   const [logoutUser] = useLogoutUserMutation();
+   const { data: categoryApi } = useGetCategoryQuery();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+console.log("category check", categoryApi);
+const filterdCategoryByParents = categoryApi?.categories?.filter(category => category.parent_id === null) 
+// const filterdSubCategoryByParents = categoryApi?.categories?.filter(category => category.parent_id === fil) 
   // State for user dropdown
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
@@ -23,7 +27,7 @@ const HeaderThree = ({ category }) => {
   const handleLogout = async () => {
     try {
       await logoutUser().unwrap();
-      dispatch({ type: 'auth/logout' }); // Adjust based on your auth slice
+      dispatch({ type: 'auth/logout' });
       navigate('/account');
     } catch (error) {
       console.error('Logout failed:', error);
@@ -31,32 +35,35 @@ const HeaderThree = ({ category }) => {
     setUserDropdownOpen(false);
   };
 
+  // Handle scroll for fixed header
   useEffect(() => {
-    window.onscroll = () => {
+    const handleScroll = () => {
       if (window.pageYOffset < 150) {
         setScroll(false);
       } else if (window.pageYOffset > 150) {
         setScroll(true);
       }
-      return () => (window.onscroll = null);
     };
-    const selectElement = query('.js-example-basic-single');
+    window.addEventListener('scroll', handleScroll);
+
+    // Initialize Select2 for category dropdown
+    const selectElement = $('.js-example-basic-single');
     selectElement.select2();
 
     return () => {
+      window.removeEventListener('scroll', handleScroll);
       if (selectElement.data('select2')) {
         selectElement.select2('destroy');
       }
     };
   }, []);
 
-  // Set the default language
+  // Language and currency state
   const [selectedLanguage, setSelectedLanguage] = useState('Eng');
   const handleLanguageChange = (language) => {
     setSelectedLanguage(language);
   };
 
-  // Set the default currency
   const [selectedCurrency, setSelectedCurrency] = useState('USD');
   const handleCurrencyChange = (currency) => {
     setSelectedCurrency(currency);
@@ -84,15 +91,16 @@ const HeaderThree = ({ category }) => {
 
   return (
     <>
-      <div className="overlay" />
+      {/* Overlay for mobile menu */}
+      <div className="overlay" style={{ zIndex: 9997 }} />
       <div
         className={`side-overlay ${menuActive || activeCategory ? 'show' : ''}`}
+        style={{ zIndex: 9997 }}
       />
       {/* Mobile Menu */}
       <div
-        className={`mobile-menu scroll-sm d-lg-none d-block ${
-          menuActive ? 'active' : ''
-        }`}
+        className={`mobile-menu scroll-sm d-lg-none d-block ${menuActive ? 'active' : ''}`}
+        style={{ zIndex: 9998 }}
       >
         <button
           onClick={() => {
@@ -112,17 +120,13 @@ const HeaderThree = ({ category }) => {
             <ul className="nav-menu flex-align nav-menu--mobile">
               <li
                 onClick={() => handleMenuClick(0)}
-                className={`on-hover-item nav-menu__item has-submenu ${
-                  activeIndex === 0 ? 'd-block' : ''
-                }`}
+                className={`on-hover-item nav-menu__item has-submenu ${activeIndex === 0 ? 'd-block' : ''}`}
               >
                 <Link to="#" className="nav-menu__link">
                   Home
                 </Link>
                 <ul
-                  className={`on-hover-dropdown common-dropdown nav-submenu scroll-sm ${
-                    activeIndex === 0 ? 'open' : ''
-                  }`}
+                  className={`on-hover-dropdown common-dropdown nav-submenu scroll-sm ${activeIndex === 0 ? 'open' : ''}`}
                 >
                   <li className="common-dropdown__item nav-submenu__item">
                     <Link
@@ -155,17 +159,13 @@ const HeaderThree = ({ category }) => {
               </li>
               <li
                 onClick={() => handleMenuClick(1)}
-                className={`on-hover-item nav-menu__item has-submenu ${
-                  activeIndex === 1 ? 'd-block' : ''
-                }`}
+                className={`on-hover-item nav-menu__item has-submenu ${activeIndex === 1 ? 'd-block' : ''}`}
               >
                 <Link to="#" className="nav-menu__link">
                   Shop
                 </Link>
                 <ul
-                  className={`on-hover-dropdown common-dropdown nav-submenu scroll-sm ${
-                    activeIndex === 1 ? 'open' : ''
-                  }`}
+                  className={`on-hover-dropdown common-dropdown nav-submenu scroll-sm ${activeIndex === 1 ? 'open' : ''}`}
                 >
                   <li className="common-dropdown__item nav-submenu__item">
                     <Link
@@ -198,9 +198,7 @@ const HeaderThree = ({ category }) => {
               </li>
               <li
                 onClick={() => handleMenuClick(2)}
-                className={`on-hover-item nav-menu__item has-submenu ${
-                  activeIndex === 2 ? 'd-block' : ''
-                }`}
+                className={`on-hover-item nav-menu__item has-submenu ${activeIndex === 2 ? 'd-block' : ''}`}
               >
                 <span className="badge-notification bg-warning-600 text-white text-sm py-2 px-8 rounded-4">
                   New
@@ -209,9 +207,7 @@ const HeaderThree = ({ category }) => {
                   Pages
                 </Link>
                 <ul
-                  className={`on-hover-dropdown common-dropdown nav-submenu scroll-sm ${
-                    activeIndex === 2 ? 'open' : ''
-                  }`}
+                  className={`on-hover-dropdown common-dropdown nav-submenu scroll-sm ${activeIndex === 2 ? 'open' : ''}`}
                 >
                   <li className="common-dropdown__item nav-submenu__item">
                     <Link
@@ -262,9 +258,7 @@ const HeaderThree = ({ category }) => {
               </li>
               <li
                 onClick={() => handleMenuClick(3)}
-                className={`on-hover-item nav-menu__item has-submenu ${
-                  activeIndex === 3 ? 'd-block' : ''
-                }`}
+                className={`on-hover-item nav-menu__item has-submenu ${activeIndex === 3 ? 'd-block' : ''}`}
               >
                 <span className="badge-notification bg-tertiary-600 text-white text-sm py-2 px-8 rounded-4">
                   New
@@ -273,9 +267,7 @@ const HeaderThree = ({ category }) => {
                   Vendors
                 </Link>
                 <ul
-                  className={`on-hover-dropdown common-dropdown nav-submenu scroll-sm ${
-                    activeIndex === 3 ? 'open' : ''
-                  }`}
+                  className={`on-hover-dropdown common-dropdown nav-submenu scroll-sm ${activeIndex === 3 ? 'open' : ''}`}
                 >
                   <li className="common-dropdown__item nav-submenu__item">
                     <Link
@@ -317,17 +309,13 @@ const HeaderThree = ({ category }) => {
               </li>
               <li
                 onClick={() => handleMenuClick(4)}
-                className={`on-hover-item nav-menu__item has-submenu ${
-                  activeIndex === 4 ? 'd-block' : ''
-                }`}
+                className={`on-hover-item nav-menu__item has-submenu ${activeIndex === 4 ? 'd-block' : ''}`}
               >
                 <Link to="#" className="nav-menu__link">
                   Blog
                 </Link>
                 <ul
-                  className={`on-hover-dropdown common-dropdown nav-submenu scroll-sm ${
-                    activeIndex === 4 ? 'open' : ''
-                  }`}
+                  className={`on-hover-dropdown common-dropdown nav-submenu scroll-sm ${activeIndex === 4 ? 'open' : ''}`}
                 >
                   <li className="common-dropdown__item nav-submenu__item">
                     <Link
@@ -359,9 +347,12 @@ const HeaderThree = ({ category }) => {
         </div>
       </div>
       {/* Middle Header Two */}
-      <header className="header-middle style-two bg-color-neutral">
-        <div className="container container-lg">
-          <nav className="header-inner flex-between">
+      <header
+        className="header-middle style-two bg-color-neutral"
+        style={{ zIndex: 1001, overflow: 'visible' }}
+      >
+        <div className="container container-lg" style={{ overflow: 'visible' }}>
+          <nav className="header-inner flex-between" style={{ overflow: 'visible' }}>
             {/* Logo */}
             <div className="logo">
               <Link to="/" className="link">
@@ -376,7 +367,7 @@ const HeaderThree = ({ category }) => {
                     <Link to="#" className="selected-text text-heading text-sm py-8">
                       {selectedLanguage}
                     </Link>
-                    <ul className="selectable-text-list on-hover-dropdown common-dropdown common-dropdown--sm max-h-200 scroll-sm px-0 py-8">
+                    <ul className="selectable-text-list on-hover-dropdown common-dropdown common-dropdown--sm max-h-200 scroll-sm px-0 py-8" style={{ zIndex: 1003 }}>
                       <li>
                         <Link
                           to="#"
@@ -467,7 +458,7 @@ const HeaderThree = ({ category }) => {
                     <Link to="#" className="selected-text text-heading text-sm py-8">
                       {selectedCurrency}
                     </Link>
-                    <ul className="selectable-text-list on-hover-dropdown common-dropdown common-dropdown--sm max-h-200 scroll-sm px-0 py-8">
+                    <ul className="selectable-text-list on-hover-dropdown common-dropdown common-dropdown--sm max-h-200 scroll-sm px-0 py-8" style={{ zIndex: 1003 }}>
                       <li>
                         <Link
                           to="#"
@@ -556,7 +547,10 @@ const HeaderThree = ({ category }) => {
                   </li>
                 </ul>
               </div>
-              <div className="search-category style-two d-flex h-48 search-form d-sm-flex">
+              <div
+                className="search-category style-two d-flex search-form d-sm-flex position-relative"
+                style={{ minHeight: '48px', overflow: 'visible' }}
+              >
                 <select
                   defaultValue={1}
                   className="js-example-basic-single border border-gray-200 border-end-0 rounded-0 border-0"
@@ -594,7 +588,7 @@ const HeaderThree = ({ category }) => {
                         </Link>
                       )}
                     </span>
-                    <span className="text-md text-white item-hover__text d-none d-lg-flex">
+                    <span className="text-md text-white item-hover__texts d-none d-lg-flex">
                       {token && user?.name ? (
                         `Hi, ${user.name}`
                       ) : (
@@ -606,10 +600,8 @@ const HeaderThree = ({ category }) => {
                   </button>
                   {token && user?.name && (
                     <ul
-                      className={`on-hover-dropdown common-dropdown nav-submenu scroll-sm ${
-                        userDropdownOpen ? 'open' : ''
-                      }`}
-                      style={{ right: 0, width: '150px' }}
+                      className={`on-hover-dropdown common-dropdown nav-submenu scroll-sm ${userDropdownOpen ? 'open' : ''}`}
+                      style={{ right: 0, width: '150px', zIndex: 1003 }}
                     >
                       <li className="common-dropdown__item nav-submenu__item">
                         <Link
@@ -680,12 +672,11 @@ const HeaderThree = ({ category }) => {
       </header>
       {/* Header Two */}
       <header
-        className={`header bg-white border-bottom border-gray-100 ${
-          scroll ? 'fixed-header' : ''
-        }`}
+        className={`header bg-white border-bottom border-gray-100 ${scroll ? 'fixed-header' : ''}`}
+        style={{ zIndex: 1000, overflow: 'visible' }}
       >
-        <div className="container container-lg">
-          <nav className="header-inner d-flex justify-content-between gap-8">
+        <div className="container container-lg" style={{ overflow: 'visible' }}>
+          <nav className="header-inner d-flex justify-content-between gap-8" style={{ overflow: 'visible' }}>
             <div className="flex-align menu-category-wrapper">
               {/* Category Dropdown */}
               <div
@@ -705,9 +696,8 @@ const HeaderThree = ({ category }) => {
                   </span>
                 </button>
                 <div
-                  className={`responsive-dropdown cat common-dropdown d-lg-none d-block nav-submenu p-0 submenus-submenu-wrapper shadow-none border border-gray-100 ${
-                    activeCategory ? 'active' : ''
-                  }`}
+                  className={`responsive-dropdown cat common-dropdown d-lg-none d-block nav-submenu p-0 submenus-submenu-wrapper shadow-none border border-gray-100 ${activeCategory ? 'active' : ''}`}
+                  style={{ zIndex: 1003 }}
                 >
                   <button
                     onClick={() => {
@@ -767,14 +757,12 @@ const HeaderThree = ({ category }) => {
                         </ul>
                       </div>
                     </li>
-                    {/* Other category items remain unchanged */}
+                    {/* Add other category items as needed */}
                   </ul>
                 </div>
               </div>
               <div
-                className={`category main on-hover-item bg-main-600 text-white ${
-                  category === true ? 'd-block' : 'd-none'
-                }`}
+                className={`category main on-hover-item bg-main-600 text-white ${category === true ? 'd-block' : 'd-none'}`}
               >
                 <button
                   type="button"
@@ -783,72 +771,59 @@ const HeaderThree = ({ category }) => {
                   <span className="icon text-2xl d-xs-flex d-none">
                     <i className="ph ph-dots-nine" />
                   </span>
-                  <span className="d-sm-flex d-none">All</span> Categories
+                  <span className="d-sm-flex d-none">All</span> Categoriesss
                   <span className="arrow-icon text-xl d-flex">
                     <i className="ph ph-caret-down" />
                   </span>
                 </button>
-                <div className="responsive-dropdown on-hover-dropdown common-dropdown nav-submenu p-0 submenus-submenu-wrapper">
-                  <button
-                    type="button"
-                    className="close-responsive-dropdown rounded-circle text-xl position-absolute inset-inline-end-0 inset-block-start-0 mt-4 me-8 d-lg-none d-flex"
-                  >
-                    <i className="ph ph-x" />
-                  </button>
-                  <div className="logo px-16 d-lg-none d-block">
-                    <Link to="/" className="link">
-                      <img src="assets/images/logo/logo.png" alt="Logo" />
-                    </Link>
-                  </div>
-                  <ul className="scroll-sm p-0 py-8 w-300 max-h-400 overflow-y-auto">
-                    <li className="has-submenus-submenu">
-                      <Link
-                        to="#"
-                        className="text-gray-500 text-15 py-12 px-16 flex-align gap-8 rounded-0"
-                      >
-                        <span className="text-xl d-flex">
-                          <i className="ph ph-carrot" />
-                        </span>
-                        <span>Vegetables & Fruit</span>
-                        <span className="icon text-md d-flex ms-auto">
-                          <i className="ph ph-caret-right" />
-                        </span>
-                      </Link>
-                      <div className="submenus-submenu py-16">
-                        <h6 className="text-lg px-16 submenus-submenu__title">
-                          Vegetables & Fruit
-                        </h6>
-                        <ul className="submenus-submenu__list max-h-300 overflow-y-auto scroll-sm">
-                          <li>
-                            <Link to="/shop">Potato & Tomato</Link>
-                          </li>
-                          <li>
-                            <Link to="/shop">Cucumber & Capsicum</Link>
-                          </li>
-                          <li>
-                            <Link to="/shop">Leafy Vegetables</Link>
-                          </li>
-                          <li>
-                            <Link to="/shop">Root Vegetables</Link>
-                          </li>
-                          <li>
-                            <Link to="/shop">Beans & Okra</Link>
-                          </li>
-                          <li>
-                            <Link to="/shop">Cabbage & Cauliflower</Link>
-                          </li>
-                          <li>
-                            <Link to="/shop">Gourd & Drumstick</Link>
-                          </li>
-                          <li>
-                            <Link to="/shop">Specialty</Link>
-                          </li>
-                        </ul>
-                      </div>
-                    </li>
-                    {/* Other category items remain unchanged */}
-                  </ul>
-                </div>
+                <div
+  className="responsive-dropdown on-hover-dropdown common-dropdown nav-submenu p-0 submenus-submenu-wrapper"
+  style={{ zIndex: 1003 }}
+>
+  <button
+    type="button"
+    className="close-responsive-dropdown rounded-circle text-xl position-absolute inset-inline-end-0 inset-block-start-0 mt-4 me-8 d-lg-none d-flex"
+  >
+    <i className="ph ph-x" />
+  </button>
+  <div className="logo px-16 d-lg-none d-block">
+    <Link to="/" className="link">
+      {/* <img src="assets/images/logo/logo.png" alt="Logo" /> */}
+    </Link>
+  </div>
+  {filterdCategoryByParents?.map((category) => (
+    <ul
+      key={category?.id}
+      className="scroll-sm p-0 py-8 w-300 max-h-400 overflow-y-auto"
+    >
+      <li className="has-submenus-submenu">
+        <Link
+          to={`/category/${category?.id}`}
+          className="text-gray-500 text-15 py-12 px-16 flex-align gap-8 rounded-0"
+        >
+          <span>{category?.categoryName}</span>
+          <span className="icon text-md d-flex ms-auto">
+            <i className="ph ph-caret-right" />
+          </span>
+        </Link>
+        <div className="submenus-submenu py-16">
+          <h6 className="text-lg px-16 submenus-submenu__title">
+            {category?.categoryName}
+          </h6>
+          <ul className="submenus-submenu__list max-h-300 overflow-y-auto scroll-sm">
+            {categoryApi?.categories?.filter((subCategory) => subCategory?.parent_id === category?.id)?.map((subCategory) => (
+                <li key={subCategory?.id}>
+                  <Link to={`/shop/${subCategory?.id}`}>
+                    {subCategory?.categoryName}
+                  </Link>
+                </li>
+              ))}
+          </ul>
+        </div>
+      </li>
+    </ul>
+  ))}
+</div>
               </div>
               {/* Menu */}
               <div className="header-menu d-lg-block d-none">
@@ -857,7 +832,7 @@ const HeaderThree = ({ category }) => {
                     <Link to="#" className="nav-menu__link">
                       Home
                     </Link>
-                    <ul className="on-hover-dropdown common-dropdown nav-submenu scroll-sm">
+                    <ul className="on-hover-dropdown common-dropdown nav-submenu scroll-sm" style={{ zIndex: 1003 }}>
                       <li className="common-dropdown__item nav-submenu__item">
                         <NavLink
                           to="/"
@@ -900,7 +875,7 @@ const HeaderThree = ({ category }) => {
                     <Link to="#" className="nav-menu__link">
                       Shop
                     </Link>
-                    <ul className="on-hover-dropdown common-dropdown nav-submenu scroll-sm">
+                    <ul className="on-hover-dropdown common-dropdown nav-submenu scroll-sm" style={{ zIndex: 1003 }}>
                       <li className="common-dropdown__item nav-submenu__item">
                         <NavLink
                           to="/shop"
@@ -946,7 +921,7 @@ const HeaderThree = ({ category }) => {
                     <Link to="#" className="nav-menu__link">
                       Pages
                     </Link>
-                    <ul className="on-hover-dropdown common-dropdown nav-submenu scroll-sm">
+                    <ul className="on-hover-dropdown common-dropdown nav-submenu scroll-sm" style={{ zIndex: 1003 }}>
                       <li className="common-dropdown__item nav-submenu__item">
                         <NavLink
                           to="/cart"
@@ -1016,7 +991,7 @@ const HeaderThree = ({ category }) => {
                     <Link to="#" className="nav-menu__link">
                       Vendors
                     </Link>
-                    <ul className="on-hover-dropdown common-dropdown nav-submenu scroll-sm">
+                    <ul className="on-hover-dropdown common-dropdown nav-submenu scroll-sm" style={{ zIndex: 1003 }}>
                       <li className="common-dropdown__item nav-submenu__item">
                         <NavLink
                           to="/vendor"
@@ -1071,7 +1046,7 @@ const HeaderThree = ({ category }) => {
                     <Link to="#" className="nav-menu__link">
                       Blog
                     </Link>
-                    <ul className="on-hover-dropdown common-dropdown nav-submenu scroll-sm">
+                    <ul className="on-hover-dropdown common-dropdown nav-submenu scroll-sm" style={{ zIndex: 1003 }}>
                       <li className="common-dropdown__item nav-submenu__item">
                         <NavLink
                           to="/blog"
@@ -1121,7 +1096,7 @@ const HeaderThree = ({ category }) => {
                     <Link to="#" className="selected-text text-heading text-sm py-8">
                       {selectedLanguage}
                     </Link>
-                    <ul className="selectable-text-list on-hover-dropdown common-dropdown common-dropdown--sm max-h-200 scroll-sm px-0 py-8">
+                    <ul className="selectable-text-list on-hover-dropdown common-dropdown common-dropdown--sm max-h-200 scroll-sm px-0 py-8" style={{ zIndex: 1003 }}>
                       <li>
                         <Link
                           to="#"
@@ -1212,7 +1187,7 @@ const HeaderThree = ({ category }) => {
                     <Link to="#" className="selected-text text-heading text-sm py-8">
                       {selectedCurrency}
                     </Link>
-                    <ul className="selectable-text-list on-hover-dropdown common-dropdown common-dropdown--sm max-h-200 scroll-sm px-0 py-8">
+                    <ul className="selectable-text-list on-hover-dropdown common-dropdown common-dropdown--sm max-h-200 scroll-sm px-0 py-8" style={{ zIndex: 1003 }}>
                       <li>
                         <Link
                           to="#"

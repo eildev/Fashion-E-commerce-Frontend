@@ -1,7 +1,7 @@
 import React from "react";
 import Preloader from "../helper/Preloader";
 import HeaderTwo from "../components/HeaderTwo";
-import BannerTwo from "../components/BannerTwo";
+import BannerThree from "../components/BannerThree";
 import PromotionalTwo from "../components/PromotionalTwo";
 import DealsOne from "../components/DealsOne";
 import TopSellingOne from "../components/TopSellingOne";
@@ -42,8 +42,7 @@ const HomePageThree = () => {
       <HeaderThree category={false} />
 
       {/* BannerTwo */}
-      <BannerTwo />
-
+  <BannerThree></BannerThree>
       {/* PromotionalTwo */}
       <PromotionalTwo />
 

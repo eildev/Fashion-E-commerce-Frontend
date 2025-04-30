@@ -12,6 +12,7 @@ import BottomFooter from "../components/BottomFooter";
 import ScrollToTop from "react-scroll-to-top";
 import { useGetVariantApiQuery } from "../redux/features/api/variantApi";
 import { useParams } from "react-router-dom";
+import HeaderThree from "../components/HeaderThree";
 
 
 const ProductDetailsPageTwo = () => {
@@ -35,7 +36,7 @@ const ProductDetailsPageTwo = () => {
       <Preloader />
 
       {/* HeaderTwo */}
-      <HeaderTwo category={true} />
+      <HeaderThree category={true} />
 
       {/* Breadcrumb */}
       <Breadcrumb title={"Product Details"} />

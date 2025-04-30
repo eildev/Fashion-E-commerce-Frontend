@@ -3,7 +3,11 @@ import Slider from "react-slick";
 import { WOW } from "wowjs";
 import "animate.css";
 import { Link } from "react-router-dom";
+import { useGetBannerApiQuery } from "../redux/features/api/bannerApi";
+import { imagePath } from "./imagePath";
 const BannerThree = () => {
+const {data, isloading, error} = useGetBannerApiQuery()
+console.log("banner", data);
   useEffect(() => {
     const wow = new WOW({
       live: false,
@@ -96,60 +100,65 @@ const BannerThree = () => {
       <div className='container container-lg'>
         <div>
           <Slider {...settings} className='banner-three-slider'>
-            <div className=''>
-              <div className='row align-items-center gy-4'>
-                <div className='col-lg-6'>
-                  <div className='span3'>
-                    <span className='text-white mb-8 h6 wow bounceIn'>
-                      UP TO 50% OFF
-                    </span>
-                    <h1 className='text-white display-one wow '>
-                      New
-                      <span
-                        className='fw-normal text-main-two-600 font-heading-four wow bounceIn'
-                        data-wow-duration='2s'
-                        data-wow-delay='.5s'
-                      >
-                        Style
-                      </span>{" "}
-                      Just For You.
-                    </h1>
-                    <p className='text-white max-w-472 text-2xl mb-24 wow bounceInUp'>
-                      You appear ordinary if you dress simply. We are able to
-                      help you.
-                    </p>
-                    <Link
-                      to='/shop'
-                      className='btn btn-outline-white d-inline-flex align-items-center rounded-pill gap-8 mt-lg-4 mt-sm-1 wow bounceIn'
-                      tabIndex={0}
-                    >
-                      Shop Now
-                      <span className='icon text-xl d-flex'>
-                        <i className='ph ph-shopping-cart-simple' />
+            {
+              data?.banners?.map(banner =>    <div key={banner?.id} className=''>
+                <div className='row align-items-center gy-4'>
+                  <div className='col-lg-6'>
+                    <div className='span3'>
+                      <span className='text-white mb-8 h6 wow bounceIn'>
+                        UP TO 50% OFF
                       </span>
-                    </Link>
+                      <h1 className='text-white display-one wow '>
+                        New
+                        <span
+                          className='fw-normal text-main-two-600 font-heading-four wow bounceIn'
+                          data-wow-duration='2s'
+                          data-wow-delay='.5s'
+                        >
+                          Style
+                        </span>{" "}
+                        Just For You.
+                      </h1>
+                      <p className='text-white max-w-472 text-2xl mb-24 wow bounceInUp'>
+                  {banner?.title}
+                      </p>
+                      <Link
+                        to='/shop'
+                        className='btn btn-outline-white d-inline-flex align-items-center rounded-pill gap-8 mt-lg-4 mt-sm-1 wow bounceIn'
+                        tabIndex={0}
+                      >
+                        Shop Now
+                        <span className='icon text-xl d-flex'>
+                          <i className='ph ph-shopping-cart-simple' />
+                        </span>
+                      </Link>
+                    </div>
+                  </div>
+                  <div className='col-lg-6'>
+                    <div
+                      className='d-flex justify-content-center wow bounceIn'
+                      data-wow-duration='3s'
+                      data-wow-delay='.5s'
+                      data-tilt=''
+                      data-tilt-max={16}
+                      data-tilt-speed={500}
+                      data-tilt-perspective={5000}
+                      data-tilt-scale='1.06'
+                    >
+                         <img
+                                                     src={imagePath(
+                                                      banner?.medium_image
+                                                    )}
+                                                    alt=''
+                                                  />
+                     
+                    </div>
                   </div>
                 </div>
-                <div className='col-lg-6'>
-                  <div
-                    className='d-flex justify-content-center wow bounceIn'
-                    data-wow-duration='3s'
-                    data-wow-delay='.5s'
-                    data-tilt=''
-                    data-tilt-max={16}
-                    data-tilt-speed={500}
-                    data-tilt-perspective={5000}
-                    data-tilt-scale='1.06'
-                  >
-                    <img
-                      src='assets/images/thumbs/banner-three-img1.png'
-                      alt=''
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className=''>
+              </div>)
+            }
+         
+            {/* <div className=''>
               <div className='row align-items-center gy-4'>
                 <div className='col-lg-6'>
                   <div className=''>
@@ -256,7 +265,7 @@ const BannerThree = () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </Slider>
         </div>
       </div>

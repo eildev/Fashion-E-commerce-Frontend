@@ -1,43 +1,43 @@
 
-// import { createSlice } from "@reduxjs/toolkit";
-
-// const searchSlice = createSlice({
-//   name: "search",
-//   initialState: {
-//     query: "",
-//     isSuggestionsVisible: false,
-//   },
-//   reducers: {
-//     setQuery: (state, action) => {
-//       state.query = action.payload;
-//     },
-//     setSuggestionsVisible: (state, action) => {
-//       state.isSuggestionsVisible = action.payload;
-//     },
-//   },
-// });
-
-// export const { setQuery, setSuggestionsVisible } = searchSlice.actions;
-// export default searchSlice.reducer;
-
-
-
-
-// searchSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+// Async thunk to fetch search results
 export const fetchSearchResults = createAsyncThunk(
   'search/fetchSearchResults',
   async ({ query, category }, { rejectWithValue }) => {
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/product/search', {
-        query,
-        category: category !== 'All Categories' ? category : undefined,
+      console.log('Fetching search results:', { query, category });
+      // Fetch CSRF cookie
+      await axios.get('http://127.0.0.1:8000/sanctum/csrf-cookie', {
+        withCredentials: true,
       });
-      return response.data;
+
+      // Search API call
+      const response = await axios.post(
+        'http://127.0.0.1:8000/api/product/search',
+        {
+          query: query.trim(),
+          category: category !== 'All Categories' ? category : undefined,
+        },
+        { withCredentials: true }
+      );
+
+      console.log('API response:', response.data);
+
+      // Normalize response
+      const normalizedData = {
+        products: response.data.products || [],
+        categories: response.data.categories || [],
+        brands: response.data.brands || [],
+      };
+
+      return normalizedData;
     } catch (error) {
-      return rejectWithValue(error.response?.data || 'Something went wrong');
+      console.error('Search API error:', error.response?.data || error.message);
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to fetch search results'
+      );
     }
   }
 );
@@ -46,8 +46,12 @@ const searchSlice = createSlice({
   name: 'search',
   initialState: {
     query: '',
-    isSuggestionsVisible: false,
-    results: [],
+    suggestionsVisible: false,
+    results: {
+      products: [],
+      categories: [],
+      brands: [],
+    },
     loading: false,
     error: null,
   },
@@ -56,7 +60,13 @@ const searchSlice = createSlice({
       state.query = action.payload;
     },
     setSuggestionsVisible: (state, action) => {
-      state.isSuggestionsVisible = action.payload;
+      state.suggestionsVisible = action.payload;
+    },
+    clearSearch: (state) => {
+      state.query = '';
+      state.results = { products: [], categories: [], brands: [] };
+      state.suggestionsVisible = false;
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
@@ -64,17 +74,22 @@ const searchSlice = createSlice({
       .addCase(fetchSearchResults.pending, (state) => {
         state.loading = true;
         state.error = null;
+        console.log('Search request pending');
       })
       .addCase(fetchSearchResults.fulfilled, (state, action) => {
         state.loading = false;
         state.results = action.payload;
+        state.error = null;
+        console.log('Search request fulfilled:', action.payload);
       })
       .addCase(fetchSearchResults.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.results = { products: [], categories: [], brands: [] };
+        console.log('Search request rejected:', action.payload);
       });
   },
 });
 
-export const { setQuery, setSuggestionsVisible } = searchSlice.actions;
+export const { setQuery, setSuggestionsVisible, clearSearch } = searchSlice.actions;
 export default searchSlice.reducer;

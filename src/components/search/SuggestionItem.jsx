@@ -1,5 +1,4 @@
-
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setSuggestionsVisible } from '../../redux/features/slice/searchSlice';
@@ -12,23 +11,18 @@ const SuggestionItem = memo(function SuggestionItem({ item, showDivider }) {
   const navigate = useNavigate();
 
   const product_image =
-    thumbnail || imagePath(variant_image && variant_image[0]?.image);
-
-  useEffect(() => {
-    // console.log('SuggestionItem mounted with slug:', slug);
-  }, [slug]);
+    thumbnail || (variant_image?.[0]?.image ? imagePath(variant_image[0].image) : '');
 
   const handleItemClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
 
     if (slug) {
+      dispatch(setSuggestionsVisible(false));
       navigate(`/product/${slug}`);
     } else {
-      toast.error('Something went wrong. Please try again.');
+      toast.error('Product details unavailable. Please try again.');
     }
-
-    dispatch(setSuggestionsVisible(false));
   };
 
   return (
@@ -38,14 +32,14 @@ const SuggestionItem = memo(function SuggestionItem({ item, showDivider }) {
         onClick={handleItemClick}
       >
         <img
-          src={product_image || ''}
+          src={product_image || 'https://via.placeholder.com/40'}
           alt={product_name || 'Product'}
           className="w-10 h-10 object-cover rounded"
-          onClick={handleItemClick}
+          onError={(e) => (e.target.src = 'https://via.placeholder.com/40')}
         />
-        <div onClick={handleItemClick}>
+        <div>
           <p className="fw-medium fs-6 text-dark mb-0">
-            {product_name || 'Unknown'}
+            {product_name || 'Unknown Product'}
           </p>
           <p className="fs-6 text-muted">
             ৳ {variants?.[0]?.regular_price || 'N/A'}

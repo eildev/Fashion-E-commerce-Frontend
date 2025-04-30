@@ -1,7 +1,10 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { useGetVariantApiQuery } from '../../redux/features/api/variantApi';
 import { useGetCategoryQuery } from '../../redux/features/api/categoryApi';
 import { useGetBrandQuery } from '../../redux/features/api/brandApi';
+import { addCategoryWithName, addBrand, setFilteredSearchQuery, removeCategoryByName, removeBrand, clearAllFilters } from '../../redux/features/slice/filterSlice';
 import toast from 'react-hot-toast';
 import FilterSection from './FilterSection';
 import ProductSection from './ProductSection';
@@ -10,6 +13,8 @@ const ShopSection = () => {
   const { data, isLoading } = useGetVariantApiQuery();
   const { data: categoryApi } = useGetCategoryQuery();
   const { data: brandData } = useGetBrandQuery();
+  const dispatch = useDispatch();
+  const location = useLocation();
 
   // Calculate dynamic price range limits
   const prices = useMemo(
@@ -32,6 +37,39 @@ const ShopSection = () => {
   // UI states
   const [grid, setGrid] = useState(false);
   const [active, setActive] = useState(false);
+
+  // Handle location state for category, brand, or search query
+  useEffect(() => {
+    const { category, brand, searchQuery } = location.state || {};
+    
+    if (category && categoryApi?.categories) {
+      const categoryObj = categoryApi.categories.find(
+        (cat) => cat.categoryName.toLowerCase() === category.toLowerCase()
+      );
+      if (categoryObj) {
+        dispatch(addCategoryWithName({ id: categoryObj.id, name: categoryObj.categoryName }));
+        setSelectedCategories((prev) => 
+          prev.includes(categoryObj.id) ? prev : [...prev, categoryObj.id]
+        );
+      }
+    }
+
+    if (brand && brandData?.Brands) {
+      const brandObj = brandData.Brands.find(
+        (b) => b.BrandName.toLowerCase() === brand.toLowerCase()
+      );
+      if (brandObj) {
+        dispatch(addBrand({ id: brandObj.id, name: brandObj.BrandName }));
+        setSelectedBrands((prev) => 
+          prev.includes(brandObj.id) ? prev : [...prev, brandObj.id]
+        );
+      }
+    }
+
+    if (searchQuery) {
+      dispatch(setFilteredSearchQuery(searchQuery));
+    }
+  }, [location.state, categoryApi, brandData, dispatch]);
 
   // Sidebar toggle
   const sidebarController = () => {
@@ -56,14 +94,22 @@ const ShopSection = () => {
     );
   };
 
-  // Remove filter (category, brand, or price)
+  // Remove filter (category, brand, price, or search)
   const removeFilter = (type, value) => {
     if (type === 'category') {
       setSelectedCategories((prev) => prev.filter((id) => id !== value));
+      dispatch(removeCategoryByName(
+        categoryApi?.categories?.find((c) => c.id === value)?.categoryName
+      ));
     } else if (type === 'brand') {
       setSelectedBrands((prev) => prev.filter((id) => id !== value));
+      dispatch(removeBrand(
+        brandData?.Brands?.find((b) => b.id === value)?.BrandName
+      ));
     } else if (type === 'price') {
       setPriceRange([minPrice, maxPrice]);
+    } else if (type === 'search') {
+      dispatch(setFilteredSearchQuery(''));
     }
   };
 
@@ -73,6 +119,7 @@ const ShopSection = () => {
     setSelectedBrands([]);
     setPriceRange([minPrice, maxPrice]);
     setCurrentPage(1);
+    dispatch(clearAllFilters());
     toast.success('Filters reset');
   };
 
@@ -135,6 +182,7 @@ const ShopSection = () => {
             toggleBrand={toggleBrand}
             removeFilter={removeFilter}
             handleResetFilters={handleResetFilters}
+            searchQuery={location.state?.searchQuery || ''}
           />
           <ProductSection
             isLoading={isLoading}

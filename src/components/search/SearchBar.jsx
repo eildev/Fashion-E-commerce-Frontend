@@ -1,53 +1,104 @@
-
-import { useEffect, useRef, useMemo } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { Icon } from '@iconify/react';
 import {
   setQuery,
   setSuggestionsVisible,
   fetchSearchResults,
+  clearSearch,
 } from '../../redux/features/slice/searchSlice';
-import { Icon } from '@iconify/react';
-import debounce from '../../utils/debounce';
-import { useNavigate } from 'react-router-dom';
+import { setFilteredSearchQuery } from '../../redux/features/slice/filterSlice';
 import RenderSuggestion from './RenderSuggestion';
+
+// Debounce utility
+const debounce = (func, delay) => {
+  let timeoutId;
+  const debounced = (...args) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func(...args), delay);
+  };
+  debounced.cancel = () => clearTimeout(timeoutId);
+  return debounced;
+};
 
 const SearchBar = ({ className }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { query, isSuggestionsVisible, results, loading, error } = useSelector(
+  const { query, suggestionsVisible, results, loading, error } = useSelector(
     (state) => state.search
   );
   const searchRef = useRef(null);
-  const selectedCategory = useSelector((state) =>
-    document.querySelector('.js-example-basic-single')?.value || 'All Categories'
-  );
 
-  const debouncedSearch = useMemo(
-    () =>
-      debounce((value, category) => {
-        if (value.trim()) {
-          dispatch(fetchSearchResults({ query: value, category }));
-        }
-      }, 300),
+  // Get selected category
+  const getSelectedCategory = () => {
+    const selectElement = document.querySelector('.js-example-basic-single');
+    return selectElement ? selectElement.value : 'All Categories';
+  };
+
+  // Debounced search
+  const debouncedSearch = useCallback(
+    debounce((value, category) => {
+      console.log('Debounced search:', { value, category });
+      if (value.trim()) {
+        dispatch(fetchSearchResults({ query: value, category }));
+      } else {
+        dispatch(clearSearch());
+      }
+    }, 300),
     [dispatch]
   );
 
-  // Handle query changes and suggestion visibility
-  useEffect(() => {
-    if (query.trim()) {
+  // Handle input change
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    dispatch(setQuery(value));
+    if (value.trim()) {
       dispatch(setSuggestionsVisible(true));
-      debouncedSearch(query, selectedCategory);
+      debouncedSearch(value, getSelectedCategory());
     } else {
       dispatch(setSuggestionsVisible(false));
-      dispatch({ type: 'search/clearResults' }); // Clear results when query is empty
+      dispatch(clearSearch());
     }
-    return () => debouncedSearch.cancel();
-  }, [query, selectedCategory, debouncedSearch, dispatch]);
+  };
 
-  // Handle clicks outside to close suggestions
+  // Handle focus
+  const handleInputFocus = () => {
+    if (query.trim() && results.products.length > 0) {
+      dispatch(setSuggestionsVisible(true));
+    }
+  };
+
+  // Handle search
+  const handleSearch = () => {
+    if (query.trim()) {
+      dispatch(setSuggestionsVisible(false));
+      dispatch(setFilteredSearchQuery(query)); // Add search query to filters
+      navigate('/shop', {
+        state: {
+          searchQuery: query,
+          category: getSelectedCategory() !== 'All Categories' ? getSelectedCategory() : undefined,
+        },
+      });
+    }
+  };
+
+  // Handle Enter key
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
+  // Click outside to close suggestions
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target) &&
+        !event.target.closest('.select2-container')
+      ) {
+        console.log('Clicked outside, hiding suggestions');
         dispatch(setSuggestionsVisible(false));
       }
     };
@@ -57,59 +108,75 @@ const SearchBar = ({ className }) => {
     };
   }, [dispatch]);
 
-  // Handle Enter key press
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && query.trim()) {
-      dispatch(setSuggestionsVisible(false));
-      navigate('/shop', { state: { searchQuery: query } });
-    }
-  };
-
-  // Handle search button click
-  const handleSearchClick = () => {
-    if (query.trim()) {
-      dispatch(setSuggestionsVisible(false));
-      navigate('/shop', { state: { searchQuery: query } });
-    }
-  };
-
-  // Handle input focus to show suggestions
-  const handleInputFocus = () => {
-    if (query.trim()) {
-      dispatch(setSuggestionsVisible(true));
-    }
-  };
+  // Clean up debounce
+  useEffect(() => {
+    return () => debouncedSearch.cancel();
+  }, [debouncedSearch]);
 
   return (
     <div ref={searchRef} className={`position-relative ${className}`}>
-      <div className="input-group rounded-pill shadow-sm overflow-hidden bg-white">
+      <div
+        className="input-group"
+        style={{
+          backgroundColor: '#fff',
+          borderRadius: '50px',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          overflow: 'hidden',
+          height: '48px',
+        }}
+      >
         <input
           type="text"
-          className="form-control border-0 ps-3"
+          style={{
+            border: 'none',
+            padding: '0 16px',
+            height: '48px',
+            fontSize: '14px',
+            flex: 1,
+          }}
           placeholder="Search for products, brands..."
           value={query}
-          onChange={(e) => dispatch(setQuery(e.target.value))}
+          onChange={handleInputChange}
           onKeyPress={handleKeyPress}
           onFocus={handleInputFocus}
-          style={{ height: '48px' }}
         />
         <button
-          className="btn btn-light border-0"
+          style={{
+            border: 'none',
+            backgroundColor: 'transparent',
+            padding: '0 16px',
+            display: 'flex',
+            alignItems: 'center',
+          }}
           type="button"
-          onClick={handleSearchClick}
+          onClick={handleSearch}
         >
           <Icon icon="ic:outline-search" width="24" />
         </button>
       </div>
-      {isSuggestionsVisible && (
+      {suggestionsVisible && (
         <div
-          className="position-absolute w-100 bg-white rounded-bottom shadow-lg mt-1 p-3 z-3"
-          style={{ maxHeight: '500px', overflowY: 'auto' }}
+          style={{
+            position: 'absolute',
+            width: '100%',
+            backgroundColor: '#fff',
+            borderRadius: '0 0 8px 8px',
+            boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+            marginTop: '4px',
+            padding: '16px',
+            maxHeight: '500px',
+            overflowY: 'auto',
+            zIndex: 9999,
+            top: '100%',
+            left: 0,
+            maxWidth: '100%',
+          }}
         >
           <RenderSuggestion
             isLoading={loading}
             error={error}
-            productData={results}
+            results={results}
+            query={query}
           />
         </div>
       )}
