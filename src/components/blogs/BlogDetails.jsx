@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { useGetBlogQuery } from '../redux/features/api/blogApi';
-import { imagePath } from './imagePath';
+import { SearchSidebar, RecentPostsSidebar, TagsSidebar, BlogItem } from './SidebarComponents';
+import { useGetBlogQuery } from '../../redux/features/api/blogApi';
 
 const BlogDetails = () => {
     const { id } = useParams();
@@ -21,65 +21,23 @@ const BlogDetails = () => {
         return <div className="text-center mt-10 text-red-500">Blog not found.</div>;
     }
 
+    const sortedBlogs = data?.blogPost
+        ?.slice()
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    const tags = data?.blogPost
+        ?.flatMap((post) => post.tags?.split(',') || [])
+        .filter((tag, index, self) => self.indexOf(tag) === index);
+
     return (
         <section className="blog-details py-80">
             <div className="container container-lg">
                 <div className="row gy-5">
                     <div className="col-lg-8 pe-xl-4">
                         <div className="blog-item-wrapper">
-                            <div className="blog-item">
-                                <img
-                                    src={imagePath(blog?.image)}
-                                    alt={blog?.title || 'Blog Post'}
-                                    className="cover-img rounded-16"
-                                    onError={(e) => (e.target.src = '/placeholder-image.jpg')}
-                                />
-                                <div className="blog-item__content mt-24">
-                                    <span className="bg-main-50 text-main-600 py-4 px-24 rounded-8 mb-16">
-                                        {blog?.tags || 'Uncategorized'}
-                                    </span>
-                                    <h4 className="mb-24">{blog?.title}</h4>
-                                    <p className="text-gray-700 mb-24">{blog?.desc}</p>
-                                    <p className="text-gray-700 pb-24 mb-24 border-bottom border-gray-100">
-                                        {blog?.desc} {/* Reuse desc for additional content */}
-                                    </p>
-                                    <div className="flex-align flex-wrap gap-24">
-                                        <div className="flex-align flex-wrap gap-8">
-                                            <span className="text-lg text-main-600">
-                                                <i className="ph ph-calendar-dots" />
-                                            </span>
-                                            <span className="text-sm text-gray-500">
-                                                <Link
-                                                    to={`/blog-details/${blog.id}`}
-                                                    className="text-gray-500 hover-text-main-600"
-                                                >
-                                                    {new Date(blog.created_at).toLocaleDateString('en-US', {
-                                                        year: 'numeric',
-                                                        month: 'short',
-                                                        day: 'numeric',
-                                                    })}
-                                                </Link>
-                                            </span>
-                                        </div>
-                                        <div className="flex-align flex-wrap gap-8">
-                                            <span className="text-lg text-main-600">
-                                                <i className="ph ph-chats-circle" />
-                                            </span>
-                                            <span className="text-sm text-gray-500">
-                                                <Link
-                                                    to={`/blog-details/${blog.id}`}
-                                                    className="text-gray-500 hover-text-main-600"
-                                                >
-                                                    0 Comments
-                                                </Link>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <BlogItem article={blog} isDetail={true} />
                         </div>
                         <div className="mt-48">
-                            <div className="row gy-4">
+                            {/* <div className="row gy-4">
                                 <div className="col-sm-6 col-xs-6">
                                     <img
                                         src="/placeholder-image.jpg"
@@ -94,7 +52,7 @@ const BlogDetails = () => {
                                         className="rounded-16"
                                     />
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                         <div className="mt-48">
                             <p className="text-gray-700 mb-24">{blog?.desc}</p>
@@ -221,7 +179,7 @@ const BlogDetails = () => {
                                 </button>
                                 <h6 className="text-lg mb-0">
                                     <Link to="/blog-details" className="">
-                                        Previous Blog Title {/* Replace with dynamic data if available */}
+                                        Previous Blog Title
                                     </Link>
                                 </h6>
                             </div>
@@ -234,7 +192,7 @@ const BlogDetails = () => {
                                 </button>
                                 <h6 className="text-lg mb-0">
                                     <Link to="/blog-details" className="">
-                                        Next Blog Title {/* Replace with dynamic data if available */}
+                                        Next Blog Title
                                     </Link>
                                 </h6>
                             </div>
@@ -337,105 +295,9 @@ const BlogDetails = () => {
                         </div>
                     </div>
                     <div className="col-lg-4 ps-xl-4">
-                        {/* Search Start */}
-                        <div className="blog-sidebar border border-gray-100 rounded-8 p-32 mb-40">
-                            <h6 className="text-xl mb-32 pb-32 border-bottom border-gray-100">
-                                Search Here
-                            </h6>
-                            <form action="#">
-                                <div className="input-group">
-                                    <input
-                                        type="text"
-                                        className="form-control common-input bg-color-three"
-                                        placeholder="Searching..."
-                                    />
-                                    <button
-                                        type="submit"
-                                        className="btn btn-main text-2xl h-56 w-56 flex-center text-2xl input-group-text"
-                                    >
-                                        <i className="ph ph-magnifying-glass" />
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                        {/* Search End */}
-                        {/* Recent Post Start */}
-                        <div className="blog-sidebar border border-gray-100 rounded-8 p-32 mb-40">
-                            <h6 className="text-xl mb-32 pb-32 border-bottom border-gray-100">
-                                Recent Posts
-                            </h6>
-                            {data?.blogPost
-                                ?.slice(0, 4)
-                                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-                                .map((post) => (
-                                    <div
-                                        key={post.id}
-                                        className="d-flex align-items-center flex-sm-nowrap flex-wrap gap-24 mb-16"
-                                    >
-                                        <Link
-                                            to={`/blog-details/${post.id}`}
-                                            className="w-100 h-100 rounded-4 overflow-hidden w-120 h-120 flex-shrink-0"
-                                        >
-                                            <img
-                                                src={imagePath(post?.image)}
-                                                alt={post?.title || 'Recent Post'}
-                                                className="cover-img"
-                                                onError={(e) => (e.target.src = '/placeholder-image.jpg')}
-                                            />
-                                        </Link>
-                                        <div className="flex-grow-1">
-                                            <h6 className="text-lg">
-                                                <Link to={`/blog-details/${post.id}`} className="text-line-3">
-                                                    {post?.title}
-                                                </Link>
-                                            </h6>
-                                            <div className="flex-align flex-wrap gap-8">
-                                                <span className="text-lg text-main-600">
-                                                    <i className="ph ph-calendar-dots" />
-                                                </span>
-                                                <span className="text-sm text-gray-500">
-                                                    <Link
-                                                        to={`/blog-details/${post.id}`}
-                                                        className="text-gray-500 hover-text-main-600"
-                                                    >
-                                                        {new Date(post.created_at).toLocaleDateString('en-US', {
-                                                            year: 'numeric',
-                                                            month: 'short',
-                                                            day: 'numeric',
-                                                        })}
-                                                    </Link>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                        </div>
-                        {/* Recent Post End */}
-                        {/* Tags Start */}
-                        <div className="blog-sidebar border border-gray-100 rounded-8 p-32 mb-40">
-                            <h6 className="text-xl mb-32 pb-32 border-bottom border-gray-100">
-                                Tags
-                            </h6>
-                            <ul>
-                                {data?.blogPost
-                                    ?.flatMap((post) => post.tags?.split(',') || [])
-                                    .filter((tag, index, self) => self.indexOf(tag) === index)
-                                    .map((tag, index) => (
-                                        <li key={index} className="mb-16">
-                                            <Link
-                                                to="/blog-details"
-                                                className="flex-between gap-8 text-gray-700 border border-gray-100 rounded-4 p-4 ps-16 hover-border-main-600 hover-text-main-600"
-                                            >
-                                                <span>{tag.trim()}</span>
-                                                <span className="w-40 h-40 flex-center rounded-4 bg-main-50 text-main-600">
-                                                    <i className="ph ph-arrow-right" />
-                                                </span>
-                                            </Link>
-                                        </li>
-                                    ))}
-                            </ul>
-                        </div>
-                        {/* Tags End */}
+                        <SearchSidebar />
+                        <RecentPostsSidebar posts={sortedBlogs} />
+                        <TagsSidebar tags={tags} />
                     </div>
                 </div>
             </div>

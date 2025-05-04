@@ -6,7 +6,7 @@ import Breadcrumb from "../components/Breadcrumb";
 import FooterTwo from "../components/FooterTwo";
 import BottomFooter from "../components/BottomFooter";
 import ShippingOne from "../components/ShippingOne";
-import Blog from "../components/Blog";
+import Blog from "../components/blogs/Blog";
 import ScrollToTop from "react-scroll-to-top";
 
 
