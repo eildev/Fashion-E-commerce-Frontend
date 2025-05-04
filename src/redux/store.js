@@ -20,6 +20,8 @@ import userApi from './features/api/userApi';
 import tagViewApi from './features/api/tagViewApi';
 import reviewApi from './features/api/reviewApi';
 import reviewGetApi from './features/api/reviewGetApi';
+import blogCategoryApi from './features/api/blogCategoryApi';
+import blogApi from './features/api/blogApi';
 
 // import productApi from './features/api/productApi';
 // import bannerApi from './features/api/bannerApi';
@@ -63,6 +65,8 @@ const store = configureStore({
         [tagViewApi.reducerPath]: tagViewApi.reducer,
         [reviewApi.reducerPath]: reviewApi.reducer,
         [reviewGetApi.reducerPath]: reviewGetApi.reducer,
+        [blogCategoryApi.reducerPath]: blogCategoryApi.reducer,
+        [blogApi.reducerPath]: blogApi.reducer,
      
     },
     middleware: (getDefaultMiddleware) =>
@@ -81,6 +85,8 @@ const store = configureStore({
             .concat(tagViewApi.middleware)
             .concat(reviewApi.middleware)
             .concat(reviewGetApi.middleware)
+            .concat(blogCategoryApi.middleware)
+            .concat(blogApi.middleware)
 })
 
 export default store;

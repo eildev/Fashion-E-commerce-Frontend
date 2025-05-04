@@ -101,6 +101,14 @@ const UserTabs = () => {
 
             <section className="user-details py-80">
                 <div className="container container-lg">
+                <div className="d-flex align-items-center mb-20 ">
+                                <button
+                                    className="btn btn-outline-secondary me-3 bg-main-700"
+                                    onClick={() => navigate('/user-details')}
+                                >
+                                    <i className="ph ph-arrow-left me-2 "></i> Back
+                                </button>
+                            </div>
                     <div className="row gy-5">
                         <div className="col-12">
                             <div className="user-details-header d-flex align-items-center justify-content-between mb-40">
@@ -108,6 +116,7 @@ const UserTabs = () => {
                                     <div className="avatar w-64 h-64 rounded-circle bg-gray-200 flex-center">
                                         <i className="ph ph-user text-2xl text-gray-500" />
                                     </div>
+                                    
                                     <div>
                                         <h6 className="text-xl fw-semibold mb-0">             {token &&  
                         `Hello, ${user.name}`
@@ -119,14 +128,7 @@ const UserTabs = () => {
                                     {/* <span className="text-md fw-medium">Credit: 0</span> */}
                                 </div>
                             </div>
-                            <div className="d-flex align-items-center mb-20 ">
-                                <button
-                                    className="btn btn-outline-secondary me-3 bg-main-700"
-                                    onClick={() => navigate('/user-dashboard')}
-                                >
-                                    <i className="ph ph-arrow-left me-2 "></i> Back
-                                </button>
-                            </div>
+                        
                             <div className="tabs mb-20">
                                 <ul className="nav nav-tabs d-flex flex-wrap gap-2">
                                     {tabs.map(tab => (
