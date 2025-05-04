@@ -85,26 +85,41 @@ const RecentPostsSidebar = ({ posts }) => {
     );
 };
 
-const TagsSidebar = ({ tags }) => {
+const TagsSidebar = ({ tags, setSelectedCategory, categoryData }) => {
     return (
         <div className="blog-sidebar border border-gray-100 rounded-8 p-32 mb-40">
             <h6 className="text-xl mb-32 pb-32 border-bottom border-gray-100">
                 Tags
             </h6>
             <ul>
-                {tags?.map((tag, index) => (
-                    <li key={index} className="mb-16">
-                        <Link
-                            to="/blog-details"
-                            className="flex-between gap-8 text-gray-700 border border-gray-100 rounded-4 p-4 ps-16 hover-border-main-600 hover-text-main-600"
-                        >
-                            <span>{tag.trim()}</span>
-                            <span className="w-40 h-40 flex-center rounded-4 bg-main-50 text-main-600">
-                                <i className="ph ph-arrow-right" />
-                            </span>
-                        </Link>
-                    </li>
-                ))}
+                <li className="mb-16">
+                    <button
+                        className={`flex-between gap-8 w-100 text-gray-700 border border-gray-100 rounded-4 p-4 ps-16 hover-border-main-600 hover-text-main-600 ${!setSelectedCategory ? 'bg-main-50 text-main-600' : ''}`}
+                        onClick={() => setSelectedCategory(null)}
+                    >
+                        <span>All Categories</span>
+                        <span className="w-40 h-40 flex-center rounded-4 bg-main-50 text-main-600">
+                            <i className="ph ph-arrow-right" />
+                        </span>
+                    </button>
+                </li>
+                {tags?.map((tag, index) => {
+                    const category = categoryData?.blogCat?.find(cat => cat.cat_name.toLowerCase() === tag.trim().toLowerCase());
+                    return (
+                        <li key={index} className="mb-16">
+                            <button
+                                className={`flex-between gap-8 w-100 text-gray-700 border border-gray-100 rounded-4 p-4 ps-16 hover-border-main-600 hover-text-main-600 ${setSelectedCategory === category?.id ? 'bg-main-50 text-main-600' : ''}`}
+                                onClick={() => setSelectedCategory(category?.id || null)}
+                                disabled={!category}
+                            >
+                                <span>{tag.trim()}</span>
+                                <span className="w-40 h-40 flex-center rounded-4 bg-main-50 text-main-600">
+                                    <i className="ph ph-arrow-right" />
+                                </span>
+                            </button>
+                        </li>
+                    );
+                })}
             </ul>
         </div>
     );

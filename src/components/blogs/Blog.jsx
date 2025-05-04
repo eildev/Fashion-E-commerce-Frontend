@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-
 import { SearchSidebar, RecentPostsSidebar, TagsSidebar, BlogItem } from './SidebarComponents';
 import { useGetBlogQuery } from '../../redux/features/api/blogApi';
 import { useGetBlogCategoryQuery } from '../../redux/features/api/blogCategoryApi';
@@ -126,7 +125,7 @@ const Blog = () => {
                     <div className="col-lg-4 ps-xl-4">
                         <SearchSidebar searchQuery={searchQuery} setSearchQuery={setSearchQuery} setCurrentPage={setCurrentPage} />
                         <RecentPostsSidebar posts={sortedBlogs} />
-                        <TagsSidebar tags={tags} />
+                        <TagsSidebar tags={tags} setSelectedCategory={setSelectedCategory} categoryData={categoryData} />
                     </div>
                 </div>
             </div>
