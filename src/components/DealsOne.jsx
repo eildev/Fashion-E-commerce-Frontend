@@ -29,7 +29,7 @@ const SamplePrevArrow = memo(function SamplePrevArrow(props) {
     );
 });
 
-const DealsOne = () => {
+const DealsOne = ({data}) => {
     const [timeLeft, setTimeLeft] = useState(getCountdown());
 
     useEffect(() => {

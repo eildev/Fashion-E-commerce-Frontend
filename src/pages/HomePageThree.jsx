@@ -2,7 +2,7 @@ import React from "react";
 import Preloader from "../helper/Preloader";
 import HeaderTwo from "../components/HeaderTwo";
 import BannerThree from "../components/BannerThree";
-import PromotionalTwo from "../components/PromotionalTwo";
+import PromotionalThree from "../components/PromotionalThree";
 import DealsOne from "../components/DealsOne";
 import TopSellingOne from "../components/TopSellingOne";
 import TrendingOne from "../components/TrendingOne";
@@ -22,9 +22,10 @@ import BottomFooter from "../components/BottomFooter";
 import ColorInit from "../helper/ColorInit";
 import ScrollToTop from "react-scroll-to-top";
 import HeaderThree from "../components/HeaderThree";
+import { useGetVariantApiQuery } from "../redux/features/api/variantApi";
 
 const HomePageThree = () => {
-
+  const { data: variantData, isLoading } = useGetVariantApiQuery();
 
   return (
 
@@ -44,13 +45,13 @@ const HomePageThree = () => {
       {/* BannerTwo */}
   <BannerThree></BannerThree>
       {/* PromotionalTwo */}
-      <PromotionalTwo />
+      <PromotionalThree data={variantData}/>
 
       {/* DealsOne */}
-      <DealsOne />
+      <DealsOne data={variantData}/>
 
       {/* TopSellingOne */}
-      <TopSellingOne />
+      <TopSellingTwo />
 
       {/* TrendingOne */}
       <TrendingOne />

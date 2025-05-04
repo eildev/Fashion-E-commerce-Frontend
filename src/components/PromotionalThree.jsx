@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const PromotionalThree = () => {
+const PromotionalThree = ({data}) => {
+console.log("prpomot", data);
   return (
     <section className='promo-three pt-120   overflow-hidden'>
       <div className='container container-lg'>

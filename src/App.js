@@ -19,6 +19,9 @@ import VendorTwoPage from "./pages/VendorTwoPage";
 import VendorTwoDetailsPage from "./pages/VendorTwoDetailsPage";
 import BecomeSellerPage from "./pages/BecomeSellerPage";
 import WishlistPage from "./pages/WishlistPage";
+import UserDetails from "./pages/UserDetailsPage";
+import UserDashboard from "./components/userDashboard/UserDashboard";
+import UserTabs from "./components/userDashboard/UserTabs";
 function App() {
   return (
     <BrowserRouter>
@@ -50,12 +53,15 @@ function App() {
         <Route exact path='/contact' element={<ContactPage />} />
         <Route exact path='/vendor' element={<VendorPage />} />
         <Route exact path='/vendor-details' element={<VendorDetailsPage />} />
+        <Route exact path='/user-details' element={<UserDetails />} />
         <Route exact path='/vendor-two' element={<VendorTwoPage />} />
         <Route
           exact
           path='/vendor-two-details'
           element={<VendorTwoDetailsPage />}
         />
+        <Route path="/user-dashboard" element={<UserDashboard />} />
+        <Route path="/user-tabs/:tabId" element={<UserTabs />} />
       </Routes>
     </BrowserRouter>
   );
