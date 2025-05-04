@@ -1,7 +1,26 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { useGetBlogQuery } from '../redux/features/api/blogApi';
+import { imagePath } from './imagePath';
 
 const BlogDetails = () => {
+    const { id } = useParams();
+    const { data, isLoading, isError } = useGetBlogQuery();
+
+    if (isLoading) {
+        return <div className="text-center mt-10">Loading blog details...</div>;
+    }
+
+    if (isError) {
+        return <div className="text-center mt-10 text-red-500">Failed to load blog details. Please try again later.</div>;
+    }
+
+    const blog = data?.blogPost?.find((post) => post.id === parseInt(id));
+
+    if (!blog) {
+        return <div className="text-center mt-10 text-red-500">Blog not found.</div>;
+    }
+
     return (
         <section className="blog-details py-80">
             <div className="container container-lg">
@@ -10,38 +29,19 @@ const BlogDetails = () => {
                         <div className="blog-item-wrapper">
                             <div className="blog-item">
                                 <img
-                                    src="assets/images/thumbs/blog-img1.png"
-                                    alt=""
+                                    src={imagePath(blog?.image)}
+                                    alt={blog?.title || 'Blog Post'}
                                     className="cover-img rounded-16"
+                                    onError={(e) => (e.target.src = '/placeholder-image.jpg')}
                                 />
                                 <div className="blog-item__content mt-24">
                                     <span className="bg-main-50 text-main-600 py-4 px-24 rounded-8 mb-16">
-                                        Gadget
+                                        {blog?.tags || 'Uncategorized'}
                                     </span>
-                                    <h4 className="mb-24">
-                                        Nice decoration make be distilled to a single house
-                                    </h4>
-                                    <p className="text-gray-700 mb-24">
-                                        A great commerce experience cannot be distilled to a single
-                                        number. It's not a Lighthouse score, or a set of Core Web Vitals
-                                        figures, although both are important inputs. A great commerce
-                                        experience is a trilemma that carefully balances competing needs
-                                        of delivering great customer experience, dynamic storefront
-                                        capabilities, and long-term business — conversion, retention,
-                                        re-engagement — objectives. As developers, we rightfully obsess
-                                        about the customer experience, relentlessly working to squeeze
-                                        every millisecond out of the critical rendering path, optimize
-                                        input latency, and eliminate jank. At the limit, statically
-                                        generated, edge delivered, and HTML-first pages look like the
-                                        optimal strategy. That is until you are confronted with the
-                                        realization that the next step function in improving conversion
-                                        rates and business.
-                                    </p>
+                                    <h4 className="mb-24">{blog?.title}</h4>
+                                    <p className="text-gray-700 mb-24">{blog?.desc}</p>
                                     <p className="text-gray-700 pb-24 mb-24 border-bottom border-gray-100">
-                                        Re-engagement — objectives. As developers, we rightfully obsess
-                                        about the customer experience, relentlessly working to squeeze
-                                        every millisecond out of the critical rendering path, optimize
-                                        input latency, and eliminate...
+                                        {blog?.desc} {/* Reuse desc for additional content */}
                                     </p>
                                     <div className="flex-align flex-wrap gap-24">
                                         <div className="flex-align flex-wrap gap-8">
@@ -50,10 +50,14 @@ const BlogDetails = () => {
                                             </span>
                                             <span className="text-sm text-gray-500">
                                                 <Link
-                                                    to="/blog-details"
+                                                    to={`/blog-details/${blog.id}`}
                                                     className="text-gray-500 hover-text-main-600"
                                                 >
-                                                    July 12, 2025
+                                                    {new Date(blog.created_at).toLocaleDateString('en-US', {
+                                                        year: 'numeric',
+                                                        month: 'short',
+                                                        day: 'numeric',
+                                                    })}
                                                 </Link>
                                             </span>
                                         </div>
@@ -63,7 +67,7 @@ const BlogDetails = () => {
                                             </span>
                                             <span className="text-sm text-gray-500">
                                                 <Link
-                                                    to="/blog-details"
+                                                    to={`/blog-details/${blog.id}`}
                                                     className="text-gray-500 hover-text-main-600"
                                                 >
                                                     0 Comments
@@ -78,29 +82,22 @@ const BlogDetails = () => {
                             <div className="row gy-4">
                                 <div className="col-sm-6 col-xs-6">
                                     <img
-                                        src="assets/images/thumbs/blog-details-img1.png"
-                                        alt=""
+                                        src="/placeholder-image.jpg"
+                                        alt="Blog Detail Image 1"
                                         className="rounded-16"
                                     />
                                 </div>
                                 <div className="col-sm-6 col-xs-6">
                                     <img
-                                        src="assets/images/thumbs/blog-details-img2.png"
-                                        alt=""
+                                        src="/placeholder-image.jpg"
+                                        alt="Blog Detail Image 2"
                                         className="rounded-16"
                                     />
                                 </div>
                             </div>
                         </div>
                         <div className="mt-48">
-                            <p className="text-gray-700 mb-24">
-                                A great commerce experience cannot be distilled to a single number.
-                                It’s not a Lighthouse score, or a set of Core Web Vitals figures,
-                                although both are important inputs. A great commerce experience is a
-                                trilemma that carefully balances competing needs of delivering great
-                                customer experience, dynamic storefront capabilities, and long-term
-                                business.
-                            </p>
+                            <p className="text-gray-700 mb-24">{blog?.desc}</p>
                         </div>
                         <div className="mt-48">
                             <h6 className="mb-32">
@@ -115,8 +112,7 @@ const BlogDetails = () => {
                                                 <i className="ph ph-check" />
                                             </span>
                                             <span className="text-gray-700 flex-grow-1">
-                                                A great commerce experience cannot be distilled to a single
-                                                number.{" "}
+                                                {blog?.desc.split('.')[0] || 'A great commerce experience...'}
                                             </span>
                                         </li>
                                         <li className="d-flex align-items-start gap-8 mb-20">
@@ -124,8 +120,7 @@ const BlogDetails = () => {
                                                 <i className="ph ph-check" />
                                             </span>
                                             <span className="text-gray-700 flex-grow-1">
-                                                A great commerce experience cannot be distilled to a single
-                                                number.{" "}
+                                                {blog?.desc.split('.')[1] || 'A great commerce experience...'}
                                             </span>
                                         </li>
                                         <li className="d-flex align-items-start gap-8 mb-0">
@@ -133,8 +128,7 @@ const BlogDetails = () => {
                                                 <i className="ph ph-check" />
                                             </span>
                                             <span className="text-gray-700 flex-grow-1">
-                                                A great commerce experience cannot be distilled to a single
-                                                number.{" "}
+                                                {blog?.desc.split('.')[2] || 'A great commerce experience...'}
                                             </span>
                                         </li>
                                     </ul>
@@ -146,8 +140,7 @@ const BlogDetails = () => {
                                                 <i className="ph ph-check" />
                                             </span>
                                             <span className="text-gray-700 flex-grow-1">
-                                                A great commerce experience cannot be distilled to a single
-                                                number.{" "}
+                                                {blog?.desc.split('.')[3] || 'A great commerce experience...'}
                                             </span>
                                         </li>
                                         <li className="d-flex align-items-start gap-8 mb-20">
@@ -155,8 +148,7 @@ const BlogDetails = () => {
                                                 <i className="ph ph-check" />
                                             </span>
                                             <span className="text-gray-700 flex-grow-1">
-                                                A great commerce experience cannot be distilled to a single
-                                                number.{" "}
+                                                {blog?.desc.split('.')[4] || 'A great commerce experience...'}
                                             </span>
                                         </li>
                                         <li className="d-flex align-items-start gap-8 mb-0">
@@ -164,8 +156,7 @@ const BlogDetails = () => {
                                                 <i className="ph ph-check" />
                                             </span>
                                             <span className="text-gray-700 flex-grow-1">
-                                                A great commerce experience cannot be distilled to a single
-                                                number.{" "}
+                                                {blog?.desc.split('.')[5] || 'A great commerce experience...'}
                                             </span>
                                         </li>
                                     </ul>
@@ -177,14 +168,7 @@ const BlogDetails = () => {
                                 <span className="w-48 h-48 bg-main-600 text-white flex-center rounded-circle mb-24 text-2xl">
                                     <i className="ph ph-quotes" />
                                 </span>
-                                <p className="text-gray-700 mb-24">
-                                    A great commerce experience cannot be distilled to a single
-                                    number. It’s not a Lighthouse score, or a set of Core Web Vitals
-                                    figures, although both are important inputs. A great commerce
-                                    experience is a trilemma that carefully balances competing needs
-                                    of delivering great customer experience, dynamic storefront
-                                    capabilities, and long-term business.
-                                </p>
+                                <p className="text-gray-700 mb-24">{blog?.desc}</p>
                                 <div className="flex-align gap-8">
                                     <span className="text-15 fw-medium text-neutral-600 d-flex">
                                         <i className="ph-fill ph-star" />
@@ -211,20 +195,17 @@ const BlogDetails = () => {
                                     to="/shop"
                                     className="border border-gray-100 rounded-4 py-6 px-8 hover-bg-gray-100 text-gray-900"
                                 >
-                                    Mobile
+                                    {blog?.tags.split(',')[0] || 'Gadget'}
                                 </Link>
-                                <Link
-                                    to="/shop"
-                                    className="border border-gray-100 rounded-4 py-6 px-8 hover-bg-gray-100 text-gray-900"
-                                >
-                                    Laptop
-                                </Link>
-                                <Link
-                                    to="/shop"
-                                    className="border border-gray-100 rounded-4 py-6 px-8 hover-bg-gray-100 text-gray-900"
-                                >
-                                    Gadget
-                                </Link>
+                                {blog?.tags.split(',').slice(1).map((tag, index) => (
+                                    <Link
+                                        key={index}
+                                        to="/shop"
+                                        className="border border-gray-100 rounded-4 py-6 px-8 hover-bg-gray-100 text-gray-900"
+                                    >
+                                        {tag.trim()}
+                                    </Link>
+                                ))}
                             </div>
                         </div>
                         <div className="my-48">
@@ -240,8 +221,7 @@ const BlogDetails = () => {
                                 </button>
                                 <h6 className="text-lg mb-0">
                                     <Link to="/blog-details" className="">
-                                        A great commerce experience cannot be distilled to a single
-                                        number.{" "}
+                                        Previous Blog Title {/* Replace with dynamic data if available */}
                                     </Link>
                                 </h6>
                             </div>
@@ -254,8 +234,7 @@ const BlogDetails = () => {
                                 </button>
                                 <h6 className="text-lg mb-0">
                                     <Link to="/blog-details" className="">
-                                        A great commerce experience cannot be distilled to a single
-                                        number.{" "}
+                                        Next Blog Title {/* Replace with dynamic data if available */}
                                     </Link>
                                 </h6>
                             </div>
@@ -325,105 +304,24 @@ const BlogDetails = () => {
                                 <h6 className="mb-48">Comments</h6>
                                 <div className="d-flex align-items-start gap-16 mb-32 pb-32 border-bottom border-gray-100">
                                     <img
-                                        src="assets/images/thumbs/comment-img1.png"
-                                        alt=""
+                                        src="/placeholder-image.jpg"
+                                        alt="Comment Author"
                                         className="w-40 h-40 rounded-circle object-fit-cover flex-shrink-0"
                                     />
                                     <div className="flex-grow-1">
                                         <div className="flex-align gap-8">
-                                            <h6 className="text-md fw-bold mb-0">Marvin McKinney</h6>
+                                            <h6 className="text-md fw-bold mb-0">Comment Author</h6>
                                             <span className="w-6 h-6 bg-gray-500 rounded-circle" />
                                             <span className="text-sm fw-medium text-gray-700">
-                                                26 Apr, 2024
+                                                {new Date().toLocaleDateString('en-US', {
+                                                    year: 'numeric',
+                                                    month: 'short',
+                                                    day: 'numeric',
+                                                })}
                                             </span>
                                         </div>
                                         <p className="mt-16 text-gray-700">
-                                            In a nisi commodo, porttitor ligula consequat, tincidunt dui.
-                                            Nulla volutpat, metus eu aliquam malesuada, elit libero
-                                            venenatis urna, consequat maximus arcu diam non diam.
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="d-flex align-items-start gap-16 mb-32 pb-32 border-bottom border-gray-100">
-                                    <img
-                                        src="assets/images/thumbs/comment-img2.png"
-                                        alt=""
-                                        className="w-40 h-40 rounded-circle object-fit-cover flex-shrink-0"
-                                    />
-                                    <div className="flex-grow-1">
-                                        <div className="flex-align gap-8">
-                                            <h6 className="text-md fw-bold mb-0">Kristin Watson</h6>
-                                            <span className="w-6 h-6 bg-gray-500 rounded-circle" />
-                                            <span className="text-sm fw-medium text-gray-700">
-                                                24 Apr, 2024
-                                            </span>
-                                        </div>
-                                        <p className="mt-16 text-gray-700">
-                                            Quisque eget tortor lobortis, facilisis metus eu, elementum
-                                            est. Nunc sit amet erat quis ex convallis suscipit. Nam
-                                            hendrerit, velit ut aliquam euismod, nibh tortor rutrum nisi,
-                                            ac sodales nunc eros porta nisi. Sed scelerisque, est eget
-                                            aliquam venenatis, est sem tempor eros.
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="d-flex align-items-start gap-16 mb-32 pb-32 border-bottom border-gray-100">
-                                    <img
-                                        src="assets/images/thumbs/comment-img3.png"
-                                        alt=""
-                                        className="w-40 h-40 rounded-circle object-fit-cover flex-shrink-0"
-                                    />
-                                    <div className="flex-grow-1">
-                                        <div className="flex-align gap-8">
-                                            <h6 className="text-md fw-bold mb-0">Jenny Wilson</h6>
-                                            <span className="w-6 h-6 bg-gray-500 rounded-circle" />
-                                            <span className="text-sm fw-medium text-gray-700">
-                                                20 Apr, 2024
-                                            </span>
-                                        </div>
-                                        <p className="mt-16 text-gray-700">
-                                            Vestibulum ante ipsum primis in faucibus orci luctus et
-                                            ultrices posuere cubilia curae.
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="d-flex align-items-start gap-16 mb-32 pb-32 border-bottom border-gray-100">
-                                    <img
-                                        src="assets/images/thumbs/comment-img4.png"
-                                        alt=""
-                                        className="w-40 h-40 rounded-circle object-fit-cover flex-shrink-0"
-                                    />
-                                    <div className="flex-grow-1">
-                                        <div className="flex-align gap-8">
-                                            <h6 className="text-md fw-bold mb-0">Robert Fox</h6>
-                                            <span className="w-6 h-6 bg-gray-500 rounded-circle" />
-                                            <span className="text-sm fw-medium text-gray-700">
-                                                18 Apr, 2024
-                                            </span>
-                                        </div>
-                                        <p className="mt-16 text-gray-700">
-                                            Pellentesque feugiat, nibh vel vehicula pretium, nibh nibh
-                                            bibendum elit, a volutpat arcu dui nec orci. Aenean dui odio,
-                                            ullamcorper quis turpis ac, volutpat imperdiet ex.
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="d-flex align-items-start gap-16">
-                                    <img
-                                        src="assets/images/thumbs/comment-img5.png"
-                                        alt=""
-                                        className="w-40 h-40 rounded-circle object-fit-cover flex-shrink-0"
-                                    />
-                                    <div className="flex-grow-1">
-                                        <div className="flex-align gap-8">
-                                            <h6 className="text-md fw-bold mb-0">Eleanor Pena</h6>
-                                            <span className="w-6 h-6 bg-gray-500 rounded-circle" />
-                                            <span className="text-sm fw-medium text-gray-700">
-                                                7 Apr, 2024
-                                            </span>
-                                        </div>
-                                        <p className="mt-16 text-gray-700">
-                                            Nulla molestie interdum ultricies.{" "}
+                                            Sample comment for this blog post.
                                         </p>
                                     </div>
                                 </div>
@@ -466,219 +364,75 @@ const BlogDetails = () => {
                             <h6 className="text-xl mb-32 pb-32 border-bottom border-gray-100">
                                 Recent Posts
                             </h6>
-                            <div className="d-flex align-items-center flex-sm-nowrap flex-wrap gap-24 mb-16">
-                                <Link
-                                    to="/blog-details"
-                                    className="w-100 h-100 rounded-4 overflow-hidden w-120 h-120 flex-shrink-0"
-                                >
-                                    <img
-                                        src="assets/images/thumbs/recent-post1.png"
-                                        alt=""
-                                        className="cover-img"
-                                    />
-                                </Link>
-                                <div className="flex-grow-1">
-                                    <h6 className="text-lg">
-                                        <Link to="/blog-details" className="text-line-3">
-                                            Once determined you need to come up with a name
+                            {data?.blogPost
+                                ?.slice(0, 4)
+                                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                                .map((post) => (
+                                    <div
+                                        key={post.id}
+                                        className="d-flex align-items-center flex-sm-nowrap flex-wrap gap-24 mb-16"
+                                    >
+                                        <Link
+                                            to={`/blog-details/${post.id}`}
+                                            className="w-100 h-100 rounded-4 overflow-hidden w-120 h-120 flex-shrink-0"
+                                        >
+                                            <img
+                                                src={imagePath(post?.image)}
+                                                alt={post?.title || 'Recent Post'}
+                                                className="cover-img"
+                                                onError={(e) => (e.target.src = '/placeholder-image.jpg')}
+                                            />
                                         </Link>
-                                    </h6>
-                                    <div className="flex-align flex-wrap gap-8">
-                                        <span className="text-lg text-main-600">
-                                            <i className="ph ph-calendar-dots" />
-                                        </span>
-                                        <span className="text-sm text-gray-500">
-                                            <Link
-                                                to="/blog-details"
-                                                className="text-gray-500 hover-text-main-600"
-                                            >
-                                                July 12, 2025
-                                            </Link>
-                                        </span>
+                                        <div className="flex-grow-1">
+                                            <h6 className="text-lg">
+                                                <Link to={`/blog-details/${post.id}`} className="text-line-3">
+                                                    {post?.title}
+                                                </Link>
+                                            </h6>
+                                            <div className="flex-align flex-wrap gap-8">
+                                                <span className="text-lg text-main-600">
+                                                    <i className="ph ph-calendar-dots" />
+                                                </span>
+                                                <span className="text-sm text-gray-500">
+                                                    <Link
+                                                        to={`/blog-details/${post.id}`}
+                                                        className="text-gray-500 hover-text-main-600"
+                                                    >
+                                                        {new Date(post.created_at).toLocaleDateString('en-US', {
+                                                            year: 'numeric',
+                                                            month: 'short',
+                                                            day: 'numeric',
+                                                        })}
+                                                    </Link>
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div className="d-flex align-items-center flex-sm-nowrap flex-wrap gap-24 mb-16">
-                                <Link
-                                    to="/blog-details"
-                                    className="w-100 h-100 rounded-4 overflow-hidden w-120 h-120 flex-shrink-0"
-                                >
-                                    <img
-                                        src="assets/images/thumbs/recent-post2.png"
-                                        alt=""
-                                        className="cover-img"
-                                    />
-                                </Link>
-                                <div className="flex-grow-1">
-                                    <h6 className="text-lg">
-                                        <Link to="/blog-details" className="text-line-3">
-                                            Once determined you need to come up with a name
-                                        </Link>
-                                    </h6>
-                                    <div className="flex-align flex-wrap gap-8">
-                                        <span className="text-lg text-main-600">
-                                            <i className="ph ph-calendar-dots" />
-                                        </span>
-                                        <span className="text-sm text-gray-500">
-                                            <Link
-                                                to="/blog-details"
-                                                className="text-gray-500 hover-text-main-600"
-                                            >
-                                                July 12, 2025
-                                            </Link>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="d-flex align-items-center flex-sm-nowrap flex-wrap gap-24 mb-16">
-                                <Link
-                                    to="/blog-details"
-                                    className="w-100 h-100 rounded-4 overflow-hidden w-120 h-120 flex-shrink-0"
-                                >
-                                    <img
-                                        src="assets/images/thumbs/recent-post3.png"
-                                        alt=""
-                                        className="cover-img"
-                                    />
-                                </Link>
-                                <div className="flex-grow-1">
-                                    <h6 className="text-lg">
-                                        <Link to="/blog-details" className="text-line-3">
-                                            Once determined you need to come up with a name
-                                        </Link>
-                                    </h6>
-                                    <div className="flex-align flex-wrap gap-8">
-                                        <span className="text-lg text-main-600">
-                                            <i className="ph ph-calendar-dots" />
-                                        </span>
-                                        <span className="text-sm text-gray-500">
-                                            <Link
-                                                to="/blog-details"
-                                                className="text-gray-500 hover-text-main-600"
-                                            >
-                                                July 12, 2025
-                                            </Link>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="d-flex align-items-center flex-sm-nowrap flex-wrap gap-24 mb-0">
-                                <Link
-                                    to="/blog-details"
-                                    className="w-100 h-100 rounded-4 overflow-hidden w-120 h-120 flex-shrink-0"
-                                >
-                                    <img
-                                        src="assets/images/thumbs/recent-post4.png"
-                                        alt=""
-                                        className="cover-img"
-                                    />
-                                </Link>
-                                <div className="flex-grow-1">
-                                    <h6 className="text-lg">
-                                        <Link to="/blog-details" className="text-line-3">
-                                            Once determined you need to come up with a name
-                                        </Link>
-                                    </h6>
-                                    <div className="flex-align flex-wrap gap-8">
-                                        <span className="text-lg text-main-600">
-                                            <i className="ph ph-calendar-dots" />
-                                        </span>
-                                        <span className="text-sm text-gray-500">
-                                            <Link
-                                                to="/blog-details"
-                                                className="text-gray-500 hover-text-main-600"
-                                            >
-                                                July 12, 2025
-                                            </Link>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
+                                ))}
                         </div>
                         {/* Recent Post End */}
                         {/* Tags Start */}
                         <div className="blog-sidebar border border-gray-100 rounded-8 p-32 mb-40">
                             <h6 className="text-xl mb-32 pb-32 border-bottom border-gray-100">
-                                Recent Posts
+                                Tags
                             </h6>
                             <ul>
-                                <li className="mb-16">
-                                    <Link
-                                        to="/blog-details"
-                                        className="flex-between gap-8 text-gray-700 border border-gray-100 rounded-4 p-4 ps-16 hover-border-main-600 hover-text-main-600"
-                                    >
-                                        <span>Gaming (12)</span>
-                                        <span className="w-40 h-40 flex-center rounded-4 bg-main-50 text-main-600">
-                                            <i className="ph ph-arrow-right" />
-                                        </span>
-                                    </Link>
-                                </li>
-                                <li className="mb-16">
-                                    <Link
-                                        to="/blog-details"
-                                        className="flex-between gap-8 text-gray-700 border border-gray-100 rounded-4 p-4 ps-16 hover-border-main-600 hover-text-main-600"
-                                    >
-                                        <span>Smart Gadget (05)</span>
-                                        <span className="w-40 h-40 flex-center rounded-4 bg-main-50 text-main-600">
-                                            <i className="ph ph-arrow-right" />
-                                        </span>
-                                    </Link>
-                                </li>
-                                <li className="mb-16">
-                                    <Link
-                                        to="/blog-details"
-                                        className="flex-between gap-8 text-gray-700 border border-gray-100 rounded-4 p-4 ps-16 hover-border-main-600 hover-text-main-600"
-                                    >
-                                        <span>Software (29)</span>
-                                        <span className="w-40 h-40 flex-center rounded-4 bg-main-50 text-main-600">
-                                            <i className="ph ph-arrow-right" />
-                                        </span>
-                                    </Link>
-                                </li>
-                                <li className="mb-16">
-                                    <Link
-                                        to="/blog-details"
-                                        className="flex-between gap-8 text-gray-700 border border-gray-100 rounded-4 p-4 ps-16 hover-border-main-600 hover-text-main-600"
-                                    >
-                                        <span>Electronics (24)</span>
-                                        <span className="w-40 h-40 flex-center rounded-4 bg-main-50 text-main-600">
-                                            <i className="ph ph-arrow-right" />
-                                        </span>
-                                    </Link>
-                                </li>
-                                <li className="mb-16">
-                                    <Link
-                                        to="/blog-details"
-                                        className="flex-between gap-8 text-gray-700 border border-gray-100 rounded-4 p-4 ps-16 hover-border-main-600 hover-text-main-600"
-                                    >
-                                        <span>Laptop (08)</span>
-                                        <span className="w-40 h-40 flex-center rounded-4 bg-main-50 text-main-600">
-                                            <i className="ph ph-arrow-right" />
-                                        </span>
-                                    </Link>
-                                </li>
-                                <li className="mb-16">
-                                    <Link
-                                        to="/blog-details"
-                                        className="flex-between gap-8 text-gray-700 border border-gray-100 rounded-4 p-4 ps-16 hover-border-main-600 hover-text-main-600"
-                                    >
-                                        <span>Mobile &amp; Accessories (16)</span>
-                                        <span className="w-40 h-40 flex-center rounded-4 bg-main-50 text-main-600">
-                                            <i className="ph ph-arrow-right" />
-                                        </span>
-                                    </Link>
-                                </li>
-                                <li className="mb-0">
-                                    <Link
-                                        to="/blog-details"
-                                        className="flex-between gap-8 text-gray-700 border border-gray-100 rounded-4 p-4 ps-16 hover-border-main-600 hover-text-main-600"
-                                    >
-                                        <span>Apliance (24)</span>
-                                        <span className="w-40 h-40 flex-center rounded-4 bg-main-50 text-main-600">
-                                            <i className="ph ph-arrow-right" />
-                                        </span>
-                                    </Link>
-                                </li>
+                                {data?.blogPost
+                                    ?.flatMap((post) => post.tags?.split(',') || [])
+                                    .filter((tag, index, self) => self.indexOf(tag) === index)
+                                    .map((tag, index) => (
+                                        <li key={index} className="mb-16">
+                                            <Link
+                                                to="/blog-details"
+                                                className="flex-between gap-8 text-gray-700 border border-gray-100 rounded-4 p-4 ps-16 hover-border-main-600 hover-text-main-600"
+                                            >
+                                                <span>{tag.trim()}</span>
+                                                <span className="w-40 h-40 flex-center rounded-4 bg-main-50 text-main-600">
+                                                    <i className="ph ph-arrow-right" />
+                                                </span>
+                                            </Link>
+                                        </li>
+                                    ))}
                             </ul>
                         </div>
                         {/* Tags End */}
@@ -686,8 +440,7 @@ const BlogDetails = () => {
                 </div>
             </div>
         </section>
+    );
+};
 
-    )
-}
-
-export default BlogDetails
+export default BlogDetails;
