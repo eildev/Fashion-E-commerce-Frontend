@@ -23,7 +23,7 @@ const ShopPage = () => {
       <Preloader />
 
       {/* HeaderOne */}
-      <HeaderThree category={false} />
+      <HeaderThree category={true} />
       {/* Breadcrumb */}
       <Breadcrumb title={"Shop"} />
 

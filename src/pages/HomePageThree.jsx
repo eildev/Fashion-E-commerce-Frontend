@@ -40,7 +40,7 @@ const HomePageThree = () => {
       <Preloader />
 
       {/* HeaderTwo */}
-      <HeaderThree category={false} />
+      <HeaderThree category={true} />
 
       {/* BannerTwo */}
   <BannerThree></BannerThree>

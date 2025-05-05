@@ -125,7 +125,7 @@ const Blog = () => {
                     <div className="col-lg-4 ps-xl-4">
                         <SearchSidebar searchQuery={searchQuery} setSearchQuery={setSearchQuery} setCurrentPage={setCurrentPage} />
                         <RecentPostsSidebar posts={sortedBlogs} />
-                        <TagsSidebar tags={tags} setSelectedCategory={setSelectedCategory} categoryData={categoryData} />
+                        <TagsSidebar tags={tags} setSelectedCategory={setSelectedCategory} categoryData={categoryData} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
                     </div>
                 </div>
             </div>
