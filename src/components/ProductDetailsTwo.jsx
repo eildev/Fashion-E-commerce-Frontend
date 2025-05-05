@@ -5,6 +5,7 @@ import { getCountdown } from '../helper/Countdown';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../redux/features/slice/cartSlice';
+import { addToCompare } from '../redux/features/slice/compareSlice';
 import { Rating, Star } from '@smastrom/react-rating';
 import { useReviewInfoMutation } from '../redux/features/api/reviewApi';
 import { useGetReviewInfoQuery } from '../redux/features/api/reviewGetApi';
@@ -14,6 +15,7 @@ import '@smastrom/react-rating/style.css';
 const ProductDetailsTwo = ({ item: data }) => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
+  const { compareItems } = useSelector((state) => state.compare);
   const { user } = useSelector((state) => state.auth);
   const [timeLeft, setTimeLeft] = useState(getCountdown());
   const [mainImage, setMainImage] = useState(data?.variant_image[0]);
@@ -27,30 +29,27 @@ const ProductDetailsTwo = ({ item: data }) => {
   const { data: reviews, isLoading, isError, error } = useGetReviewInfoQuery(data?.id);
   const [postReview, { isLoading: isSubmitting }] = useReviewInfoMutation();
 
- 
   useEffect(() => {
     if (reviews?.reviews) {
       setLocalReviews(reviews.reviews);
     }
   }, [reviews]);
 
-
   const hasUserReviewed = localReviews.some(
     (review) => review.user_id === user?.id
   );
 
-  
   useEffect(() => {
     console.log('Current rating:', rating);
   }, [rating]);
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setTimeLeft(getCountdown());
-  //   }, 1000);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeLeft(getCountdown());
+    }, 1000);
 
-  //   return () => clearInterval(interval);
-  // }, []);
+    return () => clearInterval(interval);
+  }, []);
 
   console.log(data);
 
@@ -195,6 +194,43 @@ const ProductDetailsTwo = ({ item: data }) => {
     }
   };
 
+  // Handle add to compare with localStorage sync
+  const handleAddToCompare = () => {
+    // Validate data
+    if (!data?.id) {
+      toast.error('Invalid product data!');
+      return;
+    }
+
+    // Check limit
+    if (compareItems.length >= 4) {
+      toast.error('Cannot compare more than 4 products!');
+      return;
+    }
+
+    // Check for duplicates
+    if (compareItems.some((item) => item.id === data.id)) {
+      toast.error('This product is already in comparison!');
+      return;
+    }
+
+    try {
+      // Dispatch addToCompare action
+      dispatch(addToCompare(data));
+
+      // Update localStorage with the new compareItems
+      const updatedCompareItems = [...compareItems, data];
+      localStorage.setItem('compareItems', JSON.stringify(updatedCompareItems));
+
+      toast.success('Added to comparison');
+      // Optionally navigate to compare page
+      // navigate('/compare');
+    } catch (error) {
+      console.error('Error saving to localStorage:', error);
+      toast.error('Failed to add to comparison');
+    }
+  };
+
   // Calculate average rating and distribution
   const calculateFeedback = () => {
     if (!localReviews.length) return { average: 0, distribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }, total: 0 };
@@ -327,7 +363,7 @@ const ProductDetailsTwo = ({ item: data }) => {
               </div>
               <div className="col-xl-6">
                 <div className="product-details__content">
-                  {/* <div className="flex-center mb-24 flex-wrap gap-16 bg-color-one rounded-8 py-16 px-24 position-relative z-1">
+                  <div className="flex-center mb-24 flex-wrap gap-16 bg-color-one rounded-8 py-16 px-24 position-relative z-1">
                     <img
                       src="assets/images/bg/details-offer-bg.png"
                       alt=""
@@ -357,7 +393,7 @@ const ProductDetailsTwo = ({ item: data }) => {
                       </ul>
                     </div>
                     <span className="text-white text-xs">Remains until the end of the offer</span>
-                  </div> */}
+                  </div>
                   <h5 className="mb-12">{data?.variant_name}</h5>
                   <div className="flex-align flex-wrap gap-12 mb-12">
                     <div className="flex-align gap-12 flex-wrap">
@@ -448,26 +484,6 @@ const ProductDetailsTwo = ({ item: data }) => {
           </div>
           <div className="col-xl-3">
             <div className="product-details__sidebar py-40 px-32 border border-gray-100 rounded-16">
-              {/* <div className="mb-32">
-                <label
-                  htmlFor="delivery"
-                  className="h6 activePage mb-8 text-heading fw-semibold d-block"
-                >
-                  Delivery
-                </label>
-                <div className="flex-align border border-gray-100 rounded-4 px-16">
-                  <span className="text-xl d-flex text-main-600">
-                    <i className="ph ph-map-pin" />
-                  </span>
-                  <select defaultValue={1} className="common-input border-0 px-8 rounded-4" id="delivery">
-                    <option value={1}>Maymansign</option>
-                    <option value={2}>Khulna</option>
-                    <option value={3}>Rajshahi</option>
-                    <option value={4}>Rangpur</option>
-                  </select>
-                </div>
-              </div> */}
-              
               <div className="mb-32">
                 <label
                   htmlFor="stock"
@@ -534,6 +550,14 @@ const ProductDetailsTwo = ({ item: data }) => {
               >
                 <i className="ph ph-heart text-lg" />
                 Add to Wishlist
+              </button>
+              <button
+                onClick={handleAddToCompare}
+                className="btn btn-outline-main rounded-8 py-16 fw-normal mt-16 w-100 flex-center gap-8"
+                disabled={compareItems.some((item) => item?.id === data?.id) || compareItems.length >= 4}
+              >
+                <i className="ph ph-scales text-lg" />
+                Add to Compare
               </button>
               <div className="mt-32">
                 <div className="px-16 py-8 bg-main-50 rounded-8 flex-between gap-24 mb-14">
@@ -637,7 +661,7 @@ const ProductDetailsTwo = ({ item: data }) => {
                     role="tab"
                     aria-controls="pills-reviews"
                     aria-selected="false"
-                    onClick={() =>  setRating(0)}
+                    onClick={() => setRating(0)}
                   >
                     Reviews
                   </button>
@@ -779,9 +803,9 @@ const ProductDetailsTwo = ({ item: data }) => {
                                     ))}
                                   </div>
                                 </div>
-                                {/* <span className="text-gray-800 text-xs">
+                                <span className="text-gray-800 text-xs">
                                   {formatDistanceToNow(new Date(item.created_at), { addSuffix: true })}
-                                </span> */}
+                                </span>
                               </div>
                               <h6 className="mb-14 text-md mt-24">{item.title}</h6>
                               <p className="text-gray-700">{item.review}</p>

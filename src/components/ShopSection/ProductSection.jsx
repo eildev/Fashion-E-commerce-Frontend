@@ -2,8 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../../redux/features/slice/cartSlice';
-import { useAddToWishlistMutation } from '../../redux/features/api/wishlistByUserAPI';
+import { useAddToWishlistMutation, useGetWishlistByUserIdQuery } from '../../redux/features/api/wishlistByUserAPI';
 import toast from 'react-hot-toast';
+import { Rating, Star } from '@smastrom/react-rating';
+import '@smastrom/react-rating/style.css';
 
 const ProductSection = ({
   isLoading,
@@ -21,6 +23,45 @@ const ProductSection = ({
   const cartItems = useSelector((state) => state.cart.cartItems);
   const { user } = useSelector((state) => state.auth);
   const [addToWishlist] = useAddToWishlistMutation();
+
+  // Fetch wishlist for the logged-in user
+  const { data: wishlistResponse, isLoading: wishlistLoading, error: wishlistError } = useGetWishlistByUserIdQuery(user?.id, {
+    skip: !user?.id, // Skip query if user is not logged in
+  });
+
+  // Extract wishlist array (handle array or object with data property)
+  const wishlistData = Array.isArray(wishlistResponse) ? wishlistResponse : wishlistResponse?.data || [];
+
+  // Debugging: Log wishlistData structure (remove in production)
+  console.log('wishlistData:', wishlistData);
+
+  // Calculate final price after applying coupon
+  const calculateFinalPrice = (variant) => {
+    const regularPrice = parseFloat(variant?.regular_price);
+    const coupon = variant?.product_variant_promotion?.coupon;
+
+    if (!coupon || coupon.status !== 'Active') {
+      return regularPrice;
+    }
+
+    const currentDate = new Date();
+    const startDate = new Date(coupon.start_date);
+    const endDate = new Date(coupon.end_date);
+
+    if (currentDate < startDate || currentDate > endDate) {
+      return regularPrice;
+    }
+
+    let finalPrice = regularPrice;
+    if (coupon.discount_type === 'percentage') {
+      const discountAmount = (regularPrice * parseFloat(coupon.discount_value)) / 100;
+      finalPrice = regularPrice - discountAmount;
+    } else if (coupon.discount_type === 'fixed') {
+      finalPrice = regularPrice - parseFloat(coupon.discount_value);
+    }
+
+    return Math.max(finalPrice, 0);
+  };
 
   // Add to cart
   const handleAddToCart = (eItem) => {
@@ -40,10 +81,12 @@ const ProductSection = ({
       return;
     }
 
+    const finalPrice = calculateFinalPrice(eItem);
     const newProduct = {
       ...eItem,
       quantity: 1,
       user_id: user?.id || null,
+      final_price: finalPrice,
     };
 
     dispatch(addToCart(newProduct));
@@ -57,23 +100,43 @@ const ProductSection = ({
       return;
     }
 
+    // Debugging: Log item.id and wishlistData before checking
+    console.log('Attempting to add to wishlist. Item ID:', item.id, 'Wishlist Data:', wishlistData);
+
+    // Check if the product is already in the wishlist
+    const isAlreadyInWishlist = Array.isArray(wishlistData) && wishlistData.some((wishlistItem) => {
+      const isMatch = wishlistItem.variant_id === item.id;
+      console.log('Checking wishlist item:', wishlistItem, 'against item.id:', item.id, 'Match:', isMatch);
+      return isMatch;
+    });
+
+    if (isAlreadyInWishlist) {
+      toast.error('This product is already in your wishlist');
+      return;
+    }
+
     try {
-      const wishlistData = {
+      const wishlistDataPayload = {
         user_id: user.id,
         product_id: item.product?.id,
         variant_id: item.id,
       };
-      
-      const response = await addToWishlist(wishlistData).unwrap();
+
+      console.log('Sending to wishlist API:', wishlistDataPayload);
+      await addToWishlist(wishlistDataPayload).unwrap();
       toast.success('Added to Wishlist');
     } catch (error) {
       console.error('Failed to add to wishlist:', error);
-      if (error.data?.message?.includes('already exists')) {
-        toast.error('This product is already in your wishlist');
-      } else {
-        toast.error('Failed to add to wishlist');
-      }
+      toast.error('Failed to add to wishlist');
     }
+  };
+
+  // Rating styles
+  const customStyles = {
+    itemShapes: Star,
+    boxBorderWidth: 0,
+    activeFillColor: '#FA8232',
+    inactiveFillColor: '#AFAFAF',
   };
 
   return (
@@ -134,80 +197,135 @@ const ProductSection = ({
 
       {/* Product List/Grid */}
       <div className={`list-grid-wrapper ${grid && 'list-view'}`}>
-        {isLoading ? (
-          <div>Loading...</div>
+        {isLoading || wishlistLoading ? (
+          <div className="text-center py-4">
+            <div className="spinner-border text-main-600" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        ) : wishlistError ? (
+          <div className="text-center py-4 text-gray-500">
+            Failed to load wishlist. Please try again.
+          </div>
         ) : paginatedData.length > 0 ? (
-          paginatedData.map((item, i) => (
-            <div
-              key={i}
-              className="product-card h-100 p-16 border border-gray-100 hover-border-main-600 rounded-16 position-relative transition-2"
-            >
-              <Link
-                to={`/product-details-two/${item.id}`}
-                className="product-card__thumb flex-center rounded-8 border position-relative"
+          paginatedData.map((item, i) => {
+            const finalPrice = calculateFinalPrice(item);
+            const regularPrice = parseFloat(item?.regular_price);
+            const hasDiscount = finalPrice < regularPrice;
+            const discountValue = item?.product_variant_promotion?.coupon?.discount_value;
+            const discountType = item?.product_variant_promotion?.coupon?.discount_type;
+
+            // Calculate review metrics
+            const reviews = item?.review_rating || [];
+            const reviewCount = reviews.length;
+            const averageRating =
+              reviews.length > 0
+                ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length
+                : 0;
+            const isBestSeller = reviewCount >= 10;
+
+            // Check if item is in wishlist for UI
+            const isInWishlist = Array.isArray(wishlistData) && wishlistData.some(
+              (wishlistItem) => wishlistItem.variant_id === item.id
+            );
+
+            return (
+              <div
+                key={i}
+                className="product-card h-100 p-16 border border-gray-100 hover-border-main-600 rounded-16 position-relative transition-2"
               >
-                <img
-                  src={
-                    item?.variant_image?.[0]?.image
-                      ? `http://127.0.0.1:8000/${item.variant_image[0].image}`
-                      : 'assets/images/thumbs/product-two-img1.png'
-                  }
-                  alt=""
-                  className="w-full h-auto object-contain rounded-8"
-                />
-                <span className="product-card__badge bg-primary-600 px-8 py-4 text-sm text-white position-absolute inset-inline-start-0 inset-block-start-0">
-                  {item?.product?.product_features[0]?.feature?.feature_name}
-                </span>
-              </Link>
-              <div className="product-card__content mt-16">
-                <div className="d-flex justify-content-between align-items-center">
-                  <h6 className="title text-lg fw-semibold mt-12 mb-8">
-                    <Link
-                      to={`/product-details-two/${item.id}`}
-                      className="link text-line-2"
-                      tabIndex={0}
+                <Link
+                  to={`/product-details-two/${item.id}`}
+                  className="product-card__thumb flex-center rounded-8 border position-relative"
+                >
+                  <img
+                    src={
+                      item?.variant_image?.[0]?.image
+                        ? `http://127.0.0.1:8000/${item.variant_image[0].image}`
+                        : 'assets/images/thumbs/product-two-img1.png'
+                    }
+                    alt={item?.variant_name || 'Product Image'}
+                    className="w-full h-auto object-contain rounded-8"
+                  />
+                  {/* {isBestSeller && (
+                    <span className="product-card__badge bg-primary-600 px-8 py-4 text-sm text-white position-absolute inset-inline-start-0 inset-block-start-0">
+                      Best Sale
+                    </span>
+                  )} */}
+                  
+                    <span className="product-card__badge bg-primary-600 px-8 py-4 text-sm text-white position-absolute inset-inline-start-0 inset-block-start-0">
+                    {item?.product?.product_features[0]?.feature?.feature_name}
+                    </span>
+              
+                  {hasDiscount && discountValue && (
+                    <span className="product-card__badge bg-danger-600 px-8 py-4 text-sm text-white position-absolute inset-inline-end-0 inset-block-start-0">
+                      Sale {discountValue}{discountType === 'percentage' ? '%' : '$'}
+                    </span>
+                  )}
+                </Link>
+                <div className="product-card__content mt-16">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <h6 className="title text-lg fw-semibold mt-12 mb-8">
+                      <Link
+                        to={`/product-details-two/${item.id}`}
+                        className="link text-line-2"
+                        tabIndex={0}
+                      >
+                        {item?.variant_name || 'Unnamed Product'}
+                      </Link>
+                    </h6>
+                    <button
+                      onClick={() => handleAddToWishlist(item)}
+                      className="wish-btn text-2xl text-neutral-600 hover-text-danger-600"
+                      type="button"
+                      disabled={isInWishlist}
                     >
-                      {item?.product?.product_name}
-                    </Link>
-                  </h6>
-                  <button 
-                    onClick={() => handleAddToWishlist(item)}
-                    className="wish-btn text-2xl text-neutral-600 hover-text-danger-600"
-                    type="button"
-                  >
-                    <i className="ph-bold ph-heart" />
-                  </button>
-                </div>
-                <div className="flex-align mb-20 mt-16 gap-6">
-                  <span className="text-xs fw-medium text-gray-500">4.8</span>
-                  <span className="text-15 fw-medium text-warning-600 d-flex">
-                    <i className="ph-fill ph-star" />
-                  </span>
-                  <span className="text-xs fw-medium text-gray-500">(17k)</span>
-                </div>
-                <div className="product-card__price my-20">
-                  <span className="text-gray-400 text-md fw-semibold text-decoration-line-through me-5">
-                    $28.99
-                  </span>
-                  <span className="text-heading text-md fw-semibold">
-                    ${item?.regular_price}{' '}
-                    <span className="text-gray-500 fw-normal">/Qty</span>
-                  </span>
-                </div>
-                <div className="d-flex gap-2">
+                      <i className={`ph-bold ph-heart${isInWishlist ? '-fill' : ''}`} />
+                    </button>
+                  </div>
+                  <div className="flex-align mb-20 mt-16 gap-6">
+                    {isLoading ? (
+                      <span className="text-xs text-gray-600">Loading...</span>
+                    ) : (
+                      <>
+                        <Rating
+                          value={averageRating}
+                          readOnly
+                          itemStyles={customStyles}
+                          style={{ maxWidth: 80 }}
+                        />
+                        <span className="text-xs fw-medium text-gray-500">
+                          ({reviewCount})
+                        </span>
+                      </>
+                    )}
+                  </div>
+                  <div className="product-card__price my-20 flex-align gap-8">
+                    {hasDiscount && (
+                      <span className="text-gray-400 text-md fw-semibold text-decoration-line-through">
+                        ${regularPrice.toFixed(2)}
+                      </span>
+                    )}
+                    <span className="text-heading text-md fw-semibold">
+                      ${finalPrice.toFixed(2)}{' '}
+                      <span className="text-gray-500 fw-normal">/Qty</span>
+                    </span>
+                  </div>
                   <button
                     onClick={() => handleAddToCart(item)}
-                    className="product-card__cart btn bg-gray-50 text-heading hover-bg-main-600 hover-text-white py-11 px-24 rounded-8 flex-center gap-8 fw-medium flex-grow-1"
+                    className="product-card__cart btn bg-gray-50 text-heading hover-bg-main-600 hover-text-white py-11 px-24 rounded-8 flex-center gap-8 fw-medium flex-grow-1 w-100"
                     tabIndex={0}
                   >
                     Add To Cart <i className="ph ph-shopping-cart" />
                   </button>
                 </div>
               </div>
-            </div>
-          ))
+            );
+          })
         ) : (
-          <div>No products found.</div>
+          <div className="text-center py-4 text-gray-500">
+            No products found.
+          </div>
         )}
       </div>
 
