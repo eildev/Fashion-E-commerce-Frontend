@@ -638,7 +638,7 @@ const filterdCategoryByParents = categoryApi?.categories?.filter(category => cat
                   </span>
                 </Link>
                 <Link
-                  to="/cart"
+                  to="/compare"
                   className="flex-align flex-column gap-8 item-hover-two"
                 >
                   <span className="text-2xl text-white d-flex position-relative me-6 mt-6 item-hover__text">

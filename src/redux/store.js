@@ -12,6 +12,7 @@ import checkoutApi from './features/api/checkoutApi';
 import selectCartReducer from "./features/slice/cartSlice";
 import filterReducer from "./features/slice/filterSlice";
 import searchReducer from "./features/slice/searchSlice";
+import compareReducer from "./features/slice/compareSlice";
 import cartReducer from "./features/slice/cartSlice";
 import wishListApi from './features/api/wishListApi';
 import wishlistByUserAPI from './features/api/wishlistByUserAPI';
@@ -40,6 +41,8 @@ const store = configureStore({
         cart: cartReducer,
         filters: filterReducer,
         selectCart: selectCartReducer,
+        compare: compareReducer,
+   
         // order: orderReducer,
       
      

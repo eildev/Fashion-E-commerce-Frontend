@@ -16,6 +16,7 @@
     "bootstrap": "^5.3.3",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "framer-motion": "^12.9.4",
     "iconify": "^1.4.0",
     "isotope-layout": "^3.0.6",
     "jquery": "^3.7.1",

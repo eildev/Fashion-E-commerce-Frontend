@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import RouteScrollToTop from "./helper/RouteScrollToTop";
 import HomePageOne from "./pages/HomePageOne";
-import HomePageTwo from "./pages/HomePageTwo";
+
 import HomePageThree from "./pages/HomePageThree";
 import ShopPage from "./pages/ShopPage";
 import ProductDetailsPageOne from "./pages/ProductDetailsPageOne";
@@ -22,6 +22,8 @@ import WishlistPage from "./pages/WishlistPage";
 import UserDetails from "./pages/UserDetailsPage";
 import UserDashboard from "./components/userDashboard/UserDashboard";
 import UserTabs from "./components/userDashboard/UserTabs";
+import ComparePage from "./pages/ComparePage";
+import ProtectedCartRoute from "./Route/ProtectedCartRoute";
 function App() {
   return (
     <BrowserRouter>
@@ -43,8 +45,8 @@ function App() {
           path='/product-details-two/:id'
           element={<ProductDetailsPageTwo />}
         />
-        <Route exact path='/cart' element={<CartPage />} />
-        <Route exact path='/checkout' element={<CheckoutPage />} />
+        <Route exact path='/cart' element={<ProtectedCartRoute><CartPage /></ProtectedCartRoute>} />
+        <Route exact path='/checkout' element={<ProtectedCartRoute><CheckoutPage /></ProtectedCartRoute>} />
         <Route exact path='/become-seller' element={<BecomeSellerPage />} />
         <Route exact path='/wishlist' element={<WishlistPage />} />
         <Route exact path='/account' element={<AccountPage />} />
@@ -55,6 +57,7 @@ function App() {
         <Route exact path='/vendor-details' element={<VendorDetailsPage />} />
         <Route exact path='/user-details' element={<UserDetails />} />
         <Route exact path='/vendor-two' element={<VendorTwoPage />} />
+        <Route exact path='/compare' element={<ComparePage />} />
         <Route
           exact
           path='/vendor-two-details'
