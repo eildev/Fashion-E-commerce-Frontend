@@ -20,11 +20,14 @@ const wishlistByUserAPI = createApi({
     tagTypes: ['Wishlist'],
     endpoints: (builder) => ({
         addToWishlist: builder.mutation({
-            query: (wishlistData) => ({
-                url: '/wishlist/add',
-                method: 'POST',
-                body: wishlistData,
-            }),
+            query: (wishlistData) => {
+                console.log("Sending wishlistData:", wishlistData);
+                return {
+                  url: "/wishlist/add",
+                  method: "POST",
+                  body: wishlistData,
+                };
+              },
             invalidatesTags: ['Wishlist'],
         }),
         getWishlistByUserId: builder.query({

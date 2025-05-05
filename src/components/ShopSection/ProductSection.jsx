@@ -2,10 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../../redux/features/slice/cartSlice';
-import { useAddToWishlistMutation, useGetWishlistByUserIdQuery } from '../../redux/features/api/wishlistByUserAPI';
+
 import toast from 'react-hot-toast';
 import { Rating, Star } from '@smastrom/react-rating';
 import '@smastrom/react-rating/style.css';
+import { useAddToWishlistMutation, useGetWishlistByUserIdQuery } from '../../redux/features/api/wishlistByUserAPI';
 
 const ProductSection = ({
   isLoading,
@@ -117,13 +118,15 @@ const ProductSection = ({
 
     try {
       const wishlistDataPayload = {
-        user_id: user.id,
+        user_id: user?.id,
         product_id: item.product?.id,
         variant_id: item.id,
       };
 
       console.log('Sending to wishlist API:', wishlistDataPayload);
-      await addToWishlist(wishlistDataPayload).unwrap();
+      const result = await addToWishlist(wishlistDataPayload).unwrap();
+    console.log("resukt", result);
+
       toast.success('Added to Wishlist');
     } catch (error) {
       console.error('Failed to add to wishlist:', error);
@@ -247,16 +250,11 @@ const ProductSection = ({
                     alt={item?.variant_name || 'Product Image'}
                     className="w-full h-auto object-contain rounded-8"
                   />
-                  {/* {isBestSeller && (
+                  {isBestSeller && (
                     <span className="product-card__badge bg-primary-600 px-8 py-4 text-sm text-white position-absolute inset-inline-start-0 inset-block-start-0">
                       Best Sale
                     </span>
-                  )} */}
-                  
-                    <span className="product-card__badge bg-primary-600 px-8 py-4 text-sm text-white position-absolute inset-inline-start-0 inset-block-start-0">
-                    {item?.product?.product_features[0]?.feature?.feature_name}
-                    </span>
-              
+                  )}
                   {hasDiscount && discountValue && (
                     <span className="product-card__badge bg-danger-600 px-8 py-4 text-sm text-white position-absolute inset-inline-end-0 inset-block-start-0">
                       Sale {discountValue}{discountType === 'percentage' ? '%' : '$'}
