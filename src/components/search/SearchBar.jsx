@@ -10,6 +10,7 @@ import {
 } from '../../redux/features/slice/searchSlice';
 import { setFilteredSearchQuery } from '../../redux/features/slice/filterSlice';
 import RenderSuggestion from './RenderSuggestion';
+import { result } from 'lodash';
 
 // Debounce utility
 const debounce = (func, delay) => {
@@ -29,7 +30,7 @@ const SearchBar = ({ className }) => {
     (state) => state.search
   );
   const searchRef = useRef(null);
-
+console.log("result search", result);
   // Get selected category
   const getSelectedCategory = () => {
     const selectElement = document.querySelector('.js-example-basic-single');
@@ -120,7 +121,7 @@ const SearchBar = ({ className }) => {
         style={{
           backgroundColor: '#fff',
           borderRadius: '50px',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          // boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
           overflow: 'hidden',
           height: '48px',
         }}

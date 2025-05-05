@@ -423,7 +423,7 @@ const filterSlice = createSlice({
           break;
         case "Recommended":
         default:
-          // Keep filterOrder-based sorting
+          
           break;
       }
 
@@ -434,7 +434,7 @@ const filterSlice = createSlice({
       state.selectedCategories = action.payload;
     },
     setFilteredCategories: (state, action) => {
-      state.filteredCategories = action.payload.map(String); // Ensure IDs are strings
+      state.filteredCategories = action.payload.map(String); 
       state.selectedCategories = state.selectedCategories.filter((name) => {
         const id = Object.keys(state.selectedCategoryMap).find(
           (id) => state.selectedCategoryMap[id] === name
@@ -482,21 +482,21 @@ const filterSlice = createSlice({
           filter.type !== "feature" || action.payload.includes(filter.slug)
       );
     },
-    setFilteredSearchQuery: (state, action) => {
-      state.filteredSearchQuery = action.payload;
-      // Update filterOrder
-      if (action.payload) {
-        state.filterOrder.push({
-          type: "search",
-          query: action.payload,
-          timestamp: Date.now(),
-        });
-      } else {
-        state.filterOrder = state.filterOrder.filter(
-          (filter) => filter.type !== "search"
-        );
-      }
-    },
+    // setFilteredSearchQuery: (state, action) => {
+    //   state.filteredSearchQuery = action.payload;
+    //   // Update filterOrder
+    //   if (action.payload) {
+    //     state.filterOrder.push({
+    //       type: "search",
+    //       query: action.payload,
+    //       timestamp: Date.now(),
+    //     });
+    //   } else {
+    //     state.filterOrder = state.filterOrder.filter(
+    //       (filter) => filter.type !== "search"
+    //     );
+    //   }
+    // },
     toggleFilter: (state) => {
       state.toggleFilter = !state.toggleFilter;
     },

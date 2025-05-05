@@ -551,7 +551,7 @@ const filterdCategoryByParents = categoryApi?.categories?.filter(category => cat
                 className="search-category style-two d-flex search-form d-sm-flex position-relative"
                 style={{ minHeight: '48px', overflow: 'visible' }}
               >
-                <select
+                {/* <select
                   defaultValue={1}
                   className="js-example-basic-single border border-gray-200 border-end-0 rounded-0 border-0"
                   name="state"
@@ -567,7 +567,7 @@ const filterdCategoryByParents = categoryApi?.categories?.filter(category => cat
                   <option value={1}>Frozen Foods</option>
                   <option value={1}>Noodles & Rice</option>
                   <option value={1}>Ice Cream</option>
-                </select>
+                </select> */}
                 <SearchBar className="flex-grow-1" />
               </div>
             </div>
