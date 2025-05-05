@@ -19,7 +19,7 @@ const ProductDetailsPageTwo = () => {
 
   const { id } = useParams();
   const { data, isLoading, error } = useGetVariantApiQuery();
-  
+  console.log(data);
  const item = data?.variant?.find(
    (variant) => String(variant.id) === id 
  );

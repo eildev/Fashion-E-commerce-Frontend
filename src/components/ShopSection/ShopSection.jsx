@@ -15,7 +15,7 @@ const ShopSection = () => {
   const { data: brandData } = useGetBrandQuery();
   const dispatch = useDispatch();
   const location = useLocation();
-
+console.log(data);
   // Calculate dynamic price range limits
   const prices = useMemo(
     () => data?.variant?.map(item => item?.regular_price).filter(price => price !== undefined && price !== null) || [],

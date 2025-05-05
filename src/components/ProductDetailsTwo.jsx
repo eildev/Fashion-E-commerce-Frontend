@@ -44,13 +44,13 @@ const ProductDetailsTwo = ({ item: data }) => {
     console.log('Current rating:', rating);
   }, [rating]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeLeft(getCountdown());
-    }, 1000);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setTimeLeft(getCountdown());
+  //   }, 1000);
 
-    return () => clearInterval(interval);
-  }, []);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   console.log(data);
 
@@ -327,7 +327,7 @@ const ProductDetailsTwo = ({ item: data }) => {
               </div>
               <div className="col-xl-6">
                 <div className="product-details__content">
-                  <div className="flex-center mb-24 flex-wrap gap-16 bg-color-one rounded-8 py-16 px-24 position-relative z-1">
+                  {/* <div className="flex-center mb-24 flex-wrap gap-16 bg-color-one rounded-8 py-16 px-24 position-relative z-1">
                     <img
                       src="assets/images/bg/details-offer-bg.png"
                       alt=""
@@ -357,7 +357,7 @@ const ProductDetailsTwo = ({ item: data }) => {
                       </ul>
                     </div>
                     <span className="text-white text-xs">Remains until the end of the offer</span>
-                  </div>
+                  </div> */}
                   <h5 className="mb-12">{data?.variant_name}</h5>
                   <div className="flex-align flex-wrap gap-12 mb-12">
                     <div className="flex-align gap-12 flex-wrap">
@@ -779,9 +779,9 @@ const ProductDetailsTwo = ({ item: data }) => {
                                     ))}
                                   </div>
                                 </div>
-                                <span className="text-gray-800 text-xs">
+                                {/* <span className="text-gray-800 text-xs">
                                   {formatDistanceToNow(new Date(item.created_at), { addSuffix: true })}
-                                </span>
+                                </span> */}
                               </div>
                               <h6 className="mb-14 text-md mt-24">{item.title}</h6>
                               <p className="text-gray-700">{item.review}</p>

@@ -156,7 +156,7 @@ const ProductSection = ({
                   className="w-full h-auto object-contain rounded-8"
                 />
                 <span className="product-card__badge bg-primary-600 px-8 py-4 text-sm text-white position-absolute inset-inline-start-0 inset-block-start-0">
-                  Best Sale
+                  {item?.product?.product_features[0]?.feature?.feature_name}
                 </span>
               </Link>
               <div className="product-card__content mt-16">
