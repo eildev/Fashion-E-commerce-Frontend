@@ -45,8 +45,10 @@ function App() {
           path='/product-details-two/:id'
           element={<ProductDetailsPageTwo />}
         />
-        <Route exact path='/cart' element={<ProtectedCartRoute><CartPage /></ProtectedCartRoute>} />
+        {/* <Route exact path='/cart' element={<ProtectedCartRoute><CartPage /></ProtectedCartRoute>} />
+        <Route exact path='/checkout' element={<ProtectedCartRoute><CheckoutPage /></ProtectedCartRoute>} /> */}
         <Route exact path='/checkout' element={<ProtectedCartRoute><CheckoutPage /></ProtectedCartRoute>} />
+        <Route exact path='/cart' element={<ProtectedCartRoute><CartPage></CartPage></ProtectedCartRoute>} />
         <Route exact path='/become-seller' element={<BecomeSellerPage />} />
         <Route exact path='/wishlist' element={<WishlistPage />} />
         <Route exact path='/account' element={<AccountPage />} />
