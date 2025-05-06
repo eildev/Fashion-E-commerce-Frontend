@@ -51,7 +51,7 @@ const ProductDetailsTwo = ({ item: data }) => {
     return () => clearInterval(interval);
   }, []);
 
-  console.log(data);
+
 
   useEffect(() => {
     setMainImage(data?.variant_image[0]);

@@ -8,6 +8,7 @@ import FooterTwo from '../components/FooterTwo';
 import BottomFooter from '../components/BottomFooter';
 import Breadcrumb from '../components/Breadcrumb';
 import CompareSection from '../components/CompareSection';
+import Compare from '../components/Compare';
 
 const ComparePage = () => {
     return (
@@ -28,8 +29,8 @@ const ComparePage = () => {
             <Breadcrumb title={"Compare"} />
 
             {/* Compare */}
-            <CompareSection />
-
+            {/* <CompareSection /> */}
+<Compare></Compare>
             {/* ShippingOne */}
             <ShippingOne />
 

@@ -23,7 +23,7 @@ const ProductDetailsPageTwo = () => {
  const item = data?.variant?.find(
    (variant) => String(variant.id) === id 
  );
-
+console.log("item", item);
   return (
     <>
       {/* ColorInit */}
