@@ -122,13 +122,13 @@ const filterdCategoryByParents = categoryApi?.categories?.filter(category => cat
                 onClick={() => handleMenuClick(0)}
                 className={`on-hover-item nav-menu__item has-submenu ${activeIndex === 0 ? 'd-block' : ''}`}
               >
-                <Link to="#" className="nav-menu__link">
+                <Link to="/" className="nav-menu__link">
                   Home
                 </Link>
                 <ul
                   className={`on-hover-dropdown common-dropdown nav-submenu scroll-sm ${activeIndex === 0 ? 'open' : ''}`}
                 >
-                  <li className="common-dropdown__item nav-submenu__item">
+                  {/* <li className="common-dropdown__item nav-submenu__item">
                     <Link
                       onClick={() => setActiveIndex(null)}
                       to="/"
@@ -154,7 +154,7 @@ const filterdCategoryByParents = categoryApi?.categories?.filter(category => cat
                     >
                       Home Fashion
                     </Link>
-                  </li>
+                  </li> */}
                 </ul>
               </li>
               <li
@@ -829,10 +829,10 @@ const filterdCategoryByParents = categoryApi?.categories?.filter(category => cat
               <div className="header-menu d-lg-block d-none">
                 <ul className="nav-menu flex-align">
                   <li className="on-hover-item nav-menu__item has-submenu">
-                    <Link to="#" className="nav-menu__link">
+                    <Link to="/" className="nav-menu__link">
                       Home
                     </Link>
-                    <ul className="on-hover-dropdown common-dropdown nav-submenu scroll-sm" style={{ zIndex: 1003 }}>
+                    {/* <ul className="on-hover-dropdown common-dropdown nav-submenu scroll-sm" style={{ zIndex: 1003 }}>
                       <li className="common-dropdown__item nav-submenu__item">
                         <NavLink
                           to="/"
@@ -869,13 +869,13 @@ const filterdCategoryByParents = categoryApi?.categories?.filter(category => cat
                           Home Fashion
                         </NavLink>
                       </li>
-                    </ul>
+                    </ul> */}
                   </li>
                   <li className="on-hover-item nav-menu__item has-submenu">
-                    <Link to="#" className="nav-menu__link">
+                    <Link to="/shop" className="nav-menu__link">
                       Shop
                     </Link>
-                    <ul className="on-hover-dropdown common-dropdown nav-submenu scroll-sm" style={{ zIndex: 1003 }}>
+                    {/* <ul className="on-hover-dropdown common-dropdown nav-submenu scroll-sm" style={{ zIndex: 1003 }}>
                       <li className="common-dropdown__item nav-submenu__item">
                         <NavLink
                           to="/shop"
@@ -912,7 +912,7 @@ const filterdCategoryByParents = categoryApi?.categories?.filter(category => cat
                           Shop Details Two
                         </NavLink>
                       </li>
-                    </ul>
+                    </ul> */}
                   </li>
                   <li className="on-hover-item nav-menu__item has-submenu">
                     <span className="badge-notification bg-warning-600 text-white text-sm py-2 px-8 rounded-4">
@@ -958,7 +958,7 @@ const filterdCategoryByParents = categoryApi?.categories?.filter(category => cat
                           Checkout
                         </NavLink>
                       </li>
-                      <li className="common-dropdown__item nav-submenu__item">
+                      {/* <li className="common-dropdown__item nav-submenu__item">
                         <NavLink
                           to="/become-seller"
                           className={(navData) =>
@@ -981,10 +981,10 @@ const filterdCategoryByParents = categoryApi?.categories?.filter(category => cat
                         >
                           Account
                         </NavLink>
-                      </li>
+                      </li> */}
                     </ul>
                   </li>
-                  <li className="on-hover-item nav-menu__item has-submenu">
+                  {/* <li className="on-hover-item nav-menu__item has-submenu">
                     <span className="badge-notification bg-tertiary-600 text-white text-sm py-2 px-8 rounded-4">
                       New
                     </span>
@@ -1041,12 +1041,12 @@ const filterdCategoryByParents = categoryApi?.categories?.filter(category => cat
                         </NavLink>
                       </li>
                     </ul>
-                  </li>
+                  </li> */}
                   <li className="on-hover-item nav-menu__item has-submenu">
                     <Link to="#" className="nav-menu__link">
                       Blog
                     </Link>
-                    <ul className="on-hover-dropdown common-dropdown nav-submenu scroll-sm" style={{ zIndex: 1003 }}>
+                    {/* <ul className="on-hover-dropdown common-dropdown nav-submenu scroll-sm" style={{ zIndex: 1003 }}>
                       <li className="common-dropdown__item nav-submenu__item">
                         <NavLink
                           to="/blog"
@@ -1071,7 +1071,7 @@ const filterdCategoryByParents = categoryApi?.categories?.filter(category => cat
                           Blog Details
                         </NavLink>
                       </li>
-                    </ul>
+                    </ul> */}
                   </li>
                   <li className="nav-menu__item">
                     <NavLink
