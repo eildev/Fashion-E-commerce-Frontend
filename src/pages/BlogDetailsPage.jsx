@@ -12,19 +12,7 @@ const BlogDetailsPage = () => {
   return (
     <>
       {/* ColorInit */}
-      <ColorInit color={true} />
 
-      {/* ScrollToTop */}
-      <ScrollToTop smooth color="#FA6400" />
-
-      {/* Preloader */}
-      <Preloader />
-
-      {/* HeaderTwo */}
-      <HeaderTwo category={true} />
-
-      {/* Breadcrumb */}
-      <Breadcrumb title={"Blog Details"} />
 
       {/* BlogDetails */}
       <BlogDetails />
@@ -32,11 +20,7 @@ const BlogDetailsPage = () => {
       {/* ShippingOne */}
       <ShippingOne />
 
-      {/* FooterTwo */}
-      <FooterTwo />
-
-      {/* BottomFooter */}
-      <BottomFooter />
+  
     </>
   );
 };

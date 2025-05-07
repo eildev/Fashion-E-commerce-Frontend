@@ -16,32 +16,13 @@ const CartPage = () => {
 
   return (
     <>
-      {/* ColorInit */}
-      <ColorInit color={true} />
-
-      {/* ScrollToTop */}
-      <ScrollToTop smooth color="#FA6400" />
-
-      {/* Preloader */}
-      <Preloader />
-
-      {/* HeaderTwo */}
-      <HeaderTwo category={true} />
-
+     
       {/* Breadcrumb */}
       <Breadcrumb title={"Cart"} />
 
       {/* CartSection */}
       <CartSection />
 
-      {/* ShippingOne */}
-      <ShippingOne />
-
-      {/* FooterTwo */}
-      <FooterTwo />
-
-      {/* BottomFooter */}
-      <BottomFooter />
 
 
     </>

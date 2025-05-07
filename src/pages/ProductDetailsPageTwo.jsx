@@ -1,65 +1,26 @@
+// src/pages/ProductDetailsPageTwo.jsx
 import React from "react";
-import Preloader from "../helper/Preloader";
-import ColorInit from "../helper/ColorInit";
-import HeaderTwo from "../components/HeaderTwo";
-import Breadcrumb from "../components/Breadcrumb";
+import { useParams } from "react-router-dom";
 import ProductDetailsTwo from "../components/ProductDetailsTwo";
 import NewArrivalTwo from "../components/NewArrivalTwo";
-import ShippingOne from "../components/ShippingOne";
 import NewsletterOne from "../components/NewsletterOne";
-import FooterTwo from "../components/FooterTwo";
-import BottomFooter from "../components/BottomFooter";
-import ScrollToTop from "react-scroll-to-top";
 import { useGetVariantApiQuery } from "../redux/features/api/variantApi";
-import { useParams } from "react-router-dom";
-import HeaderThree from "../components/HeaderThree";
-
 
 const ProductDetailsPageTwo = () => {
-
   const { id } = useParams();
   const { data, isLoading, error } = useGetVariantApiQuery();
-  console.log(data);
- const item = data?.variant?.find(
-   (variant) => String(variant.id) === id 
- );
-console.log("item", item);
+  const item = data?.variant?.find((variant) => String(variant.id) === id);
+
   return (
     <>
-      {/* ColorInit */}
-      <ColorInit color={true} />
-
-      {/* ScrollToTop */}
-      <ScrollToTop smooth color="#FA6400" />
-
-      {/* Preloader */}
-      <Preloader />
-
-      {/* HeaderTwo */}
-      <HeaderThree category={true} />
-
-      {/* Breadcrumb */}
-      <Breadcrumb title={"Product Details"} />
-
       {/* ProductDetailsTwo */}
-      <ProductDetailsTwo item={item}/>
+      <ProductDetailsTwo item={item} />
 
       {/* NewArrivalTwo */}
       <NewArrivalTwo />
 
-      {/* ShippingOne */}
-      <ShippingOne />
-
       {/* NewsletterOne */}
       <NewsletterOne />
-
-      {/* FooterTwo */}
-      <FooterTwo />
-
-      {/* BottomFooter */}
-      <BottomFooter />
-
-
     </>
   );
 };

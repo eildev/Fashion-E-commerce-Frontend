@@ -1043,7 +1043,7 @@ const filterdCategoryByParents = categoryApi?.categories?.filter(category => cat
                     </ul>
                   </li> */}
                   <li className="on-hover-item nav-menu__item has-submenu">
-                    <Link to="#" className="nav-menu__link">
+                    <Link to="/blog" className="nav-menu__link">
                       Blog
                     </Link>
                     {/* <ul className="on-hover-dropdown common-dropdown nav-submenu scroll-sm" style={{ zIndex: 1003 }}>

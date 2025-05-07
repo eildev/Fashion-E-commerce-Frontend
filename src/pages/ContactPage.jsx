@@ -11,20 +11,7 @@ import ScrollToTop from "react-scroll-to-top";
 const ContactPage = () => {
   return (
     <>
-      {/* ColorInit */}
-      <ColorInit color={true} />
 
-      {/* ScrollToTop */}
-      <ScrollToTop smooth color="#FA6400" />
-
-      {/* Preloader */}
-      <Preloader />
-
-      {/* HeaderTwo */}
-      <HeaderTwo category={true} />
-
-      {/* Breadcrumb */}
-      <Breadcrumb title={"Contact"} />
 
       {/* Contact */}
       <Contact />
@@ -32,7 +19,7 @@ const ContactPage = () => {
       {/* ShippingOne */}
       <ShippingOne />
 
-      {/* FooterTwo */}
+      FooterTwo
       <FooterTwo />
 
       {/* BottomFooter */}
