@@ -23,9 +23,11 @@ import ColorInit from "../helper/ColorInit";
 import ScrollToTop from "react-scroll-to-top";
 import HeaderThree from "../components/HeaderThree";
 import { useGetVariantApiQuery } from "../redux/features/api/variantApi";
+import { useGetBrandQuery } from "../redux/features/api/brandApi";
 
 const HomePageThree = () => {
   const { data: variantData, isLoading } = useGetVariantApiQuery();
+  const { data: brandData, isLoadingBrand } = useGetBrandQuery();
 
   return (
 
@@ -60,7 +62,7 @@ const HomePageThree = () => {
       <DiscountOne />
 
       {/* FeaturedOne */}
-      <FeaturedOne />
+      <FeaturedOne data={variantData}/>
 
       {/* BigDealOne */}
       <BigDealOne />
@@ -81,7 +83,7 @@ const HomePageThree = () => {
       <RecentlyViewedOne />
 
       {/* BrandTwo */}
-      <BrandTwo />
+      <BrandTwo data={brandData}/>
 
       {/* ShippingTwo */}
       <ShippingTwo />

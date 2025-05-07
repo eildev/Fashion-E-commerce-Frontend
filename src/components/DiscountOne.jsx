@@ -30,9 +30,9 @@ const DiscountOne = () => {
                                     </Link>
                                 </div>
                                 <img
-                                    src="assets/images/thumbs/discount-img1.png"
+                                    src="assets/images/oceane/adidas.png"
                                     alt=""
-                                    className="d-sm-block d-none"
+                                    className="d-sm-block d-none w-80"
                                 />
                             </div>
                         </div>
@@ -61,7 +61,7 @@ const DiscountOne = () => {
                                     </Link>
                                 </div>
                                 <img
-                                    src="assets/images/thumbs/discount-img2.png"
+                                    src="assets/images/oceane/nike2.png"
                                     alt=""
                                     className="d-sm-block d-none"
                                 />

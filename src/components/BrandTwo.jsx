@@ -1,7 +1,8 @@
 import React from 'react'
 import Slider from 'react-slick';
 
-const BrandTwo = () => {
+const BrandTwo = ({data}) => {
+    console.log("brand", data);
     function SampleNextArrow(props) {
         const { className, onClick } = props;
         return (
@@ -96,51 +97,21 @@ const BrandTwo = () => {
                     </div>
                     <div className="top-brand__slider">
                         <Slider {...settings}>
-                            <div>
+                            {data?.Brands?.map(item =>   <div>
                                 <div className="top-brand__item flex-center rounded-8 border border-gray-100 hover-border-gray-200 transition-1 px-8">
-                                    <img src="assets/images/thumbs/top-brand-img1.png" alt="" />
+                                <img
+                    src={
+                      item?.image
+                        ? `http://127.0.0.1:8000/${item?.image}`
+                        : 'assets/images/thumbs/product-two-img1.png'
+                    }
+                    alt={item?.BrandName || 'Product Image'}
+                    className="w-full h-auto object-contain rounded-8"
+                  />
                                 </div>
-                            </div>
-                            <div>
-                                <div className="top-brand__item flex-center rounded-8 border border-gray-100 hover-border-gray-200 transition-1 px-8">
-                                    <img src="assets/images/thumbs/top-brand-img2.png" alt="" />
-                                </div>
-                            </div>
-                            <div>
-                                <div className="top-brand__item flex-center rounded-8 border border-gray-100 hover-border-gray-200 transition-1 px-8">
-                                    <img src="assets/images/thumbs/top-brand-img3.png" alt="" />
-                                </div>
-                            </div>
-                            <div>
-                                <div className="top-brand__item flex-center rounded-8 border border-gray-100 hover-border-gray-200 transition-1 px-8">
-                                    <img src="assets/images/thumbs/top-brand-img4.png" alt="" />
-                                </div>
-                            </div>
-                            <div>
-                                <div className="top-brand__item flex-center rounded-8 border border-gray-100 hover-border-gray-200 transition-1 px-8">
-                                    <img src="assets/images/thumbs/top-brand-img5.png" alt="" />
-                                </div>
-                            </div>
-                            <div>
-                                <div className="top-brand__item flex-center rounded-8 border border-gray-100 hover-border-gray-200 transition-1 px-8">
-                                    <img src="assets/images/thumbs/top-brand-img6.png" alt="" />
-                                </div>
-                            </div>
-                            <div>
-                                <div className="top-brand__item flex-center rounded-8 border border-gray-100 hover-border-gray-200 transition-1 px-8">
-                                    <img src="assets/images/thumbs/top-brand-img7.png" alt="" />
-                                </div>
-                            </div>
-                            <div>
-                                <div className="top-brand__item flex-center rounded-8 border border-gray-100 hover-border-gray-200 transition-1 px-8">
-                                    <img src="assets/images/thumbs/top-brand-img8.png" alt="" />
-                                </div>
-                            </div>
-                            <div>
-                                <div className="top-brand__item flex-center rounded-8 border border-gray-100 hover-border-gray-200 transition-1 px-8">
-                                    <img src="assets/images/thumbs/top-brand-img5.png" alt="" />
-                                </div>
-                            </div>
+                            </div> )}
+                          
+                         
                         </Slider>
                     </div>
                 </div>
