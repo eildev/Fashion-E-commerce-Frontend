@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+// import image1 from '../../public/assets/images/oceane/men.png'
+// import image2 from '../../public/assets/images/oceane/women.png'
 const PromotionalThree = ({data}) => {
 console.log("prpomot", data);
   return (
@@ -11,7 +12,7 @@ console.log("prpomot", data);
             <div
               className='promo-three-item bg-img rounded-16 overflow-hidden'
               style={{
-                backgroundImage: `url('assets/images/thumbs/promo-three-img-1.png')`,
+                backgroundImage: `url('assets/images/oceane/men.png')`,
               }}
             >
               <div className='text-start'>
@@ -40,7 +41,7 @@ console.log("prpomot", data);
               className='promo-three-item bg-img rounded-16 overflow-hidden'
               data-background-image='assets/images/thumbs/promo-three-img-2.png'
               style={{
-                backgroundImage: `url('assets/images/thumbs/promo-three-img-2.png')`,
+                backgroundImage: `url('assets/images/oceane/women.png')`,
               }}
             >
               <div className='text-start'>

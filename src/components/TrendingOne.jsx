@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const TrendingOne = () => {
+const TrendingOne = ({data}) => {
     return (
         <section className="trending-productss pt-80">
             <div className="container container-lg">
@@ -117,7 +117,7 @@ const TrendingOne = () => {
                     </div>
                     <div className="trending-products-box rounded-16 overflow-hidden flex-between position-relative mb-24">
                         <div className="d-md-block d-none ps-xxl-5 ps-md-4">
-                            <img src="assets/images/thumbs/trending-products-img1.png" alt="" />
+                            <img src="assets/images/oceane/nike.png" alt="" />
                         </div>
                         <div className="trending-products-box__content px-4 d-block w-100 text-center py-32">
                             <h6 className="mb-0 trending-products-box__title">
@@ -126,7 +126,7 @@ const TrendingOne = () => {
                             </h6>
                         </div>
                         <div className="d-md-block d-none pe-xxl-5 me-xxl-5 pe-md-4">
-                            <img src="assets/images/thumbs/trending-products-img2.png" alt="" />
+                            <img src="assets/images/oceane/puma.png" alt="" />
                         </div>
                     </div>
                     <div className="tab-content" id="pills-tabContent">

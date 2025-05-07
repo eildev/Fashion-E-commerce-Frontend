@@ -2,9 +2,11 @@ import React, { memo, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
 import { getCountdown } from '../helper/Countdown';
+import { useGetVariantApiQuery } from '../redux/features/api/variantApi';
 
 
 const SampleNextArrow = memo(function SampleNextArrow(props) {
+    
     const { className, onClick } = props;
     return (
         <button
@@ -30,6 +32,7 @@ const SamplePrevArrow = memo(function SamplePrevArrow(props) {
 });
 
 const DealsOne = ({data}) => {
+    
     const [timeLeft, setTimeLeft] = useState(getCountdown());
 
     useEffect(() => {
@@ -107,7 +110,7 @@ const DealsOne = ({data}) => {
                             className="position-absolute inset-block-start-0 inset-block-start-0 w-100 h-100 z-n1 object-fit-cover"
                         />
                         <div className="d-lg-block d-none ps-32 flex-shrink-0">
-                            <img src="assets/images/thumbs/week-deal-img1.png" alt="" />
+                            <img src="assets/images/oceane/kid_cat.png" alt="" />
                         </div>
                         <div className="deal-week-box__content px-sm-4 d-block w-100 text-center">
                             <h6 className="mb-20">Apple AirPods Max, Over Ear Headphones</h6>
@@ -134,89 +137,97 @@ const DealsOne = ({data}) => {
                         </div>
                         <div className="d-lg-block d-none flex-shrink-0 pe-xl-5">
                             <div className="me-xxl-5">
-                                <img src="assets/images/thumbs/week-deal-img2.png" alt="" />
+                                <img src="assets/images/oceane/men_cat.png" alt="" />
                             </div>
                         </div>
                     </div>
                     <div className="deals-week-slider arrow-style-two">
                         <Slider {...settings}>
-                            <div>
-                                <div className="product-card h-100 p-16 border border-gray-100 hover-border-main-600 rounded-16 position-relative transition-2">
-                                    <Link
-                                        to="/product-details-two"
-                                        className="product-card__thumb flex-center rounded-8 bg-gray-50 position-relative"
-                                    >
-                                        <span className="product-card__badge bg-main-600 px-8 py-4 text-sm text-white position-absolute inset-inline-start-0 inset-block-start-0">
-                                            Sold
-                                        </span>
-                                        <img
-                                            src="assets/images/thumbs/product-two-img1.png"
-                                            alt=""
-                                            className="w-auto max-w-unset"
-                                        />
-                                    </Link>
-                                    <div className="product-card__content mt-16">
-                                        <div className="flex-align gap-6">
-                                            <span className="text-xs fw-medium text-gray-500">4.8</span>
-                                            <span className="text-15 fw-medium text-warning-600 d-flex">
-                                                <i className="ph-fill ph-star" />
-                                            </span>
-                                            <span className="text-xs fw-medium text-gray-500">(17k)</span>
-                                        </div>
-                                        <h6 className="title text-lg fw-semibold mt-12 mb-8">
+                        {
+                                    data?.variant?.map(item => <div>
+                                
+                                        <div className="product-card h-100 p-16 border border-gray-100 hover-border-main-600 rounded-16 position-relative transition-2">
                                             <Link
                                                 to="/product-details-two"
-                                                className="link text-line-2"
-                                                tabIndex={0}
+                                                className="product-card__thumb flex-center rounded-8 bg-gray-50 position-relative"
                                             >
-                                                Taylor Farms Broccoli Florets Vegetables
+                                                <span className="product-card__badge bg-main-600 px-8 py-4 text-sm text-white position-absolute inset-inline-start-0 inset-block-start-0">
+                                                    Sold
+                                                </span>
+                                                <img
+                    src={
+                      item?.variant_image?.[0]?.image
+                        ? `http://127.0.0.1:8000/${item.variant_image[0].image}`
+                        : 'assets/images/thumbs/product-two-img1.png'
+                    }
+                    alt={item?.variant_name || 'Product Image'}
+                    className="w-full h-auto object-contain rounded-8"
+                  />
                                             </Link>
-                                        </h6>
-                                        <div className="flex-align gap-4">
-                                            <span className="text-tertiary-600 text-md d-flex">
-                                                <i className="ph-fill ph-storefront" />
-                                            </span>
-                                            <span className="text-gray-500 text-xs">
-                                                By Lucky Supermarket
-                                            </span>
-                                        </div>
-                                        <div className="mt-8">
-                                            <div
-                                                className="progress w-100 bg-color-three rounded-pill h-4"
-                                                role="progressbar"
-                                                aria-label="Basic example"
-                                                aria-valuenow={35}
-                                                aria-valuemin={0}
-                                                aria-valuemax={100}
-                                            >
-                                                <div
-                                                    className="progress-bar bg-tertiary-600 rounded-pill"
-                                                    style={{ width: "35%" }}
-                                                />
+                                            <div className="product-card__content mt-16">
+                                                <div className="flex-align gap-6">
+                                                    <span className="text-xs fw-medium text-gray-500">4.8</span>
+                                                    <span className="text-15 fw-medium text-warning-600 d-flex">
+                                                        <i className="ph-fill ph-star" />
+                                                    </span>
+                                                    <span className="text-xs fw-medium text-gray-500">(17k)</span>
+                                                </div>
+                                                <h6 className="title text-lg fw-semibold mt-12 mb-8">
+                                                    <Link
+                                                        to="/product-details-two"
+                                                        className="link text-line-2"
+                                                        tabIndex={0}
+                                                    >
+                                                        Taylor Farms Broccoli Florets Vegetables
+                                                    </Link>
+                                                </h6>
+                                                <div className="flex-align gap-4">
+                                                    <span className="text-tertiary-600 text-md d-flex">
+                                                        <i className="ph-fill ph-storefront" />
+                                                    </span>
+                                                    <span className="text-gray-500 text-xs">
+                                                        By Lucky Supermarket
+                                                    </span>
+                                                </div>
+                                                <div className="mt-8">
+                                                    <div
+                                                        className="progress w-100 bg-color-three rounded-pill h-4"
+                                                        role="progressbar"
+                                                        aria-label="Basic example"
+                                                        aria-valuenow={35}
+                                                        aria-valuemin={0}
+                                                        aria-valuemax={100}
+                                                    >
+                                                        <div
+                                                            className="progress-bar bg-tertiary-600 rounded-pill"
+                                                            style={{ width: "35%" }}
+                                                        />
+                                                    </div>
+                                                    <span className="text-gray-900 text-xs fw-medium mt-8">
+                                                        Sold: 18/35
+                                                    </span>
+                                                </div>
+                                                <div className="product-card__price my-20">
+                                                    <span className="text-gray-400 text-md fw-semibold text-decoration-line-through">
+                                                        $28.99
+                                                    </span>
+                                                    <span className="text-heading text-md fw-semibold ">
+                                                        $14.99 <span className="text-gray-500 fw-normal">/Qty</span>{" "}
+                                                    </span>
+                                                </div>
+                                                <Link
+                                                    to="/cart"
+                                                    className="product-card__cart btn bg-gray-50 text-heading hover-bg-main-600 hover-text-white py-11 px-24 rounded-8 flex-center gap-8 fw-medium"
+                                                    tabIndex={0}
+                                                >
+                                                    Add To Cart <i className="ph ph-shopping-cart" />
+                                                </Link>
                                             </div>
-                                            <span className="text-gray-900 text-xs fw-medium mt-8">
-                                                Sold: 18/35
-                                            </span>
                                         </div>
-                                        <div className="product-card__price my-20">
-                                            <span className="text-gray-400 text-md fw-semibold text-decoration-line-through">
-                                                $28.99
-                                            </span>
-                                            <span className="text-heading text-md fw-semibold ">
-                                                $14.99 <span className="text-gray-500 fw-normal">/Qty</span>{" "}
-                                            </span>
-                                        </div>
-                                        <Link
-                                            to="/cart"
-                                            className="product-card__cart btn bg-gray-50 text-heading hover-bg-main-600 hover-text-white py-11 px-24 rounded-8 flex-center gap-8 fw-medium"
-                                            tabIndex={0}
-                                        >
-                                            Add To Cart <i className="ph ph-shopping-cart" />
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
+                                    </div>)
+                                }
+                            
+                            {/* <div>
                                 <div className="product-card h-100 p-16 border border-gray-100 hover-border-main-600 rounded-16 position-relative transition-2">
                                     <Link
                                         to="/product-details-two"
@@ -671,7 +682,7 @@ const DealsOne = ({data}) => {
                                         </Link>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                         </Slider>
                     </div>
                 </div>

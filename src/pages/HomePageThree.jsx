@@ -51,10 +51,10 @@ const HomePageThree = () => {
       <DealsOne data={variantData}/>
 
       {/* TopSellingOne */}
-      {/* <TopSellingTwo /> */}
+      <TopSellingTwo data={variantData}/>
 
       {/* TrendingOne */}
-      <TrendingOne />
+      <TrendingOne data={variantData}/>
 
       {/* DiscountOne */}
       <DiscountOne />
@@ -66,7 +66,7 @@ const HomePageThree = () => {
       <BigDealOne />
 
       {/* TopSellingTwo */}
-      <TopSellingTwo />
+      <TopSellingTwo data={variantData}/>
 
       {/* PopularProductsOne */}
       <PopularProductsOne />
