@@ -6,11 +6,15 @@ import Preloader from '../../helper/Preloader';
 import HeaderThree from '../HeaderThree';
 import Breadcrumb from '../Breadcrumb';
 import { useSelector } from 'react-redux';
+import { useGetUserInfoQuery } from '../../redux/features/api/auth/authApi';
 
 const UserDashboard = () => {
       const { token, user } = useSelector((state) => state.auth);
+      const userID = user?.id;
     const navigate = useNavigate();
-
+  const { data, isLoading, isError } = useGetUserInfoQuery(userID, {
+    skip: !userID,
+  });
     const options = [
         { id: 'orders', label: 'Orders', icon: 'ph-shopping-cart', path: '/orders' },
         // { id: 'quote', label: 'Quote', icon: 'ph-file-text', path: '/quote' },
@@ -40,9 +44,9 @@ const UserDashboard = () => {
                                         <i className="ph ph-user text-2xl text-gray-500" />
                                     </div>
                                     <div>
-                                        <h6 className="text-xl fw-bold mb-0"><span className='text-base fw-medium'>Hello,</span>  <br />
+                                        <h6 className="text-xl fw-bold mb-0"><span className='text-base fw-normal fs-6'>Hello,</span>  <br />
                                         {token &&  
-                        `  ${user.name}`
+                        `  ${data?.user?.name}`
                       }
                                            </h6>
                                     </div>
@@ -57,7 +61,7 @@ const UserDashboard = () => {
                                     <div className="col-lg-4 col-sm-6 " key={option.id}>
                                         <div
                                             onClick={() => handleOptionClick(option.id)}
-                                            className="user-details-box border border-gray-100 rounded-2 p-24 mt-5 text-center hover-border-main-600 transition-1 h-100 d-flex flex-column justify-content-center"
+                                            className="user-details-box border border-gray-100 rounded-2 p-24 mt-5 text-center hover-border-main-600 shadow-sm transition-1 h-100 d-flex flex-column justify-content-center"
                                             style={{ minHeight: '200px', cursor: 'pointer' }}
                                         >
                                             <div className="icon w-48 h-48 rounded-circle bg-main-600 text-white flex-center mb-16 mx-auto">

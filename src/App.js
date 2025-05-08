@@ -58,11 +58,12 @@ function App() {
           <Route exact path="/vendor-two" element={<VendorTwoPage />} title="Vendor Two" />
           <Route exact path="/compare" element={<ComparePage />} title="Compare" />
           <Route exact path="/vendor-two-details" element={<VendorTwoDetailsPage />} title="Vendor Two Details" />
+          <Route path="/user-dashboard" element={<UserDashboard />} />
+          <Route path="/user-tabs/:tabId" element={<UserTabs />} />
         </Route>
 
         {/* Routes without MainLayout */}
-        <Route path="/user-dashboard" element={<UserDashboard />} />
-        <Route path="/user-tabs/:tabId" element={<UserTabs />} />
+
       </Routes>
     </BrowserRouter>
   );

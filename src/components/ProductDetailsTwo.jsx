@@ -195,42 +195,31 @@ const ProductDetailsTwo = ({ item: data }) => {
   };
 
   // Handle add to compare with localStorage sync
-  const handleAddToCompare = () => {
-    // Validate data
-    if (!data?.id) {
-      toast.error('Invalid product data!');
-      return;
-    }
-
-    // Check limit
+  const handleAddToCompare = (variant) => {
     if (compareItems.length >= 4) {
       toast.error('Cannot compare more than 4 products!');
       return;
     }
-
-    // Check for duplicates
-    if (compareItems.some((item) => item.id === data.id)) {
+    if (compareItems.some((item) => item.id === variant.id)) {
       toast.error('This product is already in comparison!');
       return;
     }
-
+  
+    const variantWithUserId = {
+      ...variant,
+      user_id: user?.id || null,
+    };
+  
+    dispatch(addToCompare(variantWithUserId));
+    toast.success('Added to comparison');
     try {
-      // Dispatch addToCompare action
-      dispatch(addToCompare(data));
-
-      // Update localStorage with the new compareItems
-      const updatedCompareItems = [...compareItems, data];
+      const updatedCompareItems = [...compareItems, variantWithUserId];
       localStorage.setItem('compareItems', JSON.stringify(updatedCompareItems));
-
-      toast.success('Added to comparison');
-      // Optionally navigate to compare page
-      // navigate('/compare');
-    } catch (error) {
-      console.error('Error saving to localStorage:', error);
-      toast.error('Failed to add to comparison');
+    } catch (err) {
+      console.error('Error saving to localStorage:', err);
+      toast.error('Failed to save to comparison');
     }
   };
-
   // Calculate average rating and distribution
   const calculateFeedback = () => {
     if (!localReviews.length) return { average: 0, distribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }, total: 0 };
@@ -552,7 +541,7 @@ const ProductDetailsTwo = ({ item: data }) => {
                 Add to Wishlist
               </button>
               <button
-                onClick={handleAddToCompare}
+                onClick={() => handleAddToCompare(data)}
                 className="btn btn-outline-main rounded-8 py-16 fw-normal mt-16 w-100 flex-center gap-8"
                 disabled={compareItems.some((item) => item?.id === data?.id) || compareItems.length >= 4}
               >

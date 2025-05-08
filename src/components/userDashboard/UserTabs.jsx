@@ -10,11 +10,16 @@ import OrdersTable from './OrdersTabel';
 import WishlistTable from './WishlistTable';
 import { useSelector } from 'react-redux';
 import EditProfile from './EditProfile';
+import { useGetUserInfoQuery } from '../../redux/features/api/auth/authApi';
 
 const UserTabs = () => {
      const { token, user } = useSelector((state) => state.auth);
     const { tabId } = useParams();
-    const navigate = useNavigate();
+      const userID = user?.id;
+      const navigate = useNavigate();
+    const { data, isLoading, isError } = useGetUserInfoQuery(userID, {
+      skip: !userID,
+    });
     const [activeTab, setActiveTab] = useState(tabId || 'edit-profile');
 
     useEffect(() => {
@@ -52,7 +57,7 @@ const UserTabs = () => {
          
             case 'change-password':
                 return (
-                    <div className="tab-content p-4">
+                    <div className="tab-content p-4 ">
                         <h3>Change Password</h3>
                         <form>
                             <div className="mb-3">
@@ -86,20 +91,8 @@ const UserTabs = () => {
     return (
         <div>
               {/* ColorInit */}
-      <ColorInit color={true} />
 
-{/* ScrollToTop */}
-<ScrollToTop smooth color="#FA6400" />
-
-{/* Preloader */}
-<Preloader />
-
-{/* HeaderOne */}
-<HeaderThree category={false} />
-{/* Breadcrumb */}
-<Breadcrumb title={"Shop"} />
-
-            <section className="user-details py-80">
+            <section className="user-details py-20">
                 <div className="container container-lg">
                 <div className="d-flex align-items-center mb-20 ">
                                 <button
@@ -118,9 +111,11 @@ const UserTabs = () => {
                                     </div>
                                     
                                     <div>
-                                        <h6 className="text-xl fw-semibold mb-0">             {token &&  
-                        `Hello, ${user.name}`
-                      }</h6>
+                                        <h6 className="text-xl fw-bold mb-0"><span className='text-base fw-normal fs-6'>Hello,</span>  <br />
+                                        {token &&  
+                        `  ${data?.user?.name}`
+                      }
+                                           </h6>
                                     </div>
                                 </div>
                                 <div className="d-flex align-items-center gap-16">
@@ -129,8 +124,8 @@ const UserTabs = () => {
                                 </div>
                             </div>
                         
-                            <div className="tabs mb-20">
-                                <ul className="nav nav-tabs d-flex flex-wrap gap-2">
+                            <div className="tabs mb-20 ">
+                                <ul className="nav nav-tabs d-flex flex-wrap gap-2 ">
                                     {tabs.map(tab => (
                                         <li className="nav-item" key={tab.id}>
                                             <button
@@ -144,7 +139,7 @@ const UserTabs = () => {
                                     ))}
                                 </ul>
                             </div>
-                            <div className="tab-content-wrapper mb-20">
+                            <div className="tab-content-wrapper mb-20 shadow-sm">
                                 {renderContent()}
                             </div>
                         </div>

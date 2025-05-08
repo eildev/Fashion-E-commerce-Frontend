@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import $ from 'jquery';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLogoutUserMutation } from '../redux/features/api/auth/authApi';
+import { useGetUserInfoQuery, useLogoutUserMutation } from '../redux/features/api/auth/authApi';
 import SearchBar from './search/SearchBar';
 import { useGetCategoryQuery } from '../redux/features/api/categoryApi';
 import { useGetWishlistByUserIdQuery } from '../redux/features/api/wishlistByUserAPI';
@@ -14,7 +14,11 @@ const HeaderThree = ({ category }) => {
   const [logoutUser] = useLogoutUserMutation();
    const { data: categoryApi } = useGetCategoryQuery();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+    const userID = user?.id;
+       const navigate = useNavigate();
+     const { data, isUserLoading, isError } = useGetUserInfoQuery(userID, {
+       skip: !userID,
+     });
   const cartItems = useSelector((state) => state.cart.cartItems);
   const compareItems = useSelector((state) => state.compare.compareItems);
 
@@ -620,7 +624,7 @@ const filterdCategoryByParents = categoryApi?.categories?.filter(category => cat
                     </span>
                     <span className="text-md text-white item-hover__texts d-none d-lg-flex">
                       {token && user?.name ? (
-                        `Hi, ${user.name}`
+                        `Hi, ${data?.user?.name}`
                       ) : (
                         <Link to="/account" className="text-white">
                           Login
