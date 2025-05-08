@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLogoutUserMutation } from '../redux/features/api/auth/authApi';
 import SearchBar from './search/SearchBar';
 import { useGetCategoryQuery } from '../redux/features/api/categoryApi';
+import { useGetWishlistByUserIdQuery } from '../redux/features/api/wishlistByUserAPI';
 
 const HeaderThree = ({ category }) => {
   const [scroll, setScroll] = useState(false);
@@ -14,6 +15,35 @@ const HeaderThree = ({ category }) => {
    const { data: categoryApi } = useGetCategoryQuery();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const cartItems = useSelector((state) => state.cart.cartItems);
+  const compareItems = useSelector((state) => state.compare.compareItems);
+
+  const filteredCompareItems = compareItems.filter(item => {
+    if (user?.id) {
+      return item.user_id === user.id;
+    } else {
+      return item.user_id == null;
+    }
+  });
+  const filteredCartItems = cartItems.filter(item => {
+    if (user?.id) {
+      return item.user_id === user.id;
+    } else {
+      return item.user_id == null;
+    }
+  });
+  
+  const cartCount = filteredCartItems.length;
+  const compareCount = filteredCompareItems.length;
+
+  const {
+    data: wishlist,
+    error,
+    isLoading,
+  } = useGetWishlistByUserIdQuery(user?.id, {
+    skip: !user?.id,
+  });
+  const wishListCount = wishlist?.wishlist.length;
 console.log("category check", categoryApi);
 const filterdCategoryByParents = categoryApi?.categories?.filter(category => category.parent_id === null) 
 // const filterdSubCategoryByParents = categoryApi?.categories?.filter(category => category.parent_id === fil) 
@@ -630,7 +660,7 @@ const filterdCategoryByParents = categoryApi?.categories?.filter(category => cat
                   <span className="text-2xl text-white d-flex position-relative me-6 mt-6 item-hover__text">
                     <i className="ph ph-heart" />
                     <span className="w-16 h-16 flex-center rounded-circle bg-main-two-600 text-white text-xs position-absolute top-n6 end-n4">
-                      2
+                     {wishListCount}
                     </span>
                   </span>
                   <span className="text-md text-white item-hover__text d-none d-lg-flex">
@@ -644,7 +674,7 @@ const filterdCategoryByParents = categoryApi?.categories?.filter(category => cat
                   <span className="text-2xl text-white d-flex position-relative me-6 mt-6 item-hover__text">
                     <i className="ph-fill ph-shuffle" />
                     <span className="w-16 h-16 flex-center rounded-circle bg-main-two-600 text-white text-xs position-absolute top-n6 end-n4">
-                      2
+                     {compareCount}
                     </span>
                   </span>
                   <span className="text-md text-white item-hover__text d-none d-lg-flex">
@@ -658,7 +688,7 @@ const filterdCategoryByParents = categoryApi?.categories?.filter(category => cat
                   <span className="text-2xl text-white d-flex position-relative me-6 mt-6 item-hover__text">
                     <i className="ph ph-shopping-cart-simple" />
                     <span className="w-16 h-16 flex-center rounded-circle bg-main-two-600 text-white text-xs position-absolute top-n6 end-n4">
-                      2
+                      {cartCount}
                     </span>
                   </span>
                   <span className="text-md text-white item-hover__text d-none d-lg-flex">

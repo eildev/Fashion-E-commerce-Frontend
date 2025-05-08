@@ -33,16 +33,16 @@ const HomePageThree = () => {
 
     <>
       {/* ColorInit */}
-      <ColorInit color={true} />
+      {/* <ColorInit color={true} /> */}
 
       {/* ScrollToTop */}
-      <ScrollToTop smooth color="#FA6400" />
+      {/* <ScrollToTop smooth color="#FA6400" /> */}
 
       {/* Preloader */}
-      <Preloader />
+      {/* <Preloader /> */}
 
       {/* HeaderTwo */}
-      <HeaderThree category={true} />
+      {/* <HeaderThree category={true} /> */}
 
       {/* BannerTwo */}
   <BannerThree></BannerThree>
@@ -80,22 +80,22 @@ const HomePageThree = () => {
       <DaySaleOne />
 
       {/* RecentlyViewedOne */}
-      <RecentlyViewedOne />
+      <RecentlyViewedOne data={variantData}/>
 
       {/* BrandTwo */}
       <BrandTwo data={brandData}/>
 
       {/* ShippingTwo */}
-      <ShippingTwo />
+      {/* <ShippingTwo /> */}
 
       {/* NewsletterTwo */}
-      <NewsletterTwo />
+      {/* <NewsletterTwo /> */}
 
       {/* FooterTwo */}
-      <FooterTwo />
+      {/* <FooterTwo /> */}
 
       {/* BottomFooter */}
-      <BottomFooter />
+      {/* <BottomFooter /> */}
 
 
     </>

@@ -57,7 +57,7 @@ const UserDashboard = () => {
                                     <div className="col-lg-4 col-sm-6 " key={option.id}>
                                         <div
                                             onClick={() => handleOptionClick(option.id)}
-                                            className="user-details-box border border-gray-100 rounded-16 p-24 mt-5 text-center hover-border-main-600 transition-1 h-100 d-flex flex-column justify-content-center"
+                                            className="user-details-box border border-gray-100 rounded-2 p-24 mt-5 text-center hover-border-main-600 transition-1 h-100 d-flex flex-column justify-content-center"
                                             style={{ minHeight: '200px', cursor: 'pointer' }}
                                         >
                                             <div className="icon w-48 h-48 rounded-circle bg-main-600 text-white flex-center mb-16 mx-auto">

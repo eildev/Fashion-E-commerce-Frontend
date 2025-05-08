@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Compare = () => {
   const dispatch = useDispatch();
+   const { token, user } = useSelector((state) => state.auth);
   const { compareItems } = useSelector((state) => state.compare);
   const { data: variants, isLoading, isError, error } = useGetVariantApiQuery();
   const [showModal, setShowModal] = useState(false);
@@ -23,10 +24,16 @@ const Compare = () => {
       toast.error('This product is already in comparison!');
       return;
     }
-    dispatch(addToCompare(variant));
+  
+    const variantWithUserId = {
+      ...variant,
+      user_id: user?.id || null,
+    };
+  
+    dispatch(addToCompare(variantWithUserId));
     toast.success('Added to comparison');
     try {
-      const updatedCompareItems = [...compareItems, variant];
+      const updatedCompareItems = [...compareItems, variantWithUserId];
       localStorage.setItem('compareItems', JSON.stringify(updatedCompareItems));
     } catch (err) {
       console.error('Error saving to localStorage:', err);

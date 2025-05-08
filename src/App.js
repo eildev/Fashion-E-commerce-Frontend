@@ -4,6 +4,8 @@ import RouteScrollToTop from "./helper/RouteScrollToTop";
 import PhosphorIconInit from "./helper/PhosphorIconInit";
 import MainLayout from "./components/MainLayout"; // Import the layout
 import HomePageThree from "./pages/HomePageThree";
+import HomePageTwo from "./pages/HomePageTwo";
+import HomePageOne from "./pages/HomePageOne";
 import ShopPage from "./pages/ShopPage";
 import ProductDetailsPageOne from "./pages/ProductDetailsPageOne";
 import ProductDetailsPageTwo from "./pages/ProductDetailsPageTwo";
@@ -32,10 +34,13 @@ function App() {
 
       <Routes>
         {/* HomePageThree with its own structure */}
-        <Route exact path="/" element={<HomePageThree />} />
+       
+        <Route exact path="/two" element={<HomePageTwo></HomePageTwo>} />
+        <Route exact path="/one" element={<HomePageOne></HomePageOne>} />
 
         {/* Routes using MainLayout */}
         <Route element={<MainLayout />}>
+        <Route exact path="/" element={<HomePageThree />} />
           <Route exact path="/shop" element={<ShopPage />} />
           <Route exact path="/product-details" element={<ProductDetailsPageOne />} />
           <Route exact path="/product-details-two/:id" element={<ProductDetailsPageTwo />} />
