@@ -102,7 +102,7 @@ const BrandTwo = ({data}) => {
                                 <img
                     src={
                       item?.image
-                        ? `http://127.0.0.1:8000/${item?.image}`
+                        ? `https://fashion-backend.eclipseposapp.com/${item?.image}`
                         : 'assets/images/thumbs/product-two-img1.png'
                     }
                     alt={item?.BrandName || 'Product Image'}

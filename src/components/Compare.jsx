@@ -91,7 +91,7 @@ const Compare = () => {
                     onClick={() => handleRemoveFromCompare(item.id)}
                   />
                   <img
-                    src={`http://127.0.0.1:8000/${item.variant_image[0]?.image}`}
+                    src={`https://fashion-backend.eclipseposapp.com/${item.variant_image[0]?.image}`}
                     alt={item.variant_name}
                     className="img-fluid"
                     style={{ maxWidth: '150px', maxHeight: '150px' }}
@@ -239,7 +239,7 @@ const Compare = () => {
                 <div key={variant.id} className="col-md-4 mb-4">
                   <div className="card h-100">
                     <img
-                      src={`http://127.0.0.1:8000/${variant.variant_image[0]?.image}`}
+                      src={`https://fashion-backend.eclipseposapp.com/${variant.variant_image[0]?.image}`}
                       className="card-img-top"
                       alt={variant.variant_name}
                       style={{ height: '150px', objectFit: 'cover' }}

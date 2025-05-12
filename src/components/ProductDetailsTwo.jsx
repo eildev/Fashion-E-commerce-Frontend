@@ -325,7 +325,7 @@ const ProductDetailsTwo = ({ item: data }) => {
                   <div className="product-details__thumb-slider border border-gray-100 rounded-16">
                     <div className="">
                       <div className="product-details__thumb flex-center h-100">
-                        <img src={`http://127.0.0.1:8000/${mainImage?.image}`} alt={data?.variant_name} />
+                        <img src={`https://fashion-backend.eclipseposapp.com/${mainImage?.image}`} alt={data?.variant_name} />
                       </div>
                     </div>
                   </div>
@@ -340,7 +340,7 @@ const ProductDetailsTwo = ({ item: data }) => {
                           >
                             <img
                               className="thum"
-                              src={`http://127.0.0.1:8000/${image?.image}`}
+                              src={`https://fashion-backend.eclipseposapp.com/${image?.image}`}
                               alt={`Thumbnail ${index}`}
                             />
                           </div>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getCountdown } from '../helper/Countdown';
 
-const PopularProductsOne = () => {
+const PopularProductsOne = ({data}) => {
     const [timeLeft, setTimeLeft] = useState(getCountdown());
 
     useEffect(() => {
@@ -36,7 +36,7 @@ const PopularProductsOne = () => {
                             className="position-absolute inset-block-start-0 inset-block-start-0 w-100 h-100 z-n1"
                         />
                         <div className="d-lg-block d-none ps-32">
-                            <img src="assets/images/thumbs/expensive-offer1.png" alt="" />
+                        <img src="assets/images/oceane/puma.png" alt="" />
                         </div>
                         <div className="popular-products-box__content px-sm-4 d-block w-100 text-center py-20">
                             <div className="flex-align gap-16 justify-content-center">
@@ -65,22 +65,28 @@ const PopularProductsOne = () => {
                             </div>
                         </div>
                         <div className="d-lg-block d-none ">
-                            <img src="assets/images/thumbs/expensive-offer2.png" alt="" />
+                        <img src="assets/images/oceane/nike.png" alt="" />
                         </div>
                     </div>
                     <div className="row gy-4">
-                        <div className="col-xxl-3 col-xl-4 col-sm-6 col-xs-6">
+                    {
+                                    data?.variant?.map(item => 
+                                        <div className="col-xxl-3 col-xl-4 col-sm-6 col-xs-6">
                             <div className="product-card h-100 d-flex gap-16 p-16 border border-gray-100 hover-border-main-600 rounded-16 position-relative transition-2">
                                 <Link
                                     to="/product-details"
                                     className="product-card__thumb flex-center h-unset rounded-8 bg-gray-50 position-relative w-unset flex-shrink-0 p-24"
                                     tabIndex={0}
                                 >
-                                    <img
-                                        src="assets/images/thumbs/popular-img1.png"
-                                        alt=""
-                                        className="w-auto max-w-unset"
-                                    />
+                                   <img
+                    src={
+                      item?.variant_image?.[0]?.image
+                        ? `https://fashion-backend.eclipseposapp.com/${item.variant_image[0].image}`
+                        : 'assets/images/thumbs/product-two-img1.png'
+                    }
+                    alt={item?.variant_name || 'Product Image'}
+                    className="w-full h-auto object-contain rounded-8"
+                  />
                                 </Link>
                                 <div className="product-card__content flex-grow-1">
                                     <h6 className="title text-lg fw-semibold mb-12">
@@ -89,7 +95,7 @@ const PopularProductsOne = () => {
                                             className="link text-line-2"
                                             tabIndex={0}
                                         >
-                                            Headphone &amp; Earphone
+                                            {item?.variant_name}
                                         </Link>
                                     </h6>
                                     <span className="text-gray-600 text-sm mb-4">
@@ -114,7 +120,10 @@ const PopularProductsOne = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-xxl-3 col-xl-4 col-sm-6 col-xs-6">
+                                       
+                                    )}
+                        
+                        {/* <div className="col-xxl-3 col-xl-4 col-sm-6 col-xs-6">
                             <div className="product-card h-100 d-flex gap-16 p-16 border border-gray-100 hover-border-main-600 rounded-16 position-relative transition-2">
                                 <Link
                                     to="/product-details"
@@ -428,7 +437,7 @@ const PopularProductsOne = () => {
                                     </Link>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

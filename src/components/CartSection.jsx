@@ -276,7 +276,7 @@ const CartSection = () => {
                                   className="table-product__thumb border border-gray-100 rounded-8 flex-center"
                                 >
                                   <img
-                                    src={`http://127.0.0.1:8000/${item.variant_image?.[0]?.image || ''}`}
+                                    src={`https://fashion-backend.eclipseposapp.com/${item.variant_image?.[0]?.image || ''}`}
                                     alt={item.variant_name || 'Product'}
                                     onError={(e) => (e.target.src = '/placeholder-image.jpg')}
                                   />

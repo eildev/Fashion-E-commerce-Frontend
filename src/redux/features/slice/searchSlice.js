@@ -9,13 +9,13 @@ export const fetchSearchResults = createAsyncThunk(
     try {
       console.log('Fetching search results:', { query, category });
       // Fetch CSRF cookie
-      await axios.get('http://127.0.0.1:8000/sanctum/csrf-cookie', {
+      await axios.get('https://fashion-backend.eclipseposapp.com/sanctum/csrf-cookie', {
         withCredentials: true,
       });
 
       // Search API call
       const response = await axios.post(
-        'http://127.0.0.1:8000/api/product/search',
+        'https://fashion-backend.eclipseposapp.com/api/product/search',
         {
           query: query.trim(),
           category: category !== 'All Categories' ? category : undefined,

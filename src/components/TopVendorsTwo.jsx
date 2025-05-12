@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
 
-const TopVendorsTwo = () => {
+const TopVendorsTwo = ({data}) => {
     function SampleNextArrow(props) {
         const { className, onClick } = props;
         return (
@@ -59,81 +59,95 @@ const TopVendorsTwo = () => {
                         </div>
                     </div>
                     <div className="row gy-4 vendor-card-wrapper">
-                        <div className="col-xxl-3 col-lg-4 col-sm-6">
-                            <div className="vendor-card text-center px-16 pb-24">
-                                <div className="">
+                        {
+                            data?.variant?.slice(0,4)?.map(item =>  <div className="col-xxl-3 col-lg-4 col-sm-6">
+                                <div className="vendor-card text-center px-16 pb-24">
+                                    <div className="">
                                     <img
-                                        src="assets/images/thumbs/vendor-logo1.png"
-                                        alt=""
-                                        className="vendor-card__logo m-12"
-                                    />
-                                    <h6 className="title mt-32 text-lg">Organic Market</h6>
-                                    <div className="flex-align gap-6 justify-content-center">
-                                        <span className="text-lg fw-medium text-warning-600 d-flex">
-                                            <i className="ph-fill ph-star" />
-                                        </span>
-                                        <span className="text-md fw-medium text-heading">4.8</span>
-                                        <span className="text-md fw-medium text-heading">(12K)</span>
+                    src={
+                      item?.variant_image?.[0]?.image
+                        ? `https://fashion-backend.eclipseposapp.com/${item.variant_image[0].image}`
+                        : 'assets/images/thumbs/product-two-img1.png'
+                    }
+                    alt={item?.variant_name || 'Product Image'}
+                    className="w-full h-auto object-contain rounded-8"
+                  />
+                                        <h6 className="title mt-32 text-lg">Organic Market</h6>
+                                        <div className="flex-align gap-6 justify-content-center">
+                                            <span className="text-lg fw-medium text-warning-600 d-flex">
+                                                <i className="ph-fill ph-star" />
+                                            </span>
+                                            <span className="text-md fw-medium text-heading">4.8</span>
+                                            <span className="text-md fw-medium text-heading">(12K)</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="position-relative slick-arrows-style-three">
+                                    <div className="position-relative slick-arrows-style-three">
+    
+                                        <div className="vendor-card__list style-two mt-22">
+                                            <Slider {...settings}>
 
-                                    <div className="vendor-card__list style-two mt-22">
-                                        <Slider {...settings}>
-                                            <div className="">
-                                                <div className="vendor-card__item bg-white rounded-circle flex-center">
+                                                {data?.variant?.map(item =>   <div className="">
+                                                    <div className="vendor-card__item bg-white rounded-circle flex-center">
                                                     <img
-                                                        src="assets/images/thumbs/vendor-two-img1.png"
-                                                        alt=""
-                                                    />
+                    src={
+                      item?.variant_image?.[0]?.image
+                        ? `https://fashion-backend.eclipseposapp.com/${item.variant_image[0].image}`
+                        : 'assets/images/thumbs/product-two-img1.png'
+                    }
+                    alt={item?.variant_name || 'Product Image'}
+                    className="w-full h-auto object-contain rounded-8"
+                  />
+                                                    </div>
+                                                </div>)}
+                                              
+                                                {/* <div className="">
+                                                    <div className="vendor-card__item bg-white rounded-circle flex-center">
+                                                        <img
+                                                            src="assets/images/thumbs/vendor-two-img2.png"
+                                                            alt=""
+                                                        />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div className="">
-                                                <div className="vendor-card__item bg-white rounded-circle flex-center">
-                                                    <img
-                                                        src="assets/images/thumbs/vendor-two-img2.png"
-                                                        alt=""
-                                                    />
+                                                <div className="">
+                                                    <div className="vendor-card__item bg-white rounded-circle flex-center">
+                                                        <img
+                                                            src="assets/images/thumbs/vendor-two-img3.png"
+                                                            alt=""
+                                                        />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div className="">
-                                                <div className="vendor-card__item bg-white rounded-circle flex-center">
-                                                    <img
-                                                        src="assets/images/thumbs/vendor-two-img3.png"
-                                                        alt=""
-                                                    />
+                                                <div className="">
+                                                    <div className="vendor-card__item bg-white rounded-circle flex-center">
+                                                        <img
+                                                            src="assets/images/thumbs/vendor-two-img4.png"
+                                                            alt=""
+                                                        />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div className="">
-                                                <div className="vendor-card__item bg-white rounded-circle flex-center">
-                                                    <img
-                                                        src="assets/images/thumbs/vendor-two-img4.png"
-                                                        alt=""
-                                                    />
+                                                <div className="">
+                                                    <div className="vendor-card__item bg-white rounded-circle flex-center">
+                                                        <img
+                                                            src="assets/images/thumbs/vendor-two-img5.png"
+                                                            alt=""
+                                                        />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div className="">
-                                                <div className="vendor-card__item bg-white rounded-circle flex-center">
-                                                    <img
-                                                        src="assets/images/thumbs/vendor-two-img5.png"
-                                                        alt=""
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="">
-                                                <div className="vendor-card__item bg-white rounded-circle flex-center">
-                                                    <img
-                                                        src="assets/images/thumbs/vendor-two-img6.png"
-                                                        alt=""
-                                                    />
-                                                </div>
-                                            </div>
-                                        </Slider>
+                                                <div className="">
+                                                    <div className="vendor-card__item bg-white rounded-circle flex-center">
+                                                        <img
+                                                            src="assets/images/thumbs/vendor-two-img6.png"
+                                                            alt=""
+                                                        />
+                                                    </div>
+                                                </div> */}
+                                            </Slider>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div className="col-xxl-3 col-lg-4 col-sm-6">
+                            </div>)
+                        }
+                       
+                        {/* <div className="col-xxl-3 col-lg-4 col-sm-6">
                             <div className="vendor-card text-center px-16 pb-24">
                                 <div className="">
                                     <img
@@ -351,7 +365,7 @@ const TopVendorsTwo = () => {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

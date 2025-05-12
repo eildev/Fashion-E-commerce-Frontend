@@ -71,10 +71,10 @@ const HomePageThree = () => {
       <TopSellingTwo data={variantData}/>
 
       {/* PopularProductsOne */}
-      <PopularProductsOne />
+      <PopularProductsOne data={variantData}/>
 
       {/* TopVendorsTwo */}
-      <TopVendorsTwo />
+      <TopVendorsTwo data={variantData}/>
 
       {/* DaySaleOne */}
       <DaySaleOne />

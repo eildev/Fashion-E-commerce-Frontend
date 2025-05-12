@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 const subscriptionApi = createApi({
   reducerPath: "subscriptionApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://127.0.0.1:8000/api",
+    baseUrl: "https://fashion-backend.eclipseposapp.com/api",
     credentials: "include",
     prepareHeaders: (headers, { getState }) => {
       const csrfToken = Cookies.get("XSRF-TOKEN");

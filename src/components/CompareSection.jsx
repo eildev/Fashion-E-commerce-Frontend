@@ -178,7 +178,7 @@ const CompareSection = () => {
                     <motion.img
                       src={
                         item?.variant_image?.[0]?.image
-                          ? `http://127.0.0.1:8000/${item.variant_image[0].image}`
+                          ? `https://fashion-backend.eclipseposapp.com/${item.variant_image[0].image}`
                           : 'assets/images/thumbs/product-two-img1.png'
                       }
                       alt={item?.variant_name || 'Product Image'}

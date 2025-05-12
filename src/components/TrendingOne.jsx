@@ -214,7 +214,7 @@ const TrendingOne = ({data}) => {
                                                 <img
                     src={
                       item?.variant_image?.[0]?.image
-                        ? `http://127.0.0.1:8000/${item.variant_image[0].image}`
+                        ? `https://fashion-backend.eclipseposapp.com/${item.variant_image[0].image}`
                         : 'assets/images/thumbs/product-two-img1.png'
                     }
                     alt={item?.variant_name || 'Product Image'}
@@ -231,7 +231,7 @@ const TrendingOne = ({data}) => {
                                                         className="link text-line-2"
                                                         tabIndex={0}
                                                     >
-                                                        Instax Mini 12 Instant Film Camera - Green
+                                                        {item?.variant_name}
                                                     </Link>
                                                 </h6>
                                                 <div className="flex-align gap-6">
@@ -265,7 +265,7 @@ const TrendingOne = ({data}) => {
                                                         $28.99
                                                     </span>
                                                     <span className="text-heading text-md fw-semibold ">
-                                                        $14.99{" "}
+                                                        ${item?.regular_price}{" "}
                                                         <span className="text-gray-500 fw-normal">/Qty</span>{" "}
                                                     </span>
                                                 </div>
