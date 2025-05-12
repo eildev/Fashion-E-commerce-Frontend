@@ -74,7 +74,7 @@ const PopularProductsOne = ({data}) => {
                                         <div className="col-xxl-3 col-xl-4 col-sm-6 col-xs-6">
                             <div className="product-card h-100 d-flex gap-16 p-16 border border-gray-100 hover-border-main-600 rounded-16 position-relative transition-2">
                                 <Link
-                                    to="/product-details"
+                                    to={`/product-details-two/${item.id}`}
                                     className="product-card__thumb flex-center h-unset rounded-8 bg-gray-50 position-relative w-unset flex-shrink-0 p-24"
                                     tabIndex={0}
                                 >
@@ -88,10 +88,10 @@ const PopularProductsOne = ({data}) => {
                     className="w-full h-auto object-contain rounded-8"
                   />
                                 </Link>
-                                <div className="product-card__content flex-grow-1">
+                                <Link to={`/product-details-two/${item.id}`} className="product-card__content flex-grow-1">
                                     <h6 className="title text-lg fw-semibold mb-12">
                                         <Link
-                                            to="/product-details"
+                                            to={`/product-details-two/${item.id}`}
                                             className="link text-line-2"
                                             tabIndex={0}
                                         >
@@ -117,7 +117,7 @@ const PopularProductsOne = ({data}) => {
                                         All Categories
                                         <i className="ph ph-arrow-right d-flex" />
                                     </Link>
-                                </div>
+                                </Link>
                             </div>
                         </div>
                                        

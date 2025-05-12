@@ -87,7 +87,7 @@ const TopVendorsTwo = ({data}) => {
                                             <Slider {...settings}>
 
                                                 {data?.variant?.map(item =>   <div className="">
-                                                    <div className="vendor-card__item bg-white rounded-circle flex-center">
+                                                    <Link to={`/product-details-two/${item.id}`} className="vendor-card__item bg-white rounded-circle flex-center">
                                                     <img
                     src={
                       item?.variant_image?.[0]?.image
@@ -97,7 +97,7 @@ const TopVendorsTwo = ({data}) => {
                     alt={item?.variant_name || 'Product Image'}
                     className="w-full h-auto object-contain rounded-8"
                   />
-                                                    </div>
+                                                    </Link>
                                                 </div>)}
                                               
                                                 {/* <div className="">
