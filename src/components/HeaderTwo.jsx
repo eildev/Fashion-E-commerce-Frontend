@@ -395,7 +395,7 @@ const HeaderTwo = ({ category }) => {
             {/* Logo */}
             <div className="logo">
               <Link to="/" className="link">
-                <img src="assets/images/logo/logo-two.png" alt="Logo" />
+                <img src="assets/images/logo/Sports-logo.svg" alt="Logo" />
               </Link>
             </div>
             {/* Form Category */}

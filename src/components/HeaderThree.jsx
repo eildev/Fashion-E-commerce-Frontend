@@ -388,9 +388,9 @@ const filterdCategoryByParents = categoryApi?.categories?.filter(category => cat
         <div className="container container-lg" style={{ overflow: 'visible' }}>
           <nav className="header-inner flex-between" style={{ overflow: 'visible' }}>
             {/* Logo */}
-            <div className="logo">
-              <Link to="/" className="link">
-                <img src="assets/images/logo/logo-two.png" alt="Logo" />
+            <div className="logo" style = {{width: "150px"}}>
+              <Link to="/" className="link w-100">
+                <img src="assets/images/logo/Sports-logo.svg" alt="Logo" />
               </Link>
             </div>
             {/* Search Bar */}
