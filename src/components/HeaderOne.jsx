@@ -34,7 +34,7 @@ const HeaderOne = () => {
   const handleCurrencyChange = (currency) => {
     setSelectedCurrency(currency);
   };
-
+// just checking is my git still on
   // Mobile menu support
   const [menuActive, setMenuActive] = useState(false);
   const [activeIndex, setActiveIndex] = useState(null);
